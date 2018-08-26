@@ -78,10 +78,10 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 
 	config['Dataset Path']={}
 	C_Dataset=config['Dataset Path']
-	C_Dataset["path_legitimate_training"]="Dataset_legit_train"
-	C_Dataset["path_phishing_training"]="Dataset_phish_train"
-	C_Dataset["path_legitimate_testing"]="Dataset_legit_test"
-	C_Dataset["path_phishing_testing"]="Dataset_phish_test"
+	C_Dataset["path_legitimate_training"]="Dataset_all/Dataset_legit_urls"
+	C_Dataset["path_phishing_training"]="Dataset_all/Dataset_phish_urls"
+	C_Dataset["path_legitimate_testing"]="Dataset_all/Dataset_legit_urls"
+	C_Dataset["path_phishing_testing"]="Dataset_all/Dataset_legit_urls"
 
 	config['Email or URL feature Extraction']={}
 	C_email_url=config['Email or URL feature Extraction']
@@ -94,7 +94,7 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 
 	config['Classification']={}
 	C_classification=config['Classification']
-	C_classification["Running the Classifiers"]="True"
+	C_classification["Running the Classifiers"]="False"
 
 	config["Summary"]={}
 	C_summary=config["Summary"]
