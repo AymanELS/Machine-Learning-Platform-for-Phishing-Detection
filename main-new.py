@@ -89,12 +89,13 @@ def main():
                 X_test=hstack([X_test, Tfidf_test])
         elif config["Email or URL feature Extraction"]["extract_features_urls"]=="True":
             (feature_list_dict_train, y_train, feature_list_dict_test, y_test, corpus_train, corpus_test)=Features.extract_features_urls()
-            #if config["HTML_Features"]["tfidf_websites"] == "True":
-            #    Tfidf_train=Tfidf.tfidf_websites(corpus_train)
-            #    Tfidf_test=Tfidf.tfidf_websites(corpus_test)
-            #    #concatenate the tfidf with the features:
-            #    X_train=hstack([X_train, Tfidf_train])
-            #    X_test=hstack([X_test, Tfidf_test])
+            X_train, X_test=Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
+            if config["HTML_Features"]["tfidf_websites"] == "True":
+                Tfidf_train=Tfidf.tfidf_websites(corpus_train)
+                Tfidf_test=Tfidf.tfidf_websites(corpus_test)
+                #concatenate the tfidf with the features:
+                X_train=hstack([X_train, Tfidf_train])
+                X_test=hstack([X_test, Tfidf_test])
 
         X_train, X_test=Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
 
