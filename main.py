@@ -12,10 +12,26 @@ import re
 #from Classifiers_test import load_dataset
 import configparser
 #from collections import deque
+import logging
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
 
+def setup_logger():
+    # create formatter
+    # formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+    formatter = logging.Formatter('[%(asctime)s] p%(process)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s','%m-%d %H:%M:%S')
+    # create console handler and set level to debug
+    handler = logging.StreamHandler()
+    # add formatter to handler
+    handler.setFormatter(formatter)
+    # create logger
+    logger = logging.getLogger('root')
+    logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+
+setup_logger()
+logger = logging.getLogger('root')
 
 def query_yes_no(question, default="yes"):
     """Ask a yes/no question via raw_input() and return their answer.
@@ -71,21 +87,21 @@ def Confirmation():
 def main():
     Feature_extraction=False
     if config["Extraction"]["Feature Extraction"]=='True':
-        Feature_extraction=True
+        Feature_extraction = True
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
             (feature_list_dict_train, y_train, feature_list_dict_test, y_test)=Features.extract_features_emails()
-        elif config["Email or URL feature Extraction"]["extract_features_urls"]=="True":
+        elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
             (feature_list_dict_train, y_train, feature_list_dict_test, y_test)=Features.extract_features_urls()
         
         X_train, X_test=Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
         #
         #TFIDF
         #
-        print("Shape y_train: {}".format(len(y_train)))
-        print("Shape y_test: {}".format(len(y_test)))
-        print("Shape X_train: {}".format(X_train.shape))
-        print("Shape X_test: {}".format(X_test.shape))
-        X_train, X_test=Features_Support.Preprocessing(X_train, X_test)
+        logger.info("Shape y_train: {}".format(len(y_train)))
+        logger.info("Shape y_test: {}".format(len(y_test)))
+        logger.info("Shape X_train: {}".format(X_train.shape))
+        logger.info("Shape X_test: {}".format(X_test.shape))
+        X_train, X_test = Features_Support.Preprocessing(X_train, X_test)
         
         if config["Feature Selection"]["select best features"]=="True":
             #k: Number of Best features
@@ -99,7 +115,7 @@ def main():
         joblib.dump(X_test,"X_test.pkl")
         joblib.dump(y_test,"y_test.pkl")
 
-    print("Feature Extraction Done!")
+    logger.info("Feature Extraction Done!")
     if config["Classification"]["Running the classifiers"]=="True":
         if Feature_extraction==False:
             X_train=joblib.load("X_train.pkl")
@@ -107,18 +123,18 @@ def main():
             X_test=joblib.load("X_test.pkl")
             y_test=joblib.load("y_test.pkl")
 
-        print("Running the Classifiers....")
+        logger.info("Running the Classifiers....")
         classifiers(X_train, y_train, X_test, y_test )
-        print("Done running the Classifiers!!")
+        logger.info("Done running the Classifiers!!")
 
 if __name__ == "__main__":
     # execute only if run as a script
     answer = Confirmation()
     original = sys.stdout
     if answer is True:
-        print("Running......")
+        logger.debug("Running......")
         #sys.stdout= open("log.txt",'w')
         main()
         #sys.stdout=original
-        print("Done!")
+        logging.debug("Done!")
     sys.stdout=original

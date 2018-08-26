@@ -85,8 +85,8 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 
 	config['Email or URL feature Extraction']={}
 	C_email_url=config['Email or URL feature Extraction']
-	C_email_url["extract_features_emails"]="True"
-	C_email_url["extract_features_urls"]="False"
+	C_email_url["extract_features_emails"]="False"
+	C_email_url["extract_features_urls"]="True"
 
 	config['Extraction']={}
 	C_extraction=config['Extraction']

@@ -15,6 +15,8 @@ import os
 import pickle
 from sklearn.externals import joblib
 from sklearn.datasets import load_svmlight_file
+import logging
+logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
@@ -28,7 +30,7 @@ def Feature_Selection(X,y):
 	vec = joblib.load('vectorizer.pkl')
 	res=dict(zip(vec.get_feature_names(),mutual_info_classif(X, y)))
 	#sorted_d = sorted(res.items(), key=lambda x: x[1])
-	print(res)
+	logger.debug(res)
 	#return X_Best
 
 def Select_Best_Features(X_train, y_train, X_test, k):
@@ -47,20 +49,20 @@ def load_dataset():
 	try:
 		if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
 			file_feature_training=re.findall(email_training_regex,''.join(os.listdir('.')))[-1]
-			print("file_feature_training: {}".format(file_feature_training))
+			logger.debug("file_feature_training: {}".format(file_feature_training))
 			#file_feature_testing=re.findall(email_testing_regex,''.join(os.listdir('.')))[-1]
 		
 		if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 			file_feature_training=re.findall(link_training_regex,''.join(os.listdir('.')))[-1]
 			#file_feature_testing=re.findall(link_testing_regex,''.join(os.listdir('.')))[-1]
 	except Exception as e:
-		print("exception: " + str(e))
+		logger.error("exception: " + str(e))
 	
 	if config["Imbalanced Datasets"]["Load_imbalanced_dataset"] == "True":
 		X, y = Imbalanced_Dataset.load_imbalanced_dataset(file_feature_training)
 		#X_test, y_test=Imbalanced_Dataset.load_imbalanced_dataset(file_feature_testing)
 	else:
-		print("Imbalanced_Dataset not activated")
+		logger.debug("Imbalanced_Dataset not activated")
 		X, y = load_svmlight_file(file_feature_training)
 		#X_test, y_test = load_svmlight_file(file_feature_testing)
 	return X, y#, X_test, y_test

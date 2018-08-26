@@ -37,6 +37,9 @@ import configparser
 #from collections import deque
 import Features
 from sklearn.feature_extraction import DictVectorizer
+import logging
+
+logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
@@ -112,12 +115,12 @@ def extract_header_fields(email):
     try:
         msg = em.message_from_string(email)
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
 
     try:
         subject=msg['Subject']
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         subject="None"
 
     try:
@@ -127,13 +130,13 @@ def extract_header_fields(email):
         else: 
             return_addr=0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         return_addr="None"
 
     try:
         sender_full=msg['From']
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         sender_full="None"
 
     try:
@@ -142,7 +145,7 @@ def extract_header_fields(email):
         else:
             sender_name="None"
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         sender_name="None"
     #print(sender_name)
     
@@ -152,7 +155,7 @@ def extract_header_fields(email):
         else:
             sender_full_address="None"
     except  Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         sender_full_address="None"
 
     try:
@@ -161,7 +164,7 @@ def extract_header_fields(email):
         else:
             sender_domain="None"
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         sender_domain="None"
     
     try:
@@ -174,7 +177,7 @@ def extract_header_fields(email):
             else:
                 recipient_full="None"
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         recipient_full="None"
 
     try:
@@ -186,7 +189,7 @@ def extract_header_fields(email):
         else:
             recipient_name="None"
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         recipient_name="None"
     
     try:
@@ -207,7 +210,7 @@ def extract_header_fields(email):
             #if "undisclosed-recipients" in recipient_full:
              #   recipient_name='undisclosed-recipients'
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         recipient_full_address="None"
         recipient_domain="None"
 
@@ -233,7 +236,7 @@ def extract_header_fields(email):
         else:
             message_id="None"
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         message_id="None"
 
     try:
@@ -243,7 +246,7 @@ def extract_header_fields(email):
         else:
             x_mailer=0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         x_mailer="None"
 
     try:
@@ -253,7 +256,7 @@ def extract_header_fields(email):
         else:
             x_originating_hostname = 0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         x_originating_hostname="None"
 
     try:
@@ -262,7 +265,7 @@ def extract_header_fields(email):
         else:
             x_originating_ip= 0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         x_originating_ip="None"
 
     try:
@@ -271,7 +274,7 @@ def extract_header_fields(email):
         else:
             x_spam_flag= 0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         x_spam_flag="None"
 
     try:
@@ -280,7 +283,7 @@ def extract_header_fields(email):
         else:
             x_virus_scanned= 0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         x_virus_scanned="None"
 
     try:
@@ -290,7 +293,7 @@ def extract_header_fields(email):
         else:
             dkim_signature=0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         dkim_signature = 0
 
     try:
@@ -301,7 +304,7 @@ def extract_header_fields(email):
             #received_spf="None"
             received_spf=0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         received_spf=0
 
     try:
@@ -311,7 +314,7 @@ def extract_header_fields(email):
         else:
             x_original_authentication_results =0
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         x_original_authentication_results="None" 
            
     try:
@@ -320,7 +323,7 @@ def extract_header_fields(email):
         else:
             authentication_results = "None"
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         authentication_results="None" 
 
     try:
@@ -330,7 +333,7 @@ def extract_header_fields(email):
         else:
             received="None"
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
         received="None"
 
     try:
@@ -339,7 +342,7 @@ def extract_header_fields(email):
         else:
             Cc="None"
     except Exception as e:
-        print("exception: "+ str(e))
+        logger.error("exception: "+ str(e))
         Cc="None"
 
     try:
@@ -348,7 +351,7 @@ def extract_header_fields(email):
         else:
             Bcc="None"
     except Exception as e:
-        print("exception: "+ str(e))
+        logger.error("exception: "+ str(e))
         Bcc="None"
 
     try:
@@ -357,7 +360,7 @@ def extract_header_fields(email):
         else:
             To="None"
     except Exception as e:
-        print("exception: "+ str(e))
+        logger.error("exception: "+ str(e))
         To="None"
 
     try:
@@ -366,7 +369,7 @@ def extract_header_fields(email):
         else:
             MIME_version=0
     except Exception as e:
-        print("exception: "+ str(e))
+        logger.error("exception: "+ str(e))
         MIME_version="None"    
 
     #print(message_id)
@@ -746,7 +749,7 @@ def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url
     print("creation_date")
 
     Features.Network_expiration_date(whois_info, list_features, list_time)
-    print("expiration_date")
+    logger.error("expiration_date")
 
     Features.Network_updated_date(whois_info, list_features, list_time)
     print("updated_date")
@@ -1265,7 +1268,7 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                     print(soup)
                     corpus.append(soup)
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
 
 
  
@@ -1275,19 +1278,19 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
         with open(filepath,'r', encoding = "ISO-8859-1") as f:
             email=f.read()
             body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes = extract_body(email)
-            print("extract_body >>>> Done")
+            logger.error("extract_body >>>> Done")
             
             url_All=get_url(body_html)
             print(url_All)
 
-            print("extract urls from body >>>> Done")
+            logger.error("extract urls from body >>>> Done")
 
             (subject, sender_full, recipient_full, recipient_name, recipient_full_address, recipient_domain,message_id
                 , sender_name,sender_full_address, sender_domain, return_addr, x_virus_scanned, x_spam_flag, x_originating_ip, x_mailer
                 , x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results
                    , received, Cc, Bcc, To , MIME_version )= extract_header_fields(email)
 
-            print("extract_header_fields >>>> Done")
+            logger.error("extract_header_fields >>>> Done")
             #header=extract_header(email)
             single_email_features(body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
                 , Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes, subject, sender_full, recipient_full, str(recipient_name), recipient_full_address, recipient_domain,message_id
@@ -1314,6 +1317,6 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
             
 
     except Exception as e:
-        print("exception: " + str(e))
+        logger.error("exception: " + str(e))
 
 
