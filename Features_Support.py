@@ -1262,8 +1262,8 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                     print("html_featuers & url_features & Javascript feautures >>>>>> complete")
                     single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
                     dump_features(list_features, features_output, list_dict, list_time, time_dict)
-                    print(soup)
-                    corpus.append(soup)
+                    #print(soup)
+                    corpus.append(str(soup))
     except Exception as e:
         print("exception: " + str(e))
 
