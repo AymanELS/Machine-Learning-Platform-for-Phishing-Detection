@@ -111,6 +111,10 @@ def RandomForest(X,y, X_test, y_test):
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
 		logger.info("RF >>>>>>>")
+		logger.info(X_test.shape)
+		logger.info(X.shape)
+		logger.info(X_test)
+		logger.info(sum(X_test))
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
 		 
 ###### Decition Tree

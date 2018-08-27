@@ -1240,7 +1240,7 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                     pass
                 #####################  
                 logger.debug("#############################################")
-                logger.debug("\nrawurl:" + str(rawurl))
+                logger.debug("rawurl:" + str(rawurl))
                 Features.summary.write("URL: {}".format(rawurl))
                 if rawurl in Bad_URLs_List:
                     #print("This URL has trouble being extracted:\n")

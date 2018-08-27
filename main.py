@@ -15,11 +15,20 @@ import Tfidf
 from scipy.sparse import hstack
 #from collections import deque
 import logging
+import argparse
+
+parser = argparse.ArgumentParser(
+    description='A test script for http://stackoverflow.com/q/14097061/78845'
+)
+parser.add_argument("-v", "--verbose", help="increase output verbosity",
+                    action="store_true")
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
 
 def setup_logger():
+    args = parser.parse_args()
+
     # create formatter
     # formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
     formatter = logging.Formatter('[%(asctime)s] p%(process)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s','%m-%d %H:%M:%S')
@@ -29,7 +38,10 @@ def setup_logger():
     handler.setFormatter(formatter)
     # create logger
     logger = logging.getLogger('root')
-    logger.setLevel(logging.INFO)
+    if args.verbose:
+        logger.setLevel(level=logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO)
     logger.addHandler(handler)
 
 setup_logger()
