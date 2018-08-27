@@ -56,7 +56,7 @@ def load_dataset():
 			file_feature_training=re.findall(link_training_regex,''.join(os.listdir('.')))[-1]
 			#file_feature_testing=re.findall(link_testing_regex,''.join(os.listdir('.')))[-1]
 	except Exception as e:
-		logger.error("exception: " + str(e))
+		logger.warning("exception: " + str(e))
 	
 	if config["Imbalanced Datasets"]["Load_imbalanced_dataset"] == "True":
 		X, y = Imbalanced_Dataset.load_imbalanced_dataset(file_feature_training)

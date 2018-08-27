@@ -36,7 +36,10 @@ import Features
 import pickle
 from sklearn.externals import joblib
 from sklearn.feature_extraction import DictVectorizer
+import logging
 #from collections import deque
+
+logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
@@ -59,17 +62,17 @@ def load_dataset():
 			file_feature_training=re.findall(link_training_regex,''.join(os.listdir('.')))[-1]
 			file_feature_testing=re.findall(link_testing_regex,''.join(os.listdir('.')))[-1]
 	except Exception as e:
-		print("exception: " + str(e))
+		logger.error("exception: " + str(e))
 	
 	if config["Imbalanced Datasets"]["Load_imbalanced_dataset"] == "True":
 		X, y = Imbalanced_Dataset.load_imbalanced_dataset(file_feature_training)
-		print(file_feature_training)
+		logger.debug(file_feature_training)
 		X_test, y_test=Imbalanced_Dataset.load_imbalanced_dataset(file_feature_testing)
-		print(file_feature_testing)
+		logger.debug(file_feature_testing)
 	else:
-		print("Imbalanced_Dataset not activated")
-		print(file_feature_training)
-		print(file_feature_testing)
+		logger.info("Imbalanced_Dataset not activated")
+		logger.debug(file_feature_training)
+		logger.debug(file_feature_testing)
 		X, y = load_svmlight_file(file_feature_training)
 		X_test, y_test = load_svmlight_file(file_feature_testing)
 	return X, y, X_test, y_test
@@ -96,9 +99,8 @@ def SVM(X,y, X_test, y_test):
    		tol=0.001, verbose=False)
 	clf.fit(X, y)
 	y_predict=clf.predict(X_test)
-	print("SVM >>>>>>>")
+	logger.info("SVM >>>>>>>")
 	Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-	print("\n")
 
 ######## Random Forest
 def RandomForest(X,y, X_test, y_test):
@@ -108,11 +110,9 @@ def RandomForest(X,y, X_test, y_test):
 		   random_state=None, verbose=0, warm_start=False, class_weight=None)
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
-		print("RF >>>>>>>")
+		logger.info("RF >>>>>>>")
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		print("\n")
 		 
-
 ###### Decition Tree
 def DecisionTree(X,y, X_test, y_test):
 		clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
@@ -120,12 +120,9 @@ def DecisionTree(X,y, X_test, y_test):
 		 min_impurity_decrease=0.0, min_impurity_split=None, class_weight=None, presort=False)
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
-		print("DT >>>>>>>")
+		logger.info("DT >>>>>>>")
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		print("\n")
 		
-
-
 ##### Gaussian Naive Bayes
 def GaussianNaiveBayes(X,y, X_test, y_test):
 		gnb = GaussianNB(priors=None)
@@ -133,10 +130,8 @@ def GaussianNaiveBayes(X,y, X_test, y_test):
 		#X_test=X_test.toarray()
 		gnb.fit(X,y)
 		y_predict=gnb.predict(X_test)
-		print("GNB >>>>>>>")
+		logger.info("GNB >>>>>>>")
 		Evaluation_Metrics.eval_metrics(gnb, X, y, y_test, y_predict)
-		print("\n")
-
 
 ##### Multinomial Naive Bayes
 def MultinomialNaiveBayes(X,y, X_test, y_test):
@@ -145,10 +140,8 @@ def MultinomialNaiveBayes(X,y, X_test, y_test):
 		mnb=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
 		mnb.fit(X,y)
 		y_predict=mnb.predict(X_test)
-		print("MNB >>>>>>>")
+		logger.info("MNB >>>>>>>")
 		Evaluation_Metrics.eval_metrics(mnb, X, y, y_test, y_predict)
-		print("\n")
-
 
 ##### Logistic Regression
 def LogisticRegression(X,y, X_test, y_test):
@@ -157,9 +150,8 @@ def LogisticRegression(X,y, X_test, y_test):
 			 verbose=0, warm_start=False, n_jobs=1)
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
-		print("LR >>>>>>>")
+		logger.info("LR >>>>>>>")
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		print("\n")
 
 ##### k-Nearest Neighbor
 def kNearestNeighbor(X,y, X_test, y_test):
@@ -167,20 +159,18 @@ def kNearestNeighbor(X,y, X_test, y_test):
 		 metric='minkowski', metric_params=None, n_jobs=1,)
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
-		print("KNN >>>>>>>")
+		logger.info("KNN >>>>>>>")
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		print("\n")
 
 ##### KMeans
 def KMeans(X,y, X_test, y_test):
 		clf=sklearn.cluster.KMeans(n_clusters=8, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto',
  		verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')
 		clf.fit(X,y)
-		print("Kmeans")
+		logger.info("Kmeans")
 		y_predict=clf.predict(X_test)
 		Evaluation_Metrics.eval_metrics_cluster(y_test, y_predict)
 		#Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		print("\n")
 
 ##### Bagging
 def Bagging(X,y, X_test, y_test):
@@ -189,9 +179,8 @@ def Bagging(X,y, X_test, y_test):
 		  verbose=0)
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
-		print("Bagging_scores >>>>>>>")
+		logger.info("Bagging_scores >>>>>>>")
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		print("\n")
 
 #### Boosting
 def Boosting(X,y, X_test, y_test):
@@ -199,31 +188,25 @@ def Boosting(X,y, X_test, y_test):
 		 random_state=None)
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
-		print("Boosting >>>>>>>")
+		logger.info("Boosting >>>>>>>")
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		print("\n")
 
 ############### imbalanced learning
-
-
 def DNN(X,y, X_test, y_test):
 		#X_test, y_test = load_dataset("feature_vector_extract_test.txt")
 		model = Sequential()
-		print(X.shape)
+		logger.debug(X.shape)
 		dim=X.shape[1]
-		print(dim)
-		print("Start Building Model")
+		logger.debug(dim)
+		logger.info("Start Building DNN Model")
 		model.add(Dense(units=80, activation='relu', input_dim=dim))
 		model.add(Dense(1, activation='sigmoid'))
 		model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy', Evaluation_Metrics.Confusion_matrix2])
-		print("model compile end >>>>>>")
+		logger.debug("model compile end >>>>>>")
 		model.fit(X, y, epochs=150, batch_size=100)
 		y_predict=model.predict(X_test)
-		print("DNN >>>>>>>")
 		score = model.evaluate(X_test, y_test, batch_size=100)
-		print(score)
-		print("\n")
-
+		logger.info("DNN >>>>>>> Score:{}".format(score))
 
 def HDDT():
 	#java -cp <path to weka-hddt.jar> weka.classifiers.trees.HTree -U -A -B -t <training file> -T <testing file>
@@ -232,7 +215,7 @@ def HDDT():
 
 #### 
 def classifiers(X,y, X_test, y_test):
-	print("##### Classifiers #####")
+	logger.info("##### Classifiers #####")
 	summary=Features.summary
 	summary.write("\n##############\n\nClassifiers Used:\n")
 	#X,y, X_test, y_test=load_dataset()

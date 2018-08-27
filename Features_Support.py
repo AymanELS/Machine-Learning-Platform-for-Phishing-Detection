@@ -115,12 +115,12 @@ def extract_header_fields(email):
     try:
         msg = em.message_from_string(email)
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
 
     try:
         subject=msg['Subject']
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         subject="None"
 
     try:
@@ -130,13 +130,13 @@ def extract_header_fields(email):
         else: 
             return_addr=0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         return_addr="None"
 
     try:
         sender_full=msg['From']
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         sender_full="None"
 
     try:
@@ -145,7 +145,7 @@ def extract_header_fields(email):
         else:
             sender_name="None"
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         sender_name="None"
     #print(sender_name)
     
@@ -155,7 +155,7 @@ def extract_header_fields(email):
         else:
             sender_full_address="None"
     except  Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         sender_full_address="None"
 
     try:
@@ -164,7 +164,7 @@ def extract_header_fields(email):
         else:
             sender_domain="None"
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         sender_domain="None"
     
     try:
@@ -177,7 +177,7 @@ def extract_header_fields(email):
             else:
                 recipient_full="None"
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         recipient_full="None"
 
     try:
@@ -189,7 +189,7 @@ def extract_header_fields(email):
         else:
             recipient_name="None"
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         recipient_name="None"
     
     try:
@@ -210,7 +210,7 @@ def extract_header_fields(email):
             #if "undisclosed-recipients" in recipient_full:
              #   recipient_name='undisclosed-recipients'
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         recipient_full_address="None"
         recipient_domain="None"
 
@@ -236,7 +236,7 @@ def extract_header_fields(email):
         else:
             message_id="None"
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         message_id="None"
 
     try:
@@ -246,7 +246,7 @@ def extract_header_fields(email):
         else:
             x_mailer=0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         x_mailer="None"
 
     try:
@@ -256,7 +256,7 @@ def extract_header_fields(email):
         else:
             x_originating_hostname = 0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         x_originating_hostname="None"
 
     try:
@@ -265,7 +265,7 @@ def extract_header_fields(email):
         else:
             x_originating_ip= 0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         x_originating_ip="None"
 
     try:
@@ -274,7 +274,7 @@ def extract_header_fields(email):
         else:
             x_spam_flag= 0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         x_spam_flag="None"
 
     try:
@@ -283,7 +283,7 @@ def extract_header_fields(email):
         else:
             x_virus_scanned= 0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         x_virus_scanned="None"
 
     try:
@@ -293,7 +293,7 @@ def extract_header_fields(email):
         else:
             dkim_signature=0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         dkim_signature = 0
 
     try:
@@ -304,7 +304,7 @@ def extract_header_fields(email):
             #received_spf="None"
             received_spf=0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         received_spf=0
 
     try:
@@ -314,7 +314,7 @@ def extract_header_fields(email):
         else:
             x_original_authentication_results =0
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         x_original_authentication_results="None" 
            
     try:
@@ -323,7 +323,7 @@ def extract_header_fields(email):
         else:
             authentication_results = "None"
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         authentication_results="None" 
 
     try:
@@ -333,7 +333,7 @@ def extract_header_fields(email):
         else:
             received="None"
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
         received="None"
 
     try:
@@ -342,7 +342,7 @@ def extract_header_fields(email):
         else:
             Cc="None"
     except Exception as e:
-        logger.error("exception: "+ str(e))
+        logger.warning("exception: "+ str(e))
         Cc="None"
 
     try:
@@ -351,7 +351,7 @@ def extract_header_fields(email):
         else:
             Bcc="None"
     except Exception as e:
-        logger.error("exception: "+ str(e))
+        logger.warning("exception: "+ str(e))
         Bcc="None"
 
     try:
@@ -360,7 +360,7 @@ def extract_header_fields(email):
         else:
             To="None"
     except Exception as e:
-        logger.error("exception: "+ str(e))
+        logger.warning("exception: "+ str(e))
         To="None"
 
     try:
@@ -369,7 +369,7 @@ def extract_header_fields(email):
         else:
             MIME_version=0
     except Exception as e:
-        logger.error("exception: "+ str(e))
+        logger.warning("exception: "+ str(e))
         MIME_version="None"    
 
     #print(message_id)
@@ -439,7 +439,7 @@ def extract_body(email):
             try:
                 body_text = part.get_payload(decode=True).decode(part.get_content_charset())
             except Exception as e:
-                logger.error('Exception: {}'.format(e))
+                logger.warning('Exception: {}'.format(e))
                 body_text=part.get_payload(decode=False)  # decode
             #body_text = part.get_payload(decode=False)
             #print("\n\n\n")
@@ -453,7 +453,7 @@ def extract_body(email):
             try:
                 html=part.get_payload(decode=True).decode(part.get_content_charset())
             except Exception as e:
-                logger.error('Exception: {}'.format(e))
+                logger.warning('Exception: {}'.format(e))
                 html=part.get_payload(decode=False)
             #html=part.get_payload(decode=False)
             html=css_regex.sub('',str(html))
@@ -749,7 +749,7 @@ def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url
     logger.debug("creation_date")
 
     Features.Network_expiration_date(whois_info, list_features, list_time)
-    logger.error("expiration_date")
+    logger.warning("expiration_date")
 
     Features.Network_updated_date(whois_info, list_features, list_time)
     logger.debug("updated_date")
@@ -1267,7 +1267,7 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                     #print(soup)
                     corpus.append(str(soup))
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))
 
 def email_features(filepath, list_features, features_output, list_dict, list_time, time_dict, corpus):
     try:
@@ -1313,4 +1313,4 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
             
 
     except Exception as e:
-        logger.error("exception: " + str(e))
+        logger.warning("exception: " + str(e))

@@ -34,7 +34,10 @@ import sklearn
 import Evaluation_Metrics
 
 import configparser
+import logging
 #from collections import deque
+
+logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')

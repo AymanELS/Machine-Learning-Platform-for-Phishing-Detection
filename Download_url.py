@@ -15,6 +15,9 @@ import datetime
 from bs4 import BeautifulSoup
 import sys
 import re
+import logging
+
+logger = logging.getLogger('root')
 
 def dns_lookup(domain):
     ids = ['NONE',
@@ -30,80 +33,9 @@ def dns_lookup(domain):
         'TLSA',
         'URI'
     ]
-    #ids = [
-    #    'NONE',
-    #    'A',
-    #    'NS',
-    #    'MD',
-    #    'MF',
-    #    'CNAME',
-    ##    'SOA',
-    ##    'MB',
-    #    'MG',
-    #    'MR',
-    #    'NULL',
-    #    'WKS',
-    #    'PTR',
-    #    'HINFO',
-    #    'MINFO',
-    #    'MX',
-    #    'TXT',
-    #    'RP',
-    #    'AFSDB',
-    #    'X25',
-    #    'ISDN',
-    #    'RT',
-    #    'NSAP',
-    #    'NSAP-PTR',
-    ##    'SIG',
-    #    'KEY',
-    #    'PX',
-    #    'GPOS',
-    #    'AAAA',
-    #    'LOC',
-    #    'NXT',
-    #    'SRV',
-    #    'NAPTR',
-    #    'KX',
-    #    'CERT',
-    #    'A6',
-    #    'DNAME',
-    #    'OPT',
-    #    'APL',
-    ####    'DS',
-    ##    'SSHFP',
-    #    'IPSECKEY',
-    #    'RRSIG',
-    #    'NSEC',
-    ####    'DNSKEY',
-    #    'DHCID',
-    #    'NSEC3',
-    #    'NSEC3PARAM',
-    ###    'TLSA',
-    #    'HIP',
-    #    'CDS',
-    #    'CDNSKEY',
-    #    'CSYNC',
-    #    'SPF',
-    #    'UNSPEC',
-    #    'EUI48',
-    #    'EUI64',
-    #    'TKEY',
-    #    'TSIG',
-    #    'IXFR',
-    #    'AXFR',
-    #    'MAILB',
-    #    'MAILA',
-    #    'ANY',
-    #    'URI',
-    #    'CAA',
-    #    'TA',
-    #    'DLV',
-    #]
     lists=[]
     for a in ids:
         try:
-            #print("entered in loop")
             answers = dns.resolver.query(domain, a)
             for rdata in answers:
                 val=a + ' : '+ rdata.to_text()
@@ -114,7 +46,7 @@ def dns_lookup(domain):
     return lists
 
 def download_url(rawurl):
-    html, dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error= 0,0,0,0,0,0,0,0,0,0,0
+    html, dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = 0,0,0,0,0,0,0,0,0,0,0
     headers = requests.utils.default_headers()
 
     headers.update(
@@ -158,32 +90,6 @@ def download_url(rawurl):
         parsed_url = urlparse(landing_url)
         domain = '{uri.netloc}'.format(uri=parsed_url)
 
-            #html_output_file_name = ("URL_features/htmls/" + url.replace("/", "_"))[:100] + ".html"
-            #header_output_file_name = ("URL_features/headers/" + url.replace("/", "_"))[:100] + ".txt"
-            #ipwhois_output_file_name = ("URL_features/headers/" + url.replace("/", "_"))[:100] + ".ipwhois"
-            ##whois_output_file_name = ("URL_features/headers/" + url.replace("/", "_"))[:100] + ".whois"
-            #http_response_output_file_name = ("URL_features/headers/" + url.replace("/", "_"))[:100] + ".http_response"
-            #dns_output_file_name = ("URL_features/headers/" + url.replace("/", "_"))[:100] + ".dns"
-            #html_output_file = open(html_output_file_name, "w")
-            #header_output_file = open(header_output_file_name, "w")
-            #################### HTTP Response ################################
-
-            #http_response_output_file = open(http_response_output_file_name, "wb")
-            #pickle.dump(html, http_response_output_file)
-            #if html.history:
-                #print("Request was redirected", file=header_output_file)
-                #for resp in html.history:
-                #    print(resp.status_code, resp.url, file=header_output_file)
-            #http_response_output_file.close()
-            #print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", file=header_output_file)
-            #print("HTML Header", file=header_output_file)
-            #print(html.headers, file=header_output_file)
-            #print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", file=header_output_file)
-
-            #################### DNS and IP ################################
-
-            #dns_output_file = open(dns_output_file_name, "w")
-            #print("DNS Lookup", file=dns_output_file)
         t0 = time.time()
         #dns_lookup=dns_lookup(domain, output = dns_output_file)
         dns_lookup_output=dns_lookup(domain)
@@ -192,67 +98,22 @@ def download_url(rawurl):
         #print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", file=dns_output_file)
         #print("IP", file=dns_output_file)
         IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
-        #print(','.join(IPs),
-        #      file=dns_output_file)
-        #dns_output_file.close()
 
-            #################### IPwhois ################################
-            #print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", file=header_output_file)
-
-            #ipwhois_output_file = open(ipwhois_output_file_name, "wb")
-            #print("whois", file=header_output_file)
         t0 = time.time()
         for ip in IPs:
             obj = IPWhois(ip)
             ipwhois = obj.lookup_whois(get_referral=True)
-            #pickle.dump(ipwhois, ipwhois_output_file)
-            #pprint(results, header_output_file)
         ipwhois_time = time.time() - t0
-        #ipwhois_output_file.close()
 
-
-        #################### whois ################################            
-        #whois_output_file = open(whois_output_file_name, "wb")
-        #if domain in whois_info:
-        #    pickle.dump(whois_info.get(domain), whois_output_file)
-        #else:
         whois_output = whois.whois(domain)
-        #pickle.dump(whois_output, whois_output_file)
-        #whois_info[domain] = d
-
-        #whois_output_file.close()
-        #d = whois.whois(domain)
-        #pickle.dump(d, whois_output_file)
-        #whois_output_file.close()
         time.sleep(3)
 
         content = html.text
 
-            #print(content, file=html_output_file)
-            #print(content.decode(html.headers.get_content_charset()),  file=html_output_file)
-            #html_output_file.close()
-            #print(domain, file=header_output_file)
-            #print(html_time, file=header_output_file)
-            #print(dns_lookup_time, file=header_output_file)
-            #print(ipwhois_time, file=header_output_file)
-            #header_output_file.close()
-            #print(url, file = urls_file)
-        #counter = counter + 1        
     except Exception as e:
-        print(e)
+        logger.error(e)
         Error=1
-            #try:
-            #    os.remove(dns_output_file_name)
-            #    os.remove(ipwhois_output_file_name)
-            #    os.remove(http_response_output_file_name)
-            #    os.remove(header_output_file_name)
-            #    os.remove(html_output_file_name)
-            #    os.remove(whois_output_file_name)
-            #except Exception as e:
-            #    pass
-    #urls_file.close()
     return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
-#main()
 
 def visible(element):
     if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
@@ -269,5 +130,5 @@ def download_url_content(rawurl):
     return list(result)
 
 if __name__ == "__main__":
-    data=download_url_content("http://docs.python-requests.org/en/master/user/quickstart/")
-    print(data)
+    data = download_url_content("http://docs.python-requests.org/en/master/user/quickstart/")
+    logging.info(data)

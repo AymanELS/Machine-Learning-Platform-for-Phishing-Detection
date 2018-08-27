@@ -94,7 +94,7 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 
 	config['Classification']={}
 	C_classification=config['Classification']
-	C_classification["Running the Classifiers"]="False"
+	C_classification["Running the Classifiers"]="True"
 
 	config["Summary"]={}
 	C_summary=config["Summary"]
