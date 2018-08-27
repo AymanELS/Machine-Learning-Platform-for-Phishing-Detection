@@ -14,10 +14,26 @@ import configparser
 import Tfidf
 from scipy.sparse import hstack
 #from collections import deque
+import logging
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
 
+def setup_logger():
+    # create formatter
+    # formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+    formatter = logging.Formatter('[%(asctime)s] p%(process)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s','%m-%d %H:%M:%S')
+    # create console handler and set level to debug
+    handler = logging.StreamHandler()
+    # add formatter to handler
+    handler.setFormatter(formatter)
+    # create logger
+    logger = logging.getLogger('root')
+    logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+
+setup_logger()
+logger = logging.getLogger('root')
 
 def query_yes_no(question, default="yes"):
     """Ask a yes/no question via raw_input() and return their answer.
@@ -78,18 +94,18 @@ def main():
             (feature_list_dict_train, y_train, feature_list_dict_test, y_test, corpus_train, corpus_test)=Features.extract_features_emails()
             X_train, X_test=Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
             if config["Email_Features"]["tfidf_emails"] == "True":
-                print("tfidf_emails_train ######")
-                Tfidf_train=Tfidf.tfidf_emails(corpus_train)
-                print("tfidf_emails_test ######")
-                Tfidf_test=Tfidf.tfidf_emails(corpus_test)
+                logger.info("tfidf_emails_train ######")
+                Tfidf_train = Tfidf.tfidf_emails(corpus_train)
+                logger.info("tfidf_emails_test ######")
+                Tfidf_test = Tfidf.tfidf_emails(corpus_test)
                 #concatenate the tfidf with the features:
-                print("X_train shape: {}".format(X_train.shape))
-                print("Tf_idf shape: {}".format(Tfidf_train.shape))
+                logger.debug("X_train shape: {}".format(X_train.shape))
+                logger.debug("Tf_idf shape: {}".format(Tfidf_train.shape))
                 X_train=hstack([X_train, Tfidf_train])
                 X_test=hstack([X_test, Tfidf_test])
         elif config["Email or URL feature Extraction"]["extract_features_urls"]=="True":
             (feature_list_dict_train, y_train, feature_list_dict_test, y_test, corpus_train, corpus_test)=Features.extract_features_urls()
-            X_train, X_test=Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
+            X_train, X_test = Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
             if config["HTML_Features"]["tfidf_websites"] == "True":
                 Tfidf_train=Tfidf.tfidf_websites(corpus_train)
                 Tfidf_test=Tfidf.tfidf_websites(corpus_test)
@@ -97,18 +113,18 @@ def main():
                 X_train=hstack([X_train, Tfidf_train])
                 X_test=hstack([X_test, Tfidf_test])
 
-        X_train, X_test=Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
+        X_train, X_test = Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
 
-        print("Shape y_train: {}".format(len(y_train)))
-        print("Shape y_test: {}".format(len(y_test)))
-        print("Shape X_train: {}".format(X_train.shape))
-        print("Shape X_test: {}".format(X_test.shape))
+        logger.info("Shape y_train: {}".format(len(y_train)))
+        logger.info("Shape y_test: {}".format(len(y_test)))
+        logger.info("Shape X_train: {}".format(X_train.shape))
+        logger.info("Shape X_test: {}".format(X_test.shape))
         X_train, X_test=Features_Support.Preprocessing(X_train, X_test)
         
         if config["Feature Selection"]["select best features"]=="True":
             #k: Number of Best features
-            k=int(config["Feature Selection"]["number of best features"])
-            X_train, X_test=Feature_Selection.Select_Best_Features(X_train, y_train, X_test, k)
+            k = int(config["Feature Selection"]["number of best features"])
+            X_train, X_test = Feature_Selection.Select_Best_Features(X_train, y_train, X_test, k)
         if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
             X_train, y_train=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_train, y_train)
         #Dumping Results
@@ -117,7 +133,7 @@ def main():
         joblib.dump(X_test,"X_test.pkl")
         joblib.dump(y_test,"y_test.pkl")
 
-    print("Feature Extraction Done!")
+    logger.info("Feature Extraction Done!")
     if config["Classification"]["Running the classifiers"]=="True":
         if Feature_extraction==False:
             X_train=joblib.load("X_train.pkl")
@@ -125,18 +141,18 @@ def main():
             X_test=joblib.load("X_test.pkl")
             y_test=joblib.load("y_test.pkl")
 
-        print("Running the Classifiers....")
+        logger.info("Running the Classifiers....")
         classifiers(X_train, y_train, X_test, y_test)
-        print("Done running the Classifiers!!")
+        logger.info("Done running the Classifiers!!")
 
 if __name__ == "__main__":
     # execute only if run as a script
     answer = Confirmation()
     original = sys.stdout
     if answer is True:
-        print("Running......")
-        sys.stdout= open("log.txt",'w')
+        logger.debug("Running......")
+        # sys.stdout= open("log.txt",'w')
         main()
-        sys.stdout=original
-        print("Done!")
+        # sys.stdout=original
+        logger.debug("Done!")
     sys.stdout=original

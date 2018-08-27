@@ -439,7 +439,7 @@ def extract_body(email):
             try:
                 body_text = part.get_payload(decode=True).decode(part.get_content_charset())
             except Exception as e:
-                print('Exception: {}'.format(e))
+                logger.error('Exception: {}'.format(e))
                 body_text=part.get_payload(decode=False)  # decode
             #body_text = part.get_payload(decode=False)
             #print("\n\n\n")
@@ -453,7 +453,7 @@ def extract_body(email):
             try:
                 html=part.get_payload(decode=True).decode(part.get_content_charset())
             except Exception as e:
-                print('Exception: {}'.format(e))
+                logger.error('Exception: {}'.format(e))
                 html=part.get_payload(decode=False)
             #html=part.get_payload(decode=False)
             html=css_regex.sub('',str(html))
@@ -673,7 +673,7 @@ def Preprocessing(X_train, X_test):
         X_train=min_max_scaling(X_train_array)
         X_test=min_max_scaling(X_test_array)
         summary.write("\n Scaling using the min and max.\n")
-        print("Preprocessing: mix_max_scaling")
+        logger.info("Preprocessing: mix_max_scaling")
         return X_train, X_test
         # use abs value to scale
     #elif config["Preprocessing"]["abs_scaler"] == "True":
@@ -704,7 +704,7 @@ def Cleaning(dict1, dict2):
                 original=item[key]
                 item[key]= 0
                 count+=1
-                print("Value of {} changed from {} to 0".format(key,original))
+                logger.debug("Value of {} changed from {} to 0".format(key,original))
     for item in dict2:
         #print(item)
         for key in item.keys():
@@ -714,7 +714,7 @@ def Cleaning(dict1, dict2):
                 original=item[key]
                 item[key]= 0
                 count+=1
-                print("Value of {} changed from {} to 0".format(key,original))
+                logger.debug("Value of {} changed from {} to 0".format(key,original))
 
 
 #list_id=list(range(1,len(list_features)+1))
@@ -731,7 +731,7 @@ def Vectorization(list_dict_features_train, list_dict_features_test):
 
 
 def dump_features(list_features, output_file, list_dict,list_time, time_dict):
-    print("list_features: " + str(len(list_features)))
+    logger.debug("list_features: " + str(len(list_features)))
     list_dict.append(list_features)
     #print(list_dict)
     time_dict.append(list_time)
@@ -746,232 +746,232 @@ def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url
     #print("country")
 
     Features.Network_creation_date(whois_info, list_features, list_time)
-    print("creation_date")
+    logger.debug("creation_date")
 
     Features.Network_expiration_date(whois_info, list_features, list_time)
     logger.error("expiration_date")
 
     Features.Network_updated_date(whois_info, list_features, list_time)
-    print("updated_date")
+    logger.debug("updated_date")
 
     Features.Network_as_number(whois_info, list_features, list_time)
-    print("as_number")
+    logger.debug("as_number")
 
     Features.Network_number_name_server(dns_info, list_features, list_time)
-    print("number_name_server")
+    logger.debug("number_name_server")
 
     Features.Network_dns_ttl(url, list_features, list_time)
-    print("dns_ttl")
+    logger.debug("dns_ttl")
 
     Features.Network_Website_content_type(html, list_features, list_time)
-    print("content_type")
+    logger.debug("content_type")
 
     Features.Network_content_length(html, list_features, list_time)
-    print("content_length")
+    logger.debug("content_length")
 
     Features.Network_x_powered_by(html, list_features, list_time)
-    print("x_powered_by")
+    logger.debug("x_powered_by")
 
 
 
 def single_javascript_features(soup, html, list_features, list_time):
     Features.Javascript_number_of_exec(soup, html, list_features, list_time)
-    print("number_of_exec")
+    logger.debug("number_of_exec")
 
     Features.Javascript_number_of_escape(soup, html, list_features, list_time)
-    print("number_of_escape")
+    logger.debug("number_of_escape")
 
     Features.Javascript_number_of_eval(soup, html, list_features, list_time)
-    print("number_of_eval")
+    logger.debug("number_of_eval")
 
     Features.Javascript_number_of_link(soup, html, list_features, list_time)
-    print("number_of_link")
+    logger.debug("number_of_link")
 
     Features.Javascript_number_of_unescape(soup, html, list_features, list_time)
-    print("number_of_unescape")
+    logger.debug("number_of_unescape")
 
     Features.Javascript_number_of_search(soup, html, list_features, list_time)
-    print("number_of_search")
+    logger.debug("number_of_search")
 
     Features.Javascript_number_of_setTimeout(soup, html, list_features, list_time)
-    print("number_of_setTimeout")
+    logger.debug("number_of_setTimeout")
 
     Features.Javascript_number_of_iframes_in_script(soup, html, list_features, list_time)
-    print("number_of_iframes_in_script")
+    logger.debug("number_of_iframes_in_script")
 
     Features.Javascript_number_of_event_attachment(soup, html, list_features, list_time)
-    print("number_of_event_attachment")
+    logger.debug("number_of_event_attachment")
 
     Features.Javascript_rightclick_disabled(html, list_features, list_time)
-    print("rightclick_disabled")
+    logger.debug("rightclick_disabled")
 
     Features.Javascript_number_of_total_suspicious_features(list_features,list_time)
-    print("number_of_total_suspicious_features")
+    logger.debug("number_of_total_suspicious_features")
 
 def single_url_feature(url, list_features,list_time):
     Features.URL_length(url, list_features, list_time)
-    print("url_length")
+    logger.debug("url_length")
     
     Features.URL_domain_length(url, list_features, list_time)
-    print("domain_length")
+    logger.debug("domain_length")
 
     Features.URL_char_distance(url, list_features, list_time)
-    print("url_char_distance")
+    logger.debug("url_char_distance")
 
     Features.URL_kolmogorov_shmirnov(list_features, list_time)
-    print("kolmogorov_shmirnov")
+    logger.debug("kolmogorov_shmirnov")
 
     Features.URL_Kullback_Leibler_Divergence(list_features, list_time)
-    print("Kullback_Leibler_Divergence")
+    logger.debug("Kullback_Leibler_Divergence")
 
     Features.URL_edit_distance(list_features, list_time)
-    print("edit_distance")
+    logger.debug("edit_distance")
 
     Features.URL_num_punctuation(url, list_features, list_time)
-    print("num_punctuation")
+    logger.debug("num_punctuation")
 
     Features.URL_has_port(url, list_features, list_time)
-    print("has_port")
+    logger.debug("has_port")
 
     Features.URL_has_https(url, list_features, list_time)
-    print("has_https") 
+    logger.debug("has_https") 
 
     Features.URL_number_of_digits(url, list_features, list_time)
-    print("number_of_digits")
+    logger.debug("number_of_digits")
 
     Features.URL_number_of_dots(url, list_features, list_time)
-    print("number_of_dots")
+    logger.debug("number_of_dots")
 
     Features.URL_number_of_slashes(url, list_features, list_time)
-    print("number_of_slashes")
+    logger.debug("number_of_slashes")
 
     Features.URL_digit_letter_ratio(url, list_features, list_time)
-    print("digit_letter_ratio")
+    logger.debug("digit_letter_ratio")
 
     Features.URL_special_char_count(url, list_features, list_time)
-    print("special_char_count")
+    logger.debug("special_char_count")
 
     Features.URL_Top_level_domain(url, list_features, list_time)
-    print("Top_level_domain")
+    logger.debug("Top_level_domain")
 
     Features.URL_Is_IP_Addr(url, list_features, list_time)
-    print("Is_IP_Addr")
+    logger.debug("Is_IP_Addr")
 
     Features.URL_number_of_dashes(url, list_features, list_time)
-    print('URL_number_of_dashes')
+    logger.debug('URL_number_of_dashes')
 
     Features.URL_Http_middle_of_URL(url, list_features, list_time)
-    print('URL_Http_middle_of_URL')
+    logger.debug('URL_Http_middle_of_URL')
 
     Features.URL_Has_More_than_3_dots(url, list_features, list_time)
-    print('URL_Has_More_than_3_dots')
+    logger.debug('URL_Has_More_than_3_dots')
 
     Features.URL_Has_at_symbole(url, list_features, list_time)
-    print("URL_Has_at_symbole")
+    logger.debug("URL_Has_at_symbole")
 
     Features.URL_Has_anchor_tag(url, list_features, list_time)
-    print("URL_Has_anchor_tag")
+    logger.debug("URL_Has_anchor_tag")
 
     Features.URL_Null_in_Domain(url, list_features, list_time)
-    print("URL_Null_in_Domain")
+    logger.debug("URL_Null_in_Domain")
 
     Features.URL_Token_Count(url, list_features, list_time)
-    print("URL_Token_Count")
+    logger.debug("URL_Token_Count")
 
     Features.URL_Average_Path_Token_Length(url, list_features, list_time)
-    print("URL_Average_Path_Token_Length")
+    logger.debug("URL_Average_Path_Token_Length")
 
     Features.URL_Average_Domain_Token_Length(url, list_features, list_time)
-    print("URL_Average_Domain_Token_Length")
+    logger.debug("URL_Average_Domain_Token_Length")
 
     Features.URL_Longest_Domain_Token(url, list_features, list_time)
-    print('URL_Longest_Domain_Token')
+    logger.debug('URL_Longest_Domain_Token')
 
     Features.URL_Protocol_Port_Match(url, list_features, list_time)
-    print('URL_Protocol_Port_Match')
+    logger.debug('URL_Protocol_Port_Match')
 
     Features.URL_Is_Redirect(url, list_features, list_time)
-    print('URL_Is_Redirect')
+    logger.debug('URL_Is_Redirect')
 
     Features.URL_DNS_Info_Exists(url, list_features, list_time)
-    print('URL_DNS_Info_Exists')
+    logger.debug('URL_DNS_Info_Exists')
 
     Features.URL_Has_WWW_in_Middle(url, list_features, list_time)
-    print('URL_Has_WWW_in_Middle')
+    logger.debug('URL_Has_WWW_in_Middle')
 
     Features.URL_Has_Hex_Characters(url, list_features, list_time)
-    print('URL_Has_Hex_Characters')
+    logger.debug('URL_Has_Hex_Characters')
 
     Features.URL_Double_Slashes_Not_Beginning_Count(url, list_features, list_time)
-    print("URL_Double_Slashes_Not_Beginning_Count")
+    logger.debug("URL_Double_Slashes_Not_Beginning_Count")
 
 def single_html_features(soup, url, list_features, list_time):
-    print("we got soup")
+    logger.debug("we got soup")
     Features.HTML_number_of_tags(soup, list_features, list_time)
-    print("number_of_tags")
+    logger.debug("number_of_tags")
 
     Features.HTML_number_of_head(soup, list_features, list_time)
-    print("number_of_head")
+    logger.debug("number_of_head")
 
     Features.HTML_number_of_html(soup, list_features, list_time)
-    print("number_of_html")
+    logger.debug("number_of_html")
 
     Features.HTML_number_of_body(soup, list_features, list_time)
-    print("number_of_body")
+    logger.debug("number_of_body")
         
     Features.HTML_number_of_titles(soup, list_features, list_time)
-    print("number_of_titles")
+    logger.debug("number_of_titles")
 
     Features.HTML_number_suspicious_content(soup, list_features, list_time)
-    print("number_suspicious_content")
+    logger.debug("number_suspicious_content")
 
     Features.HTML_number_of_iframes(soup, list_features, list_time)
-    print("number_of_iframes")
+    logger.debug("number_of_iframes")
 
     Features.HTML_number_of_input(soup, list_features, list_time)
-    print("number_of_input")
+    logger.debug("number_of_input")
                 
     Features.HTML_number_of_img(soup, list_features, list_time)
-    print("number_of_img")
+    logger.debug("number_of_img")
 
     Features.HTML_number_of_tags(soup, list_features, list_time)
-    print("number_of_tags")
+    logger.debug("number_of_tags")
 
     Features.HTML_number_of_scripts(soup, list_features, list_time)
-    print("number_of_scripts")
+    logger.debug("number_of_scripts")
 
     Features.HTML_number_of_anchor(soup, list_features, list_time)
-    print("number_of_anchor")
+    logger.debug("number_of_anchor")
 
     Features.HTML_number_of_video(soup, list_features, list_time)
-    print("number_of_video")
+    logger.debug("number_of_video")
 
     Features.HTML_number_of_audio(soup, list_features, list_time)
-    print("number_of_audio")
+    logger.debug("number_of_audio")
 
     Features.HTML_number_of_hidden_iframe(soup, list_features, list_time)
-    print("number_of_hidden_iframe")
+    logger.debug("number_of_hidden_iframe")
 
     Features.HTML_number_of_hidden_div(soup, list_features, list_time)
-    print("number_of_hidden_div")
+    logger.debug("number_of_hidden_div")
 
     Features.HTML_number_of_hidden_object(soup, list_features, list_time)
-    print("number_of_hidden_object")
+    logger.debug("number_of_hidden_object")
 
     Features.HTML_number_of_hidden_iframe(soup, list_features, list_time)
-    print("number_of_hidden_iframe")
+    logger.debug("number_of_hidden_iframe")
 
     Features.HTML_inbound_count(soup, url, list_features, list_time)
-    print("inbound_count")
+    logger.debug("inbound_count")
 
     Features.HTML_outbound_count(soup, url, list_features, list_time)
-    print("outbound_count")
+    logger.debug("outbound_count")
 
     Features.HTML_inbound_href_count(soup, url, list_features, list_time)
-    print("inbound_href_count")
+    logger.debug("inbound_href_count")
 
     Features.HTML_outbound_href_count(soup, url, list_features, list_time)
-    print("outbound_href_count")
+    logger.debug("outbound_href_count")
 
 
 def single_email_features(body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
@@ -981,243 +981,243 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
                 , received, Cc, Bcc, To, MIME_version, list_features, list_time):
     
     Features.Email_return_path(return_addr, list_features, list_time)
-    print("return_path")
+    logger.debug("return_path")
     Features.Email_X_mailer(x_mailer,list_features, list_time)
-    print("X_mailer")
+    logger.debug("X_mailer")
     Features.Email_X_originating_hostname(x_originating_hostname, list_features, list_time)
-    print("X_originating_hostname")
+    logger.debug("X_originating_hostname")
     Features.Email_X_originating_ip(x_originating_ip, list_features, list_time)
-    print("X_originating_ip")
+    logger.debug("X_originating_ip")
     Features.Email_X_spam_flag(x_spam_flag, list_features, list_time)
-    print("X_spam_flag")
+    logger.debug("X_spam_flag")
     Features.Email_X_virus_scanned(x_virus_scanned, list_features, list_time)
-    print("X_virus_scanned")
+    logger.debug("X_virus_scanned")
     Features.Email_X_Origininal_Authentication_results(x_original_authentication_results, list_features, list_time)
-    print("X_Origininal_Authentication_results")
+    logger.debug("X_Origininal_Authentication_results")
     Features.Email_Received_SPF(received_spf, list_features, list_time)
-    print("Received-SPF")
+    logger.debug("Received-SPF")
     Features.Email_Dkim_Signature_Exists(dkim_signature, list_features, list_time)
-    print("Dkim_Signature")
+    logger.debug("Dkim_Signature")
 
     Features.Email_number_of_words_subject(subject, list_features, list_time)
-    print("number_of_words_subject")
+    logger.debug("number_of_words_subject")
 
     Features.Email_number_of_characters_subject(subject, list_features, list_time)
-    print("number_of_characters_subject")
+    logger.debug("number_of_characters_subject")
     
     Features.Email_number_of_special_characters_subject(subject, list_features, list_time)
-    print("numer_of_special_characters_subject")
+    logger.debug("numer_of_special_characters_subject")
 
     Features.Email_binary_fwd(subject, list_features, list_time)
-    print("binary_fwd")
+    logger.debug("binary_fwd")
             
     Features.Email_vocab_richness_subject(subject, list_features, list_time)
-    print("vocab_richness_subject")
+    logger.debug("vocab_richness_subject")
             
     Features.Email_flesh_read_score(body_text, list_features, list_time)
-    print("flesh_read_score")
+    logger.debug("flesh_read_score")
             
     Features.Email_smog_index(body_text, list_features, list_time)
-    print("smog_index")
+    logger.debug("smog_index")
 
     Features.Email_flesh_kincaid_score(body_text, list_features, list_time)
-    print("flesh_kincaid_score")
+    logger.debug("flesh_kincaid_score")
             
     Features.Email_coleman_liau_index(body_text, list_features, list_time)
-    print("coleman_liau_index")
+    logger.debug("coleman_liau_index")
             
     Features.Email_automated_readability_index(body_text, list_features, list_time)
-    print("automated_readability_index")
+    logger.debug("automated_readability_index")
             
     Features.Email_dale_chall_readability_score(body_text, list_features, list_time)
-    print("dale_chall_readability_score")
+    logger.debug("dale_chall_readability_score")
             
     Features.Email_difficult_words(body_text, list_features, list_time)
-    print("difficult_words")
+    logger.debug("difficult_words")
             
     Features.Email_linsear_score(body_text, list_features, list_time)
-    print("linsear_score")
+    logger.debug("linsear_score")
             
     Features.Email_gunning_fog(body_text, list_features, list_time)
-    print("gunning_fog")
+    logger.debug("gunning_fog")
             
     #Features.html_in_body(body, list_features, list_time)
     #print("html_in_body")
             
     Features.Email_number_of_words_body(body_text, list_features, list_time)
-    print("number_of_words_body")
+    logger.debug("number_of_words_body")
             
     Features.Email_number_of_characters_body(body_text, list_features, list_time)
-    print("number_of_characters_body")
+    logger.debug("number_of_characters_body")
             
     Features.Email_number_of_special_characters_body(body_text, list_features, list_time)
-    print("number_of_special_characters_body")
+    logger.debug("number_of_special_characters_body")
             
     Features.Email_vocab_richness_body(body_text, list_features, list_time)
-    print("vocab_richness_body")
+    logger.debug("vocab_richness_body")
             
     Features.Email_number_of_html_tags_body(body_html, list_features, list_time)
-    print("number_of_html_tags_body")
+    logger.debug("number_of_html_tags_body")
             
     Features.Email_number_unique_words_body(body_text, list_features, list_time)
-    print("number_unique_words_body")
+    logger.debug("number_unique_words_body")
             
     Features.Email_end_tag_count(body_html, list_features, list_time)
-    print("end_tag_count")
+    logger.debug("end_tag_count")
         
     Features.Email_open_tag_count(body_html, list_features, list_time)
-    print("open_tag_count")
+    logger.debug("open_tag_count")
             
     Features.Email_recipient_name_body(body_text,recipient_name, list_features, list_time) 
-    print("recipient_name_body")
+    logger.debug("recipient_name_body")
             
     Features.Email_on_mouse_over(body_html, list_features, list_time)
-    print("on_mouse_over")
+    logger.debug("on_mouse_over")
             
     Features.Email_count_href_tag(body_html, list_features, list_time)
-    print("count_href_tag")
+    logger.debug("count_href_tag")
             
     Features.Email_compare_sender_return(sender_full_address, return_addr, list_features, list_time)
-    print("compare_sender_return")
+    logger.debug("compare_sender_return")
             
     Features.Email_compare_sender_domain_message_id_domain(sender_domain , message_id, list_features, list_time)
     print ("compare_sender_domain_message_id_domain")
 
     #Features.Content_Disposition(cdispo, list_features, list_time)
-    #print("Content_Disposition")
+    #logger.debug("Content_Disposition")
 
     Features.Email_test_text(test_text, list_features, list_time)
-    print("test_text")
+    logger.debug("test_text")
 
     Features.Email_Text_Html(text_Html, list_features, list_time)
-    print("Text_Html")
+    logger.debug("Text_Html")
 
     Features.Email_Number_Cc(Cc, list_features, list_time)
-    print("Number_Cc")
+    logger.debug("Number_Cc")
 
     Features.Email_Number_Bcc(Bcc, list_features, list_time)
-    print("Number_Bcc")
+    logger.debug("Number_Bcc")
 
     Features.Email_Number_To(To, list_features, list_time)
-    print("Number_To")
+    logger.debug("Number_To")
     Features.Email_Num_Content_type(content_type_list, list_features, list_time)
-    print("Email_Num_Content_type")
+    logger.debug("Email_Num_Content_type")
     Features.Email_Num_Charset(charset_list, list_features, list_time)
-    print("Email_Num_Charset")
+    logger.debug("Email_Num_Charset")
     Features.Email_Num_Unique_Charset(charset_list, list_features, list_time)
-    print("Email_Num_Unique_Charset")
+    logger.debug("Email_Num_Unique_Charset")
     Features.Email_MIME_Version(MIME_version, list_features, list_time)
-    print("Email_MIME_Version")
+    logger.debug("Email_MIME_Version")
     Features.Email_Num_Unique_Content_type(content_type_list, list_features, list_time)
-    print("Email_Num_Unique_Content_type")
+    logger.debug("Email_Num_Unique_Content_type")
     Features.Email_Num_Unique_Content_Disposition(content_disposition_list, list_features, list_time)
-    print("Email_Num_Unique_Content_Disposition")
+    logger.debug("Email_Num_Unique_Content_Disposition")
     Features.Email_Num_Content_Disposition(content_disposition_list, list_features, list_time)
-    print("Email_Num_Content_Disposition")
+    logger.debug("Email_Num_Content_Disposition")
     Features.Email_Num_Content_Type_text_plain(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_text_plain")
+    logger.debug("Email_Num_Content_Type_text_plain")
     Features.Email_Num_Content_Type_text_html(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_text_html")
+    logger.debug("Email_Num_Content_Type_text_html")
     Features.Email_Num_Content_Disposition(content_disposition_list, list_features, list_time)
-    print("Email_Num_Content_Disposition")
+    logger.debug("Email_Num_Content_Disposition")
     Features.Email_Num_Content_Type_text_plain(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_text_plain")
+    logger.debug("Email_Num_Content_Type_text_plain")
     Features.Email_Num_Content_Type_text_html(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_text_html")
+    logger.debug("Email_Num_Content_Type_text_html")
     Features.Email_Num_Content_Type_Multipart_Encrypted(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_Encrypted")
+    logger.debug("Email_Num_Content_Type_Multipart_Encrypted")
     Features.Email_Num_Content_Type_Multipart_Mixed(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_Mixed")
+    logger.debug("Email_Num_Content_Type_Multipart_Mixed")
     Features.Email_Num_Content_Type_Multipart_form_data(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_form_data")
+    logger.debug("Email_Num_Content_Type_Multipart_form_data")
     Features.Email_Num_Content_Type_Multipart_byterange(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_byterange")
+    logger.debug("Email_Num_Content_Type_Multipart_byterange")
     Features.Email_Num_Content_Type_Multipart_Parallel(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_Parallel")
+    logger.debug("Email_Num_Content_Type_Multipart_Parallel")
     Features.Email_Num_Content_Type_Multipart_Report(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_Report")
+    logger.debug("Email_Num_Content_Type_Multipart_Report")
     Features.Email_Num_Content_Type_Multipart_Alternative(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_Alternative")
+    logger.debug("Email_Num_Content_Type_Multipart_Alternative")
     Features.Email_Num_Content_Type_Multipart_Digest_Num(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_Digest_Num")
+    logger.debug("Email_Num_Content_Type_Multipart_Digest_Num")
     Features.Email_Num_Content_Type_Multipart_Signed_Num(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_Signed_Num")
+    logger.debug("Email_Num_Content_Type_Multipart_Signed_Num")
     Features.Email_Num_Content_Type_Multipart_X_Mixed_Replaced(content_type_list, list_features, list_time)
-    print("Email_Num_Content_Type_Multipart_X_Mixed_Replaced")
+    logger.debug("Email_Num_Content_Type_Multipart_X_Mixed_Replaced")
     Features.Email_Num_Content_Type_Charset_us_ascii(charset_list, list_features, list_time)
-    print("Email_Num_Content_Type_Charset_us_ascii")
+    logger.debug("Email_Num_Content_Type_Charset_us_ascii")
     Features.Email_Num_Content_Type_Charset_utf_8(charset_list, list_features, list_time)
-    print("Email_Num_Content_Type_Charset_utf_8")
+    logger.debug("Email_Num_Content_Type_Charset_utf_8")
     Features.Email_Num_Content_Type_Charset_utf_7(charset_list, list_features, list_time)
-    print("Email_Num_Content_Type_Charset_utf_7")
+    logger.debug("Email_Num_Content_Type_Charset_utf_7")
     Features.Email_Num_Content_Type_Charset_gb2312(charset_list, list_features, list_time)
-    print("Email_Num_Content_Type_Charset_gb2312")
+    logger.debug("Email_Num_Content_Type_Charset_gb2312")
     Features.Email_Num_Content_Type_Charset_shift_jis(charset_list, list_features, list_time)
-    print("Email_Num_Content_Type_Charset_shift_jis")
+    logger.debug("Email_Num_Content_Type_Charset_shift_jis")
     Features.Email_Num_Content_Type_Charset_koi(charset_list, list_features, list_time)
-    print("Email_Num_Content_Type_Charset_koi")
+    logger.debug("Email_Num_Content_Type_Charset_koi")
     Features.Email_Num_Content_Type_Charset_iso2022_jp(charset_list, list_features, list_time)
-    print("Email_Num_Content_Type_Charset_iso2022_jp")
+    logger.debug("Email_Num_Content_Type_Charset_iso2022_jp")
     Features.Email_Num_Attachment(num_attachment, list_features, list_time)
-    print("Email_Num_Attachment")
+    logger.debug("Email_Num_Attachment")
     Features.Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_time)
-    print("Email_Num_Unique_Attachment_types")
+    logger.debug("Email_Num_Unique_Attachment_types")
     Features.Email_Num_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_features, list_time)
-    print("Email_Num_Content_Transfer_Encoding")
+    logger.debug("Email_Num_Content_Transfer_Encoding")
     Features.Email_Num_Unique_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_features, list_time)
-    print("Email_Num_Unique_Content_Transfer_Encoding")
+    logger.debug("Email_Num_Unique_Content_Transfer_Encoding")
     Features.Email_Num_Content_Transfer_Encoding_7bit(Content_Transfer_Encoding_list, list_features, list_time)
-    print("Email_Num_Content_Transfer_Encoding_7bit")
+    logger.debug("Email_Num_Content_Transfer_Encoding_7bit")
     Features.Email_Num_Content_Transfer_Encoding_8bit(Content_Transfer_Encoding_list, list_features, list_time)
-    print("Email_Num_Content_Transfer_Encoding_8bit")
+    logger.debug("Email_Num_Content_Transfer_Encoding_8bit")
     Features.Email_Num_Content_Transfer_Encoding_binary(Content_Transfer_Encoding_list, list_features, list_time)
-    print("Email_Num_Content_Transfer_Encoding_binary")
+    logger.debug("Email_Num_Content_Transfer_Encoding_binary")
     Features.Email_Num_Content_Transfer_Encoding_quoted_printable(Content_Transfer_Encoding_list, list_features, list_time)
-    print("Email_Num_Content_Transfer_Encoding_quoted_printable")
+    logger.debug("Email_Num_Content_Transfer_Encoding_quoted_printable")
     Features.Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_time)
-    print("Email_Num_Unique_Attachment_types")
+    logger.debug("Email_Num_Unique_Attachment_types")
     Features.Email_size_in_Bytes(size_in_Bytes ,list_features, list_time)
-    print("Email_size_in_Bytes")
+    logger.debug("Email_size_in_Bytes")
     Features.Email_Received_count(received, list_features, list_time)
-    print("Received_count")
+    logger.debug("Received_count")
     Features.Email_Authentication_Results_SPF_Pass(authentication_results, list_features, list_time)
-    print("Authentication_Results_SPF_Pass")
+    logger.debug("Authentication_Results_SPF_Pass")
     Features.Email_Authentication_Results_DKIM_Pass(authentication_results, list_features, list_time)
-    print("Authentication_Results_DKIM_Pass")
+    logger.debug("Authentication_Results_DKIM_Pass")
     Features.Email_Text_Html(text_Html, list_features, list_time)
-    print("Text_Html")
+    logger.debug("Text_Html")
     Features.Email_test_text(test_text, list_features, list_time)
-    print("test_text")
+    logger.debug("test_text")
     Features.Email_Function_Words_Count(body_text, list_features, list_time)
-    print("Email_Function_Words_Count")
+    logger.debug("Email_Function_Words_Count")
     Features.Email_Number_Of_Img_Links(body_html, list_features, list_time)
-    print("Email_Number_Of_Img_Links")
+    logger.debug("Email_Number_Of_Img_Links")
     Features.Email_blacklisted_words_body(body_text, list_features, list_time)
-    print("Email_blacklisted_words_body")
+    logger.debug("Email_blacklisted_words_body")
     Features.Email_blacklisted_words_subject(subject, list_features, list_time)
-    print("Email_blacklisted_words_subject")
+    logger.debug("Email_blacklisted_words_subject")
     Features.Email_Number_Of_Scripts(body_html, list_features, list_time)
-    print("Email_Number_Of_Scripts")
+    logger.debug("Email_Number_Of_Scripts")
 
 
 
 def email_url_features(url_All, sender_domain, list_features, list_time):
     Features.Email_Number_Url(url_All, list_features, list_time)
-    print("Number_Url")
+    logger.debug("Number_Url")
 
     Features.Email_Number_Diff_Domain(url_All, list_features, list_time)
-    print("Number_Diff_Domain")
+    logger.debug("Number_Diff_Domain")
 
     Features.Email_Number_link_at(url_All, list_features, list_time)
-    print("Number_link_at")
+    logger.debug("Number_link_at")
 
     Features.Email_Number_link_sec_port(url_All, list_features, list_time)
-    print("Number_link_sec_port")
+    logger.debug("Number_link_sec_port")
     #
     #Features.Number_link_IP(url_All, list_features, list_time)
-    #print(Number_link_IP)
+    #logger.debug(Number_link_IP)
     #Features.Number_link_HTTPS(url_All, list_features, list_time)
-    #print(Number_link_HTTPS)
+    #logger.debug(Number_link_HTTPS)
     #Features.Number_Domain_Diff_Sender(url_All, sender_domain, list_features, list_time)
     #print(Number_Domain_Diff_Sender)
     #Features.Number_Link_Text(url_All, list_features, list_time)
@@ -1239,30 +1239,29 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                 if rawurl == '':
                     pass
                 #####################  
-                print("#############################################")
-                print("\nrawurl:" + str(rawurl))
+                logger.debug("#############################################")
+                logger.debug("\nrawurl:" + str(rawurl))
                 Features.summary.write("URL: {}".format(rawurl))
                 if rawurl in Bad_URLs_List:
                     #print("This URL has trouble being extracted:\n")
-                    print("This URL will not be considered for further processing because It's registred in out list of dead URLs")
+                    logger.warning("This URL will not be considered for further processing because It's registred in list of dead URLs:{}".format(rawurl))
                     Features.summary.write("This URL will not be considered for further processing because It's registred in out list of dead URLs")
                 else:
                     html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = Download_url.download_url(rawurl)
                 
                 if Error == 1:
-                    print("This URL has trouble being extracted:\n")
-                    print("It will not be considered for further processing")
+                    logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                     Bad_URLs_List.append(rawurl)
                 else:
-                    print("download_url >>>>>>>>> complete")
+                    logger.debug("download_url >>>>>>>>> complete")
                     # include https or http
                     url = rawurl.strip().rstrip('\n')
                     soup = BeautifulSoup(content, 'html5lib')   #content=html.text
                     single_html_features(soup, url, list_features, list_time)
                     single_url_feature(url, list_features, list_time)
-                    print("html_featuers & url_features >>>>>> complete")
+                    logger.debug("html_featuers & url_features >>>>>> complete")
                     single_javascript_features(soup,html, list_features, list_time)
-                    print("html_featuers & url_features & Javascript feautures >>>>>> complete")
+                    logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
                     single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
                     dump_features(list_features, features_output, list_dict, list_time, time_dict)
                     #print(soup)
@@ -1270,34 +1269,31 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
     except Exception as e:
         logger.error("exception: " + str(e))
 
-
- 
-
 def email_features(filepath, list_features, features_output, list_dict, list_time, time_dict, corpus):
     try:
         with open(filepath,'r', encoding = "ISO-8859-1") as f:
             email=f.read()
             body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes = extract_body(email)
-            logger.error("extract_body >>>> Done")
+            logger.debug("extract_body >>>> Done")
             
             url_All=get_url(body_html)
             print(url_All)
 
-            logger.error("extract urls from body >>>> Done")
+            logger.debug("extract urls from body >>>> Done")
 
             (subject, sender_full, recipient_full, recipient_name, recipient_full_address, recipient_domain,message_id
                 , sender_name,sender_full_address, sender_domain, return_addr, x_virus_scanned, x_spam_flag, x_originating_ip, x_mailer
                 , x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results
                    , received, Cc, Bcc, To , MIME_version )= extract_header_fields(email)
 
-            logger.error("extract_header_fields >>>> Done")
+            logger.debug("extract_header_fields >>>> Done")
             #header=extract_header(email)
             single_email_features(body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
                 , Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes, subject, sender_full, recipient_full, str(recipient_name), recipient_full_address, recipient_domain,message_id
                 , sender_name,sender_full_address,sender_domain,return_addr,x_virus_scanned,x_spam_flag,x_originating_ip, x_mailer
                 , x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results
                 , received, Cc, Bcc, To, MIME_version, list_features, list_time)
-            print("Email features >>>>>>>>>>> Done")
+            logger.debug("Email features >>>>>>>>>>> Done")
 
             #email_url_features(url_All,sender_domain, list_features, list_time)
             #print("Email Url Features extracted")
@@ -1318,5 +1314,3 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
 
     except Exception as e:
         logger.error("exception: " + str(e))
-
-
