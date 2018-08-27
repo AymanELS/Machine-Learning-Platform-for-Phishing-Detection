@@ -8,6 +8,9 @@ import Features_Support
 import Download_url
 import configparser
 #from collections import deque
+import logging
+
+logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
@@ -17,12 +20,12 @@ def build_corpus():
 	data=list()
 	path=config["Dataset Path"]["path_legit_email"]
 	corpus_data_legit = Features_Support.read_corpus(path)
-	print("Corpus Data legit: >>>>>>>>>>>>>>> " + str(len(corpus_data_legit)))
+	logger.info("Corpus Data legit: >>>>>>>>>>>>>>> " + str(len(corpus_data_legit)))
 	data.extend(corpus_data_legit)
 	#for path in config["Dataset Path"][""]path_phish_email:
-	path=config["Dataset Path"]["path_phish_email"]
+	path = config["Dataset Path"]["path_phish_email"]
 	corpus_data_phish = Features_Support.read_corpus(path)
-	print("Corpus Data phish: >>>>>>>>>>>>>>> " + str(len(corpus_data_phish)))
+	logger.info("Corpus Data phish: >>>>>>>>>>>>>>> " + str(len(corpus_data_phish)))
 	data.extend(corpus_data_phish)
 	return data
 
@@ -101,4 +104,4 @@ def tfidf_websites(corpus):
 	return tfidf_matrix
 if __name__ == '__main__':
 	matrix=tfidf_website()
-	print(matrix)
+	logger.info(matrix)
