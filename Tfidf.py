@@ -29,6 +29,7 @@ def build_corpus():
 	data.extend(corpus_data_phish)
 	return data
 
+#def tfidf_emails(corpus):
 
 def tfidf_emails(corpus):
 	#corpus=[]
