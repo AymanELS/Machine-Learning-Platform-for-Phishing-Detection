@@ -107,9 +107,9 @@ def main():
             X_train, X_test=Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
             if config["Email_Features"]["tfidf_emails"] == "True":
                 logger.info("tfidf_emails_train ######")
-                Tfidf_train = Tfidf.tfidf_emails(corpus_train)
+                Tfidf_train, tf=Tfidf.tfidf_emails_training(corpus_train)
                 logger.info("tfidf_emails_test ######")
-                Tfidf_test = Tfidf.tfidf_emails(corpus_test)
+                Tfidf_test=Tfidf.tfidf_emails_testing(corpus_test, tf)
                 #concatenate the tfidf with the features:
                 logger.debug("X_train shape: {}".format(X_train.shape))
                 logger.debug("Tf_idf shape: {}".format(Tfidf_train.shape))
@@ -119,8 +119,8 @@ def main():
             (feature_list_dict_train, y_train, feature_list_dict_test, y_test, corpus_train, corpus_test)=Features.extract_features_urls()
             X_train, X_test = Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
             if config["HTML_Features"]["tfidf_websites"] == "True":
-                Tfidf_train=Tfidf.tfidf_websites(corpus_train)
-                Tfidf_test=Tfidf.tfidf_websites(corpus_test)
+                Tfidf_train=Tfidf.tfidf_websites_training(corpus_train)
+                Tfidf_test=Tfidf.tfidf_websites_testing(corpus_test)
                 #concatenate the tfidf with the features:
                 X_train=hstack([X_train, Tfidf_train])
                 X_test=hstack([X_test, Tfidf_test])

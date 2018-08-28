@@ -29,9 +29,9 @@ def build_corpus():
 	data.extend(corpus_data_phish)
 	return data
 
-#def tfidf_emails(corpus):
 
-def tfidf_emails(corpus):
+
+def tfidf_emails_training(corpus):
 	#corpus=[]
 	#data=build_corpus()
 	data=corpus
@@ -48,8 +48,14 @@ def tfidf_emails(corpus):
 	tf= TfidfVectorizer(analyzer='word', ngram_range=(1,1),
                      min_df = 0, stop_words = 'english', sublinear_tf=True)		
 	tfidf_matrix = tf.fit_transform(corpus)
-	return tfidf_matrix
+	return tfidf_matrix, tf
 
+def tfidf_emails_testing(corpus, tf):
+	#corpus=[]
+	#data=build_corpus()
+	data=corpus		
+	tfidf_matrix = tf.transform(corpus)
+	return tfidf_matrix
 
 
 def Header_Tokenizer(corpus):
@@ -75,7 +81,7 @@ def Header_Tokenizer(corpus):
 	return header_tokenizer	
 
 
-def tfidf_websites(corpus):
+def tfidf_websites_training(corpus):
 	# data=list()
 	# corpus=[]
 	# corpus_data = Features_Support.read_corpus(config["Dataset Path"]["path_legit_urls"])
@@ -102,7 +108,14 @@ def tfidf_websites(corpus):
 	tf= TfidfVectorizer(analyzer='word', ngram_range=(5,5),
                      min_df = 0, stop_words = 'english', sublinear_tf=True)
 	tfidf_matrix = tf.fit_transform(corpus)
+	return tfidf_matrix, tf
+
+def tfidf_websites_training(corpus, tf):
+	tf= TfidfVectorizer(analyzer='word', ngram_range=(5,5),
+                     min_df = 0, stop_words = 'english', sublinear_tf=True)
+	tfidf_matrix = tf.transform(corpus)
 	return tfidf_matrix
+
 if __name__ == '__main__':
 	matrix=tfidf_website()
 	logger.info(matrix)
