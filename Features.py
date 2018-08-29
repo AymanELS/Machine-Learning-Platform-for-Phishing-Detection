@@ -2468,8 +2468,8 @@ def URL_Average_Path_Token_Length(url, list_features, list_time):
             else:
                 parsed_url=urlparse(url)
                 path='{uri.path}'.format(uri=parsed_url)
-                list_len_tokens=[]
                 list_tokens=path.split('.')
+                list_len_tokens=[0 for x in range(len(list_tokens))]
                 for token in list_tokens:
                     list_len_tokens[list_tokens.index(token)]=len(token)
                 average_token_length= sum(list_len_tokens)/len(list_len_tokens)
