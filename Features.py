@@ -2681,11 +2681,11 @@ def Network_creation_date(whois_info, list_features, list_time):
                 dateTime = whois_info.get("creation_date")
                 if dateTime is not None:
                     if type(dateTime) is list:
-                        creation_date = whois_info.get("creation_date")[0].timestamp()
+                        creation_date = dateTime[0].timestamp()
                     elif type(dateTime) is str:
                         creation_date = datetime(year = 1996, month = 1, day = 1).timestamp()
                     else:
-                        creation_date = whois_info.get("creation_date").timestamp()
+                        creation_date = dateTime.timestamp()
         except Exception as e:
             logger.warning("exception: " + str(e))
         list_features["creation_date"]=creation_date
@@ -2703,11 +2703,11 @@ def Network_expiration_date(whois_info, list_features, list_time):
                 dateTime = whois_info.get("expiration_date")
                 if dateTime is not None:
                     if type(dateTime) is list:
-                        expiration_date = whois_info.get("expiration_date")[0].timestamp()
+                        expiration_date = dateTime[0].timestamp()
                     elif type(dateTime) is str:
                         expiration_date = 0.0
                     else:
-                        expiration_date = whois_info.get("expiration_date").timestamp()
+                        expiration_date = dateTime.timestamp()
         except Exception as e:
             logger.warning("exception: " + str(e))
         list_features["expiration_date"]=expiration_date
@@ -2722,11 +2722,11 @@ def Network_updated_date(whois_info, list_features, list_time):
         updated_date = 0.0
         try:
             if "updated_date" in whois_info:
-                dateTime = whois_info.get("updated_date")[0]
+                dateTime = whois_info.get("updated_date")
                 logger.debug(dateTime)
                 if dateTime is not None:
                     if type(dateTime) is list:
-                        updated_date = dateTime.timestamp()
+                        updated_date = dateTime[0].timestamp()
                     elif type(dateTime) is str:
                         updated_date = 0.0
                     else:
