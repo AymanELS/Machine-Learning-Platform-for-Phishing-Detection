@@ -2567,7 +2567,7 @@ def URL_DNS_Info_Exists(url, list_features, list_time):
         start=time.time()
         flag=1
         try:
-            parsed_url = request.urlopen(url)
+            parsed_url = urlparse(url)
             domain='{uri.netloc}'.format(uri=parsed_url)
             try:
                 dns_info = dns.resolver.query(domain, 'A')
