@@ -749,7 +749,7 @@ def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url
     logger.debug("creation_date")
 
     Features.Network_expiration_date(whois_info, list_features, list_time)
-    logger.warning("expiration_date")
+    logger.debug("expiration_date")
 
     Features.Network_updated_date(whois_info, list_features, list_time)
     logger.debug("updated_date")
