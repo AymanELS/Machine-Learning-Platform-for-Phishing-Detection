@@ -2836,7 +2836,7 @@ def Network_URL_Is_Redirect(html, url, list_features, list_time):
         start=time.time()
         flag=0
         try:
-            if url != html.url():
+            if url != html.url:
                 flag=1
             list_features["URL_Is_Redirect"]=flag
         except Exception as e:
