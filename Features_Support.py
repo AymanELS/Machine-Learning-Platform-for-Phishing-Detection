@@ -1245,23 +1245,23 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                 else:
                     html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = Download_url.download_url(rawurl)
                 
-                if Error == 1:
-                    logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
-                    Bad_URLs_List.append(rawurl)
-                else:
-                    logger.debug("download_url >>>>>>>>> complete")
-                    # include https or http
-                    url = rawurl.strip().rstrip('\n')
-                    soup = BeautifulSoup(content, 'html5lib')   #content=html.text
-                    single_html_features(soup, url, list_features, list_time)
-                    single_url_feature(url, list_features, list_time)
-                    logger.debug("html_featuers & url_features >>>>>> complete")
-                    single_javascript_features(soup,html, list_features, list_time)
-                    logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
-                    single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
-                    dump_features(list_features, features_output, list_dict, list_time, time_dict)
-                    #print(soup)
-                    corpus.append(str(soup))
+                    if Error == 1:
+                        logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
+                        Bad_URLs_List.append(rawurl)
+                    else:
+                        logger.debug("download_url >>>>>>>>> complete")
+                        # include https or http
+                        url = rawurl.strip().rstrip('\n')
+                        soup = BeautifulSoup(content, 'html5lib')   #content=html.text
+                        single_html_features(soup, url, list_features, list_time)
+                        single_url_feature(url, list_features, list_time)
+                        logger.debug("html_featuers & url_features >>>>>> complete")
+                        single_javascript_features(soup,html, list_features, list_time)
+                        logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
+                        single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
+                        dump_features(list_features, features_output, list_dict, list_time, time_dict)
+                        #print(soup)
+                        corpus.append(str(soup))
     except Exception as e:
         logger.warning("exception: " + str(e))
 
