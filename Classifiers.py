@@ -198,19 +198,22 @@ def Boosting(X,y, X_test, y_test):
 ############### imbalanced learning
 def DNN(X,y, X_test, y_test):
 		#X_test, y_test = load_dataset("feature_vector_extract_test.txt")
-		model = Sequential()
-		logger.debug(X.shape)
+		K.set_learning_phase(1) #set learning phase
+		model_dnn = Sequential()
+		print(X.shape)
 		dim=X.shape[1]
-		logger.debug(dim)
-		logger.info("Start Building DNN Model")
-		model.add(Dense(units=80, activation='relu', input_dim=dim))
-		model.add(Dense(1, activation='sigmoid'))
-		model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy', Evaluation_Metrics.Confusion_matrix2])
-		logger.debug("model compile end >>>>>>")
-		model.fit(X, y, epochs=150, batch_size=100)
-		y_predict=model.predict(X_test)
-		score = model.evaluate(X_test, y_test, batch_size=100)
-		logger.info("DNN >>>>>>> Score:{}".format(score))
+		print(dim) ##
+		print("Start Building Model")
+		model_dnn.add(Dense(80, kernel_initializer='normal', activation='relu', input_dim=dim)) #units in Dense layer as same as the input dim
+		model_dnn.add(Dense(1, activation='sigmoid'))
+		model_dnn.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+		print("model compile end >>>>>>")
+		model_dnn.fit(X, y, epochs=150, batch_size=100)
+		y_predict=model_dnn.predict(X_test)
+		print("DNN >>>>>>>")
+		score = model_dnn.evaluate(X_test, y_test, batch_size=100)
+		print(score)
+		print("\n")
 
 def HDDT():
 	#java -cp <path to weka-hddt.jar> weka.classifiers.trees.HTree -U -A -B -t <training file> -T <testing file>
@@ -254,6 +257,6 @@ def classifiers(X,y, X_test, y_test):
 	if config["Classifiers"]["Boosting"] == "True":
 		Boosting(X,y, X_test, y_test)
 		summary.write("Boosting \n")
-	#if config["Classifiers"]["DNN"] == "True":
-	#	DNN(X,y, X_test, y_test)
-	#	summary.write("DNN \n")
+	if config["Classifiers"]["DNN"] == "True":
+		DNN(X,y, X_test, y_test)
+		summary.write("DNN \n")
