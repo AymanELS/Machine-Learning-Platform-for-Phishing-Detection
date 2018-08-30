@@ -2518,7 +2518,7 @@ def URL_Protocol_Port_Match(url, list_features, list_time):
             scheme = '{uri.scheme}'.format(uri=parsed_url).lower()
             port = '{uri.port}'.format(uri=parsed_url)
             protocol_port_list=[('http',8080), ('http',80), ('https',443), ('ftp',20), ('tcp',20), ('scp',20),('ftp',21), ('ssh',22), ('telnet',23), ('smtp',25), ('dns',53), ("pop3", 110), ("sftp", 115), ("imap", 143), ("smtp",465), ("rlogin", 513), ("imap", 993), ("pop3", 995)]
-            if (scheme,port) in protocol_port_list:
+            if (scheme,int(port)) in protocol_port_list:
                 flag=1
             list_features["URL_Protocol_Port_Match"]=flag
         except Exception as e:
