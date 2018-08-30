@@ -111,8 +111,6 @@ def tfidf_websites_training(corpus):
 	return tfidf_matrix, tf
 
 def tfidf_websites_testing(corpus, tf):
-	tf= TfidfVectorizer(analyzer='word', ngram_range=(5,5),
-                     min_df = 0, stop_words = 'english', sublinear_tf=True)
 	tfidf_matrix = tf.transform(corpus)
 	return tfidf_matrix
 
