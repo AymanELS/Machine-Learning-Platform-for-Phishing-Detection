@@ -1991,7 +1991,7 @@ def URL_domain_length(url, list_features, list_time):
                 domain_length=0
             else:
                 parsed_url = urlparse(url)
-                domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_url)
+                domain = '{uri.netloc}'.format(uri=parsed_url)
                 domain_length = len(domain)
         except Exception as e:
             logger.warning("exception: " + str(e))
