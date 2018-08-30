@@ -119,8 +119,8 @@ def main():
             (feature_list_dict_train, y_train, feature_list_dict_test, y_test, corpus_train, corpus_test)=Features.extract_features_urls()
             X_train, X_test = Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
             if config["HTML_Features"]["tfidf_websites"] == "True":
-                Tfidf_train=Tfidf.tfidf_websites_training(corpus_train)
-                Tfidf_test=Tfidf.tfidf_websites_testing(corpus_test)
+                Tfidf_train, tf=Tfidf.tfidf_websites_training(corpus_train)
+                Tfidf_test=Tfidf.tfidf_websites_testing(corpus_test, tf)
                 #concatenate the tfidf with the features:
                 X_train=hstack([X_train, Tfidf_train])
                 X_test=hstack([X_test, Tfidf_test])
