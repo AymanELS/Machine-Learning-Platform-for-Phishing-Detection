@@ -772,6 +772,8 @@ def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url
     Features.Network_x_powered_by(html, list_features, list_time)
     logger.debug("x_powered_by")
 
+    Features.Network_URL_Is_Redirect(html, url, list_features, list_time)
+    logger.debug("URL_Is_Redirect")
 
 
 def single_javascript_features(soup, html, list_features, list_time):
@@ -854,9 +856,6 @@ def single_url_feature(url, list_features,list_time):
     Features.URL_Top_level_domain(url, list_features, list_time)
     logger.debug("Top_level_domain")
 
-    Features.URL_Is_IP_Addr(url, list_features, list_time)
-    logger.debug("Is_IP_Addr")
-
     Features.URL_number_of_dashes(url, list_features, list_time)
     logger.debug('URL_number_of_dashes')
 
@@ -889,9 +888,6 @@ def single_url_feature(url, list_features,list_time):
 
     Features.URL_Protocol_Port_Match(url, list_features, list_time)
     logger.debug('URL_Protocol_Port_Match')
-
-    Features.URL_Is_Redirect(url, list_features, list_time)
-    logger.debug('URL_Is_Redirect')
 
     Features.URL_DNS_Info_Exists(url, list_features, list_time)
     logger.debug('URL_DNS_Info_Exists')

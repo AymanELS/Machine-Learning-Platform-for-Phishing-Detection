@@ -2386,24 +2386,6 @@ def URL_Has_at_symbole(url, list_features, list_time):
         ex_time=end-start
         list_time["URL_Has_at_symbole"]=ex_time
 
-def URL_Has_anchor_tag(url, list_features, list_time):
-    if config["URL_Features"]["Has_anchor_tag"] == "True":
-        start=time.time()
-        regex_anchor=re.compile(r'<\?a>')
-        flag=0
-        try:
-            if url=='':
-                flag=0
-            else:
-                flag=int(bool(re.findall(regex_anchor,url)))
-                list_features["URL_Has_anchor_tag"]=flag
-        except Exception  as e:
-            logger.warning("Exception: " + str(e))
-            list_features["URL_Has_anchor_tag"]="N/A"
-        end=time.time()
-        ex_time=end-start
-        list_time["URL_Has_anchor_tag"]=ex_time
-
 
 def URL_Has_anchor_tag(url, list_features, list_time):
     if config["URL_Features"]["Has_anchor_tag"] == "True":
@@ -2546,21 +2528,6 @@ def URL_Protocol_Port_Match(url, list_features, list_time):
         ex_time=end-start
         list_time["URL_Protocol_Port_Match"]=ex_time
 
-def URL_Is_Redirect(url, list_features, list_time):
-    if config["URL_Features"]["Protocol_Port_Match"]=="True":
-        start=time.time()
-        flag=0
-        try:
-            parsed_url = request.urlopen(url)
-            if url != parsed_url.geturl():
-                flag=1
-            list_features["URL_Is_Redirect"]=flag
-        except Exception as e:
-            logger.warning("Exception: {}".format(e))
-            list_features["URL_Is_Redirect"]="N/A"
-        end=time.time()
-        ex_time=end-start
-        list_time["URL_Is_Redirect"]=ex_time
 
 def URL_DNS_Info_Exists(url, list_features, list_time):
     if config["URL_Features"]["DNS_Info_Exists"]=="True":
@@ -2864,7 +2831,20 @@ def Network_x_powered_by(html, list_features, list_time):
         ex_time=end-start
         list_time["x_powered_by"]=ex_time
 
-
+def Network_URL_Is_Redirect(html, url, list_features, list_time):
+    if config["Network_Features"]["URL_Is_Redirect"]=="True":
+        start=time.time()
+        flag=0
+        try:
+            if url != html.url():
+                flag=1
+            list_features["URL_Is_Redirect"]=flag
+        except Exception as e:
+            logger.warning("Exception: {}".format(e))
+            list_features["URL_Is_Redirect"]="N/A"
+        end=time.time()
+        ex_time=end-start
+        list_time["URL_Is_Redirect"]=ex_time
 
 ############################ Javascript features
 def Javascript_number_of_exec(soup, html, list_features, list_time):
