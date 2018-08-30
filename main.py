@@ -125,8 +125,6 @@ def main():
                 X_train=hstack([X_train, Tfidf_train])
                 X_test=hstack([X_test, Tfidf_test])
 
-        X_train, X_test = Features_Support.Vectorization(feature_list_dict_train, feature_list_dict_test)
-
         logger.info("Shape y_train: {}".format(len(y_train)))
         logger.info("Shape y_test: {}".format(len(y_test)))
         logger.info("Shape X_train: {}".format(X_train.shape))
