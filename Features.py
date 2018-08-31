@@ -2790,7 +2790,7 @@ def Network_Website_content_type(html, list_features, list_time):
                 list_features["Website_content_type"]=content_type
         except Exception as e:
             logger.warning("exception: " + str(e))
-        list_features["Website_content_type"]=0
+            list_features["Website_content_type"]=""
         end=time.time()
         ex_time=end-start
         list_time["content_type"]=ex_time
