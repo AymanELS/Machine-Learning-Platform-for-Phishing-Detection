@@ -2512,15 +2512,15 @@ def URL_Longest_Domain_Token(url, list_features, list_time):
 def URL_Protocol_Port_Match(url, list_features, list_time):
     if config["URL_Features"]["Protocol_Port_Match"]=="True":
         start=time.time()
-        flag=0
+        match = 1
         try:
             parsed_url = urlparse(url)
             scheme = '{uri.scheme}'.format(uri=parsed_url).lower()
             port = '{uri.port}'.format(uri=parsed_url)
             protocol_port_list=[('http',8080), ('http',80), ('https',443), ('ftp',20), ('tcp',20), ('scp',20),('ftp',21), ('ssh',22), ('telnet',23), ('smtp',25), ('dns',53), ("pop3", 110), ("sftp", 115), ("imap", 143), ("smtp",465), ("rlogin", 513), ("imap", 993), ("pop3", 995)]
-            if (scheme,int(port)) in protocol_port_list:
-                flag=1
-            list_features["URL_Protocol_Port_Match"]=flag
+            if port != 'None' and ((scheme, int(port)) not in protocol_port_list):
+                match = 0
+            list_features["URL_Protocol_Port_Match"] = match
         except Exception as e:
             logger.warning("Exception: {}".format(e))
             list_features["URL_Protocol_Port_Match"]="N/A"
