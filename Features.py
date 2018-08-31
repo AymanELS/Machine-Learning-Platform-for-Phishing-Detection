@@ -2248,7 +2248,7 @@ def URL_digit_letter_ratio(url, list_features, list_time):
                 list_features["digit_letter_ratio"]=digit_letter_ratio
         except Exception as e:
             logger.warning("exception: " + str(e))
-        list_features["digit_letter_ratio"]=0
+            list_features["digit_letter_ratio"]=0
         end=time.time()
         ex_time=end-start
         list_time["digit_letter_ratio"]=ex_time
