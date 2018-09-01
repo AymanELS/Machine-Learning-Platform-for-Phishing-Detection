@@ -1651,7 +1651,7 @@ def HTML_number_suspicious_content(soup, list_features, list_time):
     if config["HTML_Features"]["number_suspicious_content"] == "True":
         start=time.time()
         all_tags = soup.find_all()
-        number_suspicious_content = 0
+        number_suspicious_conten_ = 0
         try:
             for tag in all_tags:
                 str_tag = str(tag)
@@ -1909,7 +1909,7 @@ def HTML_inbound_href_count(soup, url, list_features, list_time):
         start=time.time()
         inbound_href_count = 0
         try:    
-            tags = soup.find_all(['audio', 'embed', 'iframe', 'img', 'input', 'script', 'source', 'track', 'video'])
+            tags = soup.find_all(['a', 'area', 'base', 'link'])
             for tag in tags:
                 src_address = tag.get('href')
                 if src_address is not None:
@@ -1938,7 +1938,7 @@ def HTML_outbound_href_count(soup, url, list_features, list_time):
         start=time.time()
         outbound_href_count = 0
         try:
-            tags = soup.find_all(['audio', 'embed', 'iframe', 'img', 'input', 'script', 'source', 'track', 'video'])
+            tags = soup.find_all(['a', 'area', 'base', 'link'])
             for tag in tags:
                 src_address = tag.get('href')
                 if src_address is not None:
