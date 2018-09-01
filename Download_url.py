@@ -88,7 +88,7 @@ def download_url(rawurl):
         html_time = time.time() - t0
         landing_url = html.url            
         parsed_url = urlparse(landing_url)
-        domain = '{uri.netloc}'.format(uri=parsed_url)
+        domain = '{uri.hostname}'.format(uri=parsed_url)
 
         t0 = time.time()
         #dns_lookup=dns_lookup(domain, output = dns_output_file)

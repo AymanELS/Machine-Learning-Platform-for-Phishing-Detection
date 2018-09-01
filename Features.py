@@ -917,7 +917,7 @@ def Email_Number_Diff_Domain(url_All, list_features, list_time):
         try:
             for url in url_All:
                 parsed_url=urlparse(url)
-                domain = '{uri.netloc}'.format(uri=parsed_url)
+                domain = parsed_url.hostname
                 list_Domains.append(domain)
                 #if domain not in list_Domains:
                 #    list_Domains.append(domain)
@@ -936,7 +936,7 @@ def Email_Number_Diff_Subdomain(url_All, list_features, list_time):
         try:
             for url in url_All:
                 parsed_url=urlparse(url)
-                domain = '{uri.netloc}'.format(uri=parsed_url)
+                domain = parsed_url.hostname
                 subdomain=domain.split('.')[0]
                 list_Subdomains.append(subdomain)
                 #if domain not in list_Domains:
@@ -1585,8 +1585,6 @@ def HTML_number_of_tags(soup, list_features, list_time):
             number_of_tags = len(all_tags)
         except Exception as e:
             logger.warning("exception: " + str(e))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
         list_features["number_of_tags"]=number_of_tags
         end=time.time()
         ex_time=end-start
@@ -1911,7 +1909,9 @@ def HTML_inbound_href_count(soup, url, list_features, list_time):
         start=time.time()
         inbound_href_count = 0
         try:    
-            tags = soup.find_all(['audio', 'embed', 'iframe', 'img', 'input', 'script', 'source', 'track', 'video'])
+            url_extracted = tldextract.extract(url)
+            local_domain = '{}.{}'.format(url_extracted.domain, url_extracted.suffix)
+            tags = soup.find_all(['a', 'area', 'base', 'link'])
             for tag in tags:
                 src_address = tag.get('href')
                 if src_address is not None:
@@ -1940,7 +1940,9 @@ def HTML_outbound_href_count(soup, url, list_features, list_time):
         start=time.time()
         outbound_href_count = 0
         try:
-            tags = soup.find_all(['audio', 'embed', 'iframe', 'img', 'input', 'script', 'source', 'track', 'video'])
+            url_extracted = tldextract.extract(url)
+            local_domain = '{}.{}'.format(url_extracted.domain, url_extracted.suffix)
+            tags = soup.find_all(['a', 'area', 'base', 'link'])
             for tag in tags:
                 src_address = tag.get('href')
                 if src_address is not None:
@@ -1991,7 +1993,7 @@ def URL_domain_length(url, list_features, list_time):
                 domain_length=0
             else:
                 parsed_url = urlparse(url)
-                domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_url)
+                domain = parsed_url.hostname
                 domain_length = len(domain)
         except Exception as e:
             logger.warning("exception: " + str(e))
@@ -2009,7 +2011,7 @@ def URL_letter_occurence(url, list_features, list_time):
             if url=='':
                 letter_occurence=0
             else:
-                domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_url).lower()
+                domain = '{uri.scheme}://{uri.hostname}/'.format(uri=parsed_url).lower()
                 #letter_occ = []
                 for x in range(26):
                 #letter_occ.append(domain.count(chr(x + ord('a'))))
@@ -2171,7 +2173,7 @@ def URL_has_https(url, list_features, list_time):
                 has_https=0
             else:
                 parsed_url=urlparse(url)
-                domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_url)
+                domain = '{uri.scheme}://{uri.hostname}/'.format(uri=parsed_url)
                 has_https = 0
                 if domain.startswith("https:"):
                     has_https = 1
@@ -2248,7 +2250,7 @@ def URL_digit_letter_ratio(url, list_features, list_time):
                 list_features["digit_letter_ratio"]=digit_letter_ratio
         except Exception as e:
             logger.warning("exception: " + str(e))
-        list_features["digit_letter_ratio"]=0
+            list_features["digit_letter_ratio"]=0
         end=time.time()
         ex_time=end-start
         list_time["digit_letter_ratio"]=ex_time
@@ -2299,7 +2301,7 @@ def URL_Is_IP_Addr(url, list_features, list_time):
             else:
                 Is_IP_Addr=1
                 parsed_url = urlparse(url)
-                domain = '{uri.netloc}'.format(uri=parsed_url)
+                domain = '{uri.hostname}'.format(uri=parsed_url)
                 if re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", domain) == None:
                     Is_IP_Addr= 0
         except Exception as e:
@@ -2472,7 +2474,7 @@ def URL_Average_Domain_Token_Length(url, list_features, list_time):
                 average_token_length=0
             else:
                 parsed_url=urlparse(url)
-                domain='{uri.netloc}'.format(uri=parsed_url)
+                domain='{uri.hostname}'.format(uri=parsed_url)
                 list_len_tokens=[]
                 list_tokens=domain.split('.')
                 for token in list_tokens:
@@ -2495,7 +2497,7 @@ def URL_Longest_Domain_Token(url, list_features, list_time):
                 longest_token_len=0
             else:
                 parsed_url=urlparse(url)
-                domain='{uri.netloc}'.format(uri=parsed_url)
+                domain='{uri.hostname}'.format(uri=parsed_url)
                 list_len_tokens=[]
                 list_tokens=domain.split('.')
                 for token in list_tokens:
@@ -2512,15 +2514,15 @@ def URL_Longest_Domain_Token(url, list_features, list_time):
 def URL_Protocol_Port_Match(url, list_features, list_time):
     if config["URL_Features"]["Protocol_Port_Match"]=="True":
         start=time.time()
-        flag=0
+        match = 1
         try:
             parsed_url = urlparse(url)
             scheme = '{uri.scheme}'.format(uri=parsed_url).lower()
             port = '{uri.port}'.format(uri=parsed_url)
             protocol_port_list=[('http',8080), ('http',80), ('https',443), ('ftp',20), ('tcp',20), ('scp',20),('ftp',21), ('ssh',22), ('telnet',23), ('smtp',25), ('dns',53), ("pop3", 110), ("sftp", 115), ("imap", 143), ("smtp",465), ("rlogin", 513), ("imap", 993), ("pop3", 995)]
-            if (scheme,port) in protocol_port_list:
-                flag=1
-            list_features["URL_Protocol_Port_Match"]=flag
+            if port != 'None' and ((scheme, int(port)) not in protocol_port_list):
+                match = 0
+            list_features["URL_Protocol_Port_Match"] = match
         except Exception as e:
             logger.warning("Exception: {}".format(e))
             list_features["URL_Protocol_Port_Match"]="N/A"
@@ -2535,12 +2537,13 @@ def URL_DNS_Info_Exists(url, list_features, list_time):
         flag=1
         try:
             parsed_url = urlparse(url)
-            domain='{uri.netloc}'.format(uri=parsed_url)
+            domain='{uri.hostname}'.format(uri=parsed_url)
             try:
                 dns_info = dns.resolver.query(domain, 'A')
                 flag=1
                 list_features["URL_DNS_Info_Ex"]=flag
             except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout):
+                logger.warning("Exception: {}".format(e))
                 flag=0
                 list_features["URL_DNS_Info_Ex"]=flag
         except Exception as e:
@@ -2561,7 +2564,7 @@ def URL_Has_WWW_in_Middle(url, list_features, list_time):
                 flag=0
             else:
                 parsed_url = urlparse(url)
-                domain = '{uri.netloc}'.format(uri=parsed_url).lower()
+                domain = '{uri.hostname}'.format(uri=parsed_url).lower()
                 if 'www' in domain and domain.startswith('www') == False:
                     flag=1
                 list_features["Has_WWW_in_Middle"]=0
@@ -2752,10 +2755,10 @@ def Network_dns_ttl(url, list_features, list_time):
         retry_count = 0
         try:
             parsed_url = urlparse(url)
-            domain = '{uri.netloc}'.format(uri=parsed_url)
+            domain = parsed_url.hostname
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["dns_ttl"]="N/A"
+            list_features["dns_ttl"]=-1
         try:
             while True:
                 try:
@@ -2767,6 +2770,7 @@ def Network_dns_ttl(url, list_features, list_time):
                     retry_count = retry_count + 1
                     continue
                 except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers):
+                    logger.warning("Exception: {}".format(e))
                     dns_ttl=0
                     list_features["dns_ttl"]=dns_ttl
                     break
@@ -2790,7 +2794,7 @@ def Network_Website_content_type(html, list_features, list_time):
                 list_features["Website_content_type"]=content_type
         except Exception as e:
             logger.warning("exception: " + str(e))
-        list_features["Website_content_type"]=0
+            list_features["Website_content_type"]=""
         end=time.time()
         ex_time=end-start
         list_time["content_type"]=ex_time

@@ -1,6 +1,6 @@
-from sklearn import svm  
+from sklearn import svm
 from sklearn import datasets
-from collections import Counter 
+from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
@@ -15,7 +15,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.cluster import KMeans
 from imblearn.datasets import make_imbalance
 from imblearn.under_sampling import RandomUnderSampler,CondensedNearestNeighbour
-from imblearn.under_sampling import EditedNearestNeighbours 
+from imblearn.under_sampling import EditedNearestNeighbours
 from sklearn.datasets import load_svmlight_file
 from keras.losses import mean_squared_error
 #import User_options
@@ -50,20 +50,20 @@ config.read('Config_file.ini')
 def load_dataset():
 	email_training_regex=re.compile(r"email_features_training_?\d?.txt")
 	email_testing_regex=re.compile(r"email_features_testing_?\d?.txt")
-	
+
 	link_training_regex=re.compile(r"link_features_training_?\d?.txt")
 	link_testing_regex=re.compile(r"link_features_testing_?\d?.txt")
 	try:
 		if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
 			file_feature_training=re.findall(email_training_regex,''.join(os.listdir('.')))[-1]
 			file_feature_testing=re.findall(email_testing_regex,''.join(os.listdir('.')))[-1]
-		
+
 		if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 			file_feature_training=re.findall(link_training_regex,''.join(os.listdir('.')))[-1]
 			file_feature_testing=re.findall(link_testing_regex,''.join(os.listdir('.')))[-1]
 	except Exception as e:
 		logger.error("exception: " + str(e))
-	
+
 	if config["Imbalanced Datasets"]["Load_imbalanced_dataset"] == "True":
 		X, y = Imbalanced_Dataset.load_imbalanced_dataset(file_feature_training)
 		logger.debug(file_feature_training)
@@ -111,12 +111,8 @@ def RandomForest(X,y, X_test, y_test):
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
 		logger.info("RF >>>>>>>")
-		logger.info(X_test.shape)
-		logger.info(X.shape)
-		logger.info(X_test)
-		logger.info(sum(X_test))
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		 
+
 ###### Decition Tree
 def DecisionTree(X,y, X_test, y_test):
 		clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
@@ -126,7 +122,7 @@ def DecisionTree(X,y, X_test, y_test):
 		y_predict=clf.predict(X_test)
 		logger.info("DT >>>>>>>")
 		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		
+
 ##### Gaussian Naive Bayes
 def GaussianNaiveBayes(X,y, X_test, y_test):
 		gnb = GaussianNB(priors=None)
@@ -149,7 +145,7 @@ def MultinomialNaiveBayes(X,y, X_test, y_test):
 
 ##### Logistic Regression
 def LogisticRegression(X,y, X_test, y_test):
-		clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, 
+		clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1,
 			class_weight=None, random_state=None, solver='liblinear', max_iter=100, multi_class='ovr',
 			 verbose=0, warm_start=False, n_jobs=1)
 		clf.fit(X,y)
@@ -198,26 +194,29 @@ def Boosting(X,y, X_test, y_test):
 ############### imbalanced learning
 def DNN(X,y, X_test, y_test):
 		#X_test, y_test = load_dataset("feature_vector_extract_test.txt")
-		model = Sequential()
-		logger.debug(X.shape)
+		K.set_learning_phase(1) #set learning phase
+		model_dnn = Sequential()
+		print(X.shape)
 		dim=X.shape[1]
-		logger.debug(dim)
-		logger.info("Start Building DNN Model")
-		model.add(Dense(units=80, activation='relu', input_dim=dim))
-		model.add(Dense(1, activation='sigmoid'))
-		model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy', Evaluation_Metrics.Confusion_matrix2])
-		logger.debug("model compile end >>>>>>")
-		model.fit(X, y, epochs=150, batch_size=100)
-		y_predict=model.predict(X_test)
-		score = model.evaluate(X_test, y_test, batch_size=100)
-		logger.info("DNN >>>>>>> Score:{}".format(score))
+		print(dim) ##
+		print("Start Building Model")
+		model_dnn.add(Dense(80, kernel_initializer='normal', activation='relu', input_dim=dim)) #units in Dense layer as same as the input dim
+		model_dnn.add(Dense(1, activation='sigmoid'))
+		model_dnn.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+		print("model compile end >>>>>>")
+		model_dnn.fit(X, y, epochs=150, batch_size=100)
+		y_predict=model_dnn.predict(X_test)
+		print("DNN >>>>>>>")
+		score = model_dnn.evaluate(X_test, y_test, batch_size=100)
+		print(score)
+		print("\n")
 
 def HDDT():
 	#java -cp <path to weka-hddt.jar> weka.classifiers.trees.HTree -U -A -B -t <training file> -T <testing file>
 	weka_hddt_path="weka-hddt-3-7-1.jar"
 	subprocess.call(['java', '-cp', weka_hhdt_path,'weka.classifiers.trees.HTree', '-U', '-A' '-B' '-t', y_predict, y_test])
-
-#### 
+##To-Do: Add DNN and OLL
+####
 def classifiers(X,y, X_test, y_test):
 	logger.info("##### Classifiers #####")
 	summary=Features.summary
@@ -254,6 +253,6 @@ def classifiers(X,y, X_test, y_test):
 	if config["Classifiers"]["Boosting"] == "True":
 		Boosting(X,y, X_test, y_test)
 		summary.write("Boosting \n")
-	#if config["Classifiers"]["DNN"] == "True":
-	#	DNN(X,y, X_test, y_test)
-	#	summary.write("DNN \n")
+	if config["Classifiers"]["DNN"] == "True":
+		DNN(X,y, X_test, y_test)
+		summary.write("DNN \n")

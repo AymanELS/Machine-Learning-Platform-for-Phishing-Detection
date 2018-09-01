@@ -567,7 +567,7 @@ def On_the_Character_of_Phishing_URLs(url):
 def Behind_Phishing_Modi_Operendi_Features(url):
     url_length = len(url)
     parsed_url = urlparse(url)
-    domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_url)
+    domain = '{uri.scheme}://{uri.hostname}/'.format(uri=parsed_url)
     domain_length = len(domain)
 
     lc_domain = domain.lower()
@@ -583,7 +583,7 @@ def Behind_Phishing_Modi_Operendi_Features(url):
 
 def my_isIPAddr(url):
     parsed_url = urlparse(url)
-    domain = '{uri.netloc}'.format(uri=parsed_url)
+    domain = '{uri.hostname}'.format(uri=parsed_url)
     if re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", domain) == None:
         return False
     return True
@@ -622,7 +622,7 @@ def dns_ip_retrieve(dns_input_file):
 
 def my_isIPAddr(url):
     parsed_url = urlparse(url)
-    domain = '{uri.netloc}'.format(uri=parsed_url)
+    domain = '{uri.hostname}'.format(uri=parsed_url)
     if re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", domain) == None:
         return 0
     return 1
@@ -1245,23 +1245,23 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                 else:
                     html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = Download_url.download_url(rawurl)
                 
-                if Error == 1:
-                    logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
-                    Bad_URLs_List.append(rawurl)
-                else:
-                    logger.debug("download_url >>>>>>>>> complete")
-                    # include https or http
-                    url = rawurl.strip().rstrip('\n')
-                    soup = BeautifulSoup(content, 'html5lib')   #content=html.text
-                    single_html_features(soup, url, list_features, list_time)
-                    single_url_feature(url, list_features, list_time)
-                    logger.debug("html_featuers & url_features >>>>>> complete")
-                    single_javascript_features(soup,html, list_features, list_time)
-                    logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
-                    single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
-                    dump_features(list_features, features_output, list_dict, list_time, time_dict)
-                    #print(soup)
-                    corpus.append(str(soup))
+                    if Error == 1:
+                        logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
+                        Bad_URLs_List.append(rawurl)
+                    else:
+                        logger.debug("download_url >>>>>>>>> complete")
+                        # include https or http
+                        url = rawurl.strip().rstrip('\n')
+                        soup = BeautifulSoup(content, 'html5lib')   #content=html.text
+                        single_html_features(soup, url, list_features, list_time)
+                        single_url_feature(url, list_features, list_time)
+                        logger.debug("html_featuers & url_features >>>>>> complete")
+                        single_javascript_features(soup,html, list_features, list_time)
+                        logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
+                        single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
+                        dump_features(list_features, features_output, list_dict, list_time, time_dict)
+                        #print(soup)
+                        corpus.append(str(soup))
     except Exception as e:
         logger.warning("exception: " + str(e))
 
