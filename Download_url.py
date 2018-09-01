@@ -78,6 +78,8 @@ def download_url(rawurl):
         #domain = '{uri.netloc}'.format(uri=parsed_url)
         t0 = time.time()
         html = requests.get(url=url, headers = headers, timeout = 20)
+        logger.info(url)
+        logger.info(html.text)
         if html.status_code != 200:
         	pass
         else:
@@ -93,6 +95,8 @@ def download_url(rawurl):
         t0 = time.time()
         #dns_lookup=dns_lookup(domain, output = dns_output_file)
         dns_lookup_output=dns_lookup(domain)
+        logger.info("DNS Lookup")
+        logger.info(dns_lookup_output)
         #print("dns_lookup_output " + dns_lookup_output)
         dns_lookup_time = time.time() - t0
         #print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", file=dns_output_file)
@@ -100,12 +104,15 @@ def download_url(rawurl):
         IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
 
         t0 = time.time()
+        logger.info("whois")
         for ip in IPs:
             obj = IPWhois(ip)
             ipwhois = obj.lookup_whois(get_referral=True)
+            logger.info(ipwhois)
         ipwhois_time = time.time() - t0
 
         whois_output = whois.whois(domain)
+        logger.info(whois_output)
         time.sleep(3)
 
         content = html.text

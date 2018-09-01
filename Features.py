@@ -1585,8 +1585,6 @@ def HTML_number_of_tags(soup, list_features, list_time):
             number_of_tags = len(all_tags)
         except Exception as e:
             logger.warning("exception: " + str(e))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
         list_features["number_of_tags"]=number_of_tags
         end=time.time()
         ex_time=end-start
