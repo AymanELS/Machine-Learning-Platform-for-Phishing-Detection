@@ -2539,6 +2539,7 @@ def URL_DNS_Info_Exists(url, list_features, list_time):
                 flag=1
                 list_features["URL_DNS_Info_Ex"]=flag
             except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout):
+                logger.warning("Exception: {}".format(e))
                 flag=0
                 list_features["URL_DNS_Info_Ex"]=flag
         except Exception as e:
@@ -2753,7 +2754,7 @@ def Network_dns_ttl(url, list_features, list_time):
             domain = '{uri.netloc}'.format(uri=parsed_url)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["dns_ttl"]="N/A"
+            list_features["dns_ttl"]=-1
         try:
             while True:
                 try:
@@ -2765,6 +2766,7 @@ def Network_dns_ttl(url, list_features, list_time):
                     retry_count = retry_count + 1
                     continue
                 except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers):
+                    logger.warning("Exception: {}".format(e))
                     dns_ttl=0
                     list_features["dns_ttl"]=dns_ttl
                     break
