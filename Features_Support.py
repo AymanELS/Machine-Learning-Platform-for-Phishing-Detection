@@ -567,7 +567,7 @@ def On_the_Character_of_Phishing_URLs(url):
 def Behind_Phishing_Modi_Operendi_Features(url):
     url_length = len(url)
     parsed_url = urlparse(url)
-    domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_url)
+    domain = '{uri.scheme}://{uri.hostname}/'.format(uri=parsed_url)
     domain_length = len(domain)
 
     lc_domain = domain.lower()
@@ -583,7 +583,7 @@ def Behind_Phishing_Modi_Operendi_Features(url):
 
 def my_isIPAddr(url):
     parsed_url = urlparse(url)
-    domain = '{uri.netloc}'.format(uri=parsed_url)
+    domain = '{uri.hostname}'.format(uri=parsed_url)
     if re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", domain) == None:
         return False
     return True
@@ -622,7 +622,7 @@ def dns_ip_retrieve(dns_input_file):
 
 def my_isIPAddr(url):
     parsed_url = urlparse(url)
-    domain = '{uri.netloc}'.format(uri=parsed_url)
+    domain = '{uri.hostname}'.format(uri=parsed_url)
     if re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", domain) == None:
         return 0
     return 1
