@@ -155,7 +155,7 @@ def LogisticRegression(X,y, X_test, y_test):
 
 ##### k-Nearest Neighbor
 def kNearestNeighbor(X,y, X_test, y_test):
-		clf=KNeighborsClassifier(n_neighbors=5, weights='uniform', algorithm='auto', leaf_size=30, p=2,
+		clf=KNeighborsClassifier(n_neighbors=2, weights='uniform', algorithm='auto', leaf_size=30, p=2,
 		 metric='minkowski', metric_params=None, n_jobs=1,)
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
@@ -164,7 +164,7 @@ def kNearestNeighbor(X,y, X_test, y_test):
 
 ##### KMeans
 def KMeans(X,y, X_test, y_test):
-		clf=sklearn.cluster.KMeans(n_clusters=8, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto',
+		clf=sklearn.cluster.KMeans(n_clusters=2, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto',
  		verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')
 		clf.fit(X,y)
 		logger.info("Kmeans")
