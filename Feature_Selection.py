@@ -42,13 +42,9 @@ def Feature_Ranking(X,y,k):
 	#RFE
 	vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
 	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
-		logger.info("Load Model ######")
 		model = LogisticRegression()
-		logger.info("Load RFE ######")
 		rfe = RFE(model, k)
-		logger.info("Fit RFE ######")
 		rfe.fit(X,y)
-		logger.info("Transform X ######")
 		X=rfe.transform(X)
 		f=open("Data_Dump/Feature_ranking_rfe.txt",'w')
 		res= dict(zip(vectorizer.get_feature_names(),rfe.ranking_))
@@ -56,24 +52,16 @@ def Feature_Ranking(X,y,k):
 		with open("Data_Dump/Feature_ranking_rfe.txt",'w') as f:
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
-		#f.write(str(sorted_d))
-		#f.close()
-		#np.savetxt(f,rfe.ranking_)
-			#f.write(str(sorted_d))
-		#logger.info(rfe.ranking_)
 
 	# Information Gain 
 	elif config["Feature Ranking"]["Information Gain"] == "True":
 		model = DecisionTreeClassifier(criterion='entropy')
-		#model = ExtraTreesClassifier(criterion='entropy')
 		model.fit(X,y)
-		#X=model.transform(X)
 		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
 		with open("Data_Dump/Feature_ranking_IG.txt",'w') as f:
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
-		#logger.info(model.feature_importances_)
 
 	#Gini	
 	elif config["Feature Ranking"]["Gini"] == "True":
@@ -84,7 +72,6 @@ def Feature_Ranking(X,y,k):
 		with open("Data_Dump/Feature_ranking_Gini.txt",'w') as f:
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
-		#logger.info(model.feature_importances_)
 
 	#Chi-2
 	elif config["Feature Ranking"]["Chi-2"] == "True":
