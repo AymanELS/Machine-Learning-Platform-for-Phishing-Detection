@@ -91,10 +91,19 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 	config['Extraction']={}
 	C_extraction=config['Extraction']
 	C_extraction["Feature Extraction"]="True"
+	C_extraction["Training Dataset"]="True"
+	C_extraction["Testing Dataset"]="True"
+
+	config['Features Format']={}
+	C_features_format=config['Features Format']
+	C_features_format["Pikle"]="True"
+	C_features_format["Svmlight format"]="True"
+
 
 	config['Classification']={}
 	C_classification=config['Classification']
 	C_classification["Running the Classifiers"]="True"
+	C_classification["Save Models"]="True"
 
 	config["Summary"]={}
 	C_summary=config["Summary"]

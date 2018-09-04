@@ -256,3 +256,10 @@ def classifiers(X,y, X_test, y_test):
 	if config["Classifiers"]["DNN"] == "True":
 		DNN(X,y, X_test, y_test)
 		summary.write("DNN \n")
+
+def fit_MNB(X,y):
+	mnb=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
+	mnb.fit(X,y)
+	logger.info("MNB >>>>>>>")
+	joblib.dump(mnb,"Data_Dump/Emails_Training/MNB_model.pkl")
+	

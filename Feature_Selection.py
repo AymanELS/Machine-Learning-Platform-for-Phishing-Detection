@@ -15,6 +15,9 @@ import os
 import pickle
 from sklearn.externals import joblib
 from sklearn.datasets import load_svmlight_file
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.feature_selection import RFE
 import logging
 logger = logging.getLogger('root')
 
@@ -33,13 +36,81 @@ def Feature_Selection(X,y):
 	logger.debug(res)
 	#return X_Best
 
-def Select_Best_Features(X_train, y_train, X_test, k):
+
+def Feature_Ranking(X,y,k):
+	#RFE
+	vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
+	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
+		logger.info("Load Model ######")
+		model = LogisticRegression()
+		logger.info("Load RFE ######")
+		rfe = RFE(model, k, verbose=1)
+		logger.info("Fit RFE ######")
+		rfe.fit(X,y)
+		logger.info("Transform X ######")
+		X=rfe.transform(X)
+		f=open("Data_Dump/Feature_ranking_rfe.txt",'w')
+		res= dict(zip(vectorizer.get_feature_names(),rfe.ranking_))
+		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		f.write(str(sorted_d))
+		f.close()
+		#np.savetxt(f,rfe.ranking_)
+			#f.write(str(sorted_d))
+		#logger.info(rfe.ranking_)
+
+	# Information Gain 
+	elif config["Feature Ranking"]["Information Gain"] == "True":
+		model = DecisionTreeClassifier(criterion='entropy')
+		#model = ExtraTreesClassifier(criterion='entropy')
+		model.fit(X,y)
+		#X=model.transform(X)
+		f=open("Data_Dump/Feature_ranking_IG.txt",'w')
+		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
+		
+		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		#np.savetxt(f,rfe.ranking_)
+		f.write(str(sorted_d))
+		f.close()
+		#logger.info(model.feature_importances_)
+
+	#Gini	
+	elif config["Feature Ranking"]["Gini"] == "True":
+		model = DecisionTreeClassifier(criterion='gini')
+		model.fit(X,y)
+		f=open("Data_Dump/Feature_ranking_Gini.txt",'w')
+		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
+		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		#np.savetxt(f,rfe.ranking_)
+		f.write(str(sorted_d))
+		f.close()
+		#logger.info(model.feature_importances_)
+
+	#Chi-2
+	elif config["Feature Ranking"]["Chi-2"] == "True":
+		model= sklearn.feature_selection.SelectKBest(chi2, k)
+		model.fit(X, y)
+		f=open("Data_Dump/Feature_ranking_chi2.txt",'w')
+		res= dict(zip(vectorizer.get_feature_names(),model.scores_))
+		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		#np.savetxt(f,rfe.ranking_)
+		f.write(str(sorted_d))
+		f.close()
+		X=model.transform(X)
+	return X, model
+
+def Select_Best_Features_Training(X, y, k):
 	selection= sklearn.feature_selection.SelectKBest(chi2, k)
-	selection.fit(X_train, y_train)
-	X_train=selection.transform(X_train)
-	X_test = selection.transform(X_test)
+	selection.fit(X, y)
+	X=selection.transform(X)
 	# Print out the list of best features
-	return X_train, X_test
+	return X, selection
+
+	
+
+def Select_Best_Features_Testing(X, selection):
+	X = selection.transform(X)
+	# Print out the list of best features
+	return X
 
 def load_dataset():
 	email_training_regex=re.compile(r"email_features_training_?\d?.txt")

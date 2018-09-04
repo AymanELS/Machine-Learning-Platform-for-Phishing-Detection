@@ -2107,17 +2107,17 @@ def URL_edit_distance(list_features, list_time):
         char_dist = [.08167, .01492, .02782, .04253, .12702, .02228, .02015, .06094, .06966, .00153, .00772, .04025, .02406,
                  .06749, .07507, .01929, .00095, .05987, .06327, .09056, .02758, .00978, .02360, .00150, .01974, .00074]
         try:
-            if list_features.get("url_char_distance") is None:
-                list_features["edit_distance"]= 0
+            #if list_features.get("url_char_distance") is None:
+            #    list_features["edit_distance"]= 0
+            #else:
+            url_char_distance=[]
+            for x in range(26):
+                url_char_distance.append(list_features["url_char_distance_" + chr(x+ ord('a'))])
+            if any(distance=="NaN" for distance in url_char_distance):
+                ed="NaN"
             else:
-                url_char_distance=[]
-                for x in range(26):
-                    url_char_distance.append(list_features["url_char_distance_" + chr(x+ ord('a'))])
-                if any(distance=="NaN" for distance in url_char_distance):
-                    ed="NaN"
-                else:
-                    ed = distance.euclidean(url_char_distance, char_dist)
-                    list_features["edit_distance"]=ed
+                ed = distance.euclidean(url_char_distance, char_dist)
+                list_features["edit_distance"]=ed
         except Exception as e:
             logger.warning("exception: " + str(e))
         end=time.time()
@@ -3145,56 +3145,58 @@ def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict, 
     return count_files, corpus
 
 
-def extract_features_emails():
+def Extract_Features_Emails_Training():
     #summary=open(config["Summary"]["Path"],'w')
-    if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-        start_time = time.time()
-        logger.info("===============================================================")
+    start_time = time.time()
+    logger.info("===============================================================")
+    ### Training Features
+    logger.info(">>>>> Feature extraction: Training Set >>>>>")
+    dataset_path_legit_train=config["Dataset Path"]["path_legitimate_training"]
+    dataset_path_phish_train=config["Dataset Path"]["path_phishing_training"]
+    feature_list_dict_train=[]
+    extraction_time_dict_train=[]
+    labels_legit_train, data_legit_train=extract_email_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train)
+    labels_all_train, data_phish_train=extract_email_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train)
+    logger.debug(">>>>> Feature extraction: Training Set >>>>> Done ")
 
-        ### Training Features
-        logger.info(">>>>> Feature extraction: Training Set >>>>>")
-        dataset_path_legit_train=config["Dataset Path"]["path_legitimate_training"]
-        dataset_path_phish_train=config["Dataset Path"]["path_phishing_training"]
-        feature_list_dict_train=[]
-        extraction_time_dict_train=[]
-        labels_legit_train, data_legit_train=extract_email_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train)
-        labels_all_train, data_phish_train=extract_email_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train)
-        logger.debug(">>>>> Feature extraction: Training Set >>>>> Done ")
-        ### Testing Features
-        logger.info(">>>>> Feature extraction: Testing Set >>>>>")
-        dataset_path_legit_test=config["Dataset Path"]["path_legitimate_testing"]
-        dataset_path_phish_test=config["Dataset Path"]["path_phishing_testing"]
-        feature_list_dict_test=[]
-        extraction_time_dict_test=[]
-        labels_legit_test, data_legit_test=extract_email_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test)
-        labels_all_test, data_phish_test=extract_email_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test)
-        logger.debug(">>>>> Feature extraction: Testing Set >>>>> Done ")
-        logger.info(">>>>> Cleaning >>>>")
-        logger.debug("feature_list_dict_test{}".format(len(feature_list_dict_test)))
-        Cleaning(feature_list_dict_train, feature_list_dict_test)
-        logger.debug(">>>>> Cleaning >>>>>> Done")
+    logger.info(">>>>> Cleaning >>>>")
+    logger.debug("feature_list_dict_train{}".format(len(feature_list_dict_train)))
+    Cleaning(feature_list_dict_train)
+    logger.debug(">>>>> Cleaning >>>>>> Done")
+    labels_train=[]
+    for i in range(labels_legit_train):
+        labels_train.append(0)
+    for i in range(labels_all_train-labels_legit_train):
+        labels_train.append(1)
+    corpus_train = data_legit_train + data_phish_train
+    return feature_list_dict_train, labels_train, corpus_train
 
-        labels_train=[]
-        for i in range(labels_legit_train):
-            labels_train.append(0)
-        for i in range(labels_all_train-labels_legit_train):
-            labels_train.append(1)
-
-        labels_test=[]
-        for i in range(labels_legit_test):
-            labels_test.append(0)
-        for i in range(labels_all_test-labels_legit_test):
-            labels_test.append(1)
-
-        corpus_train = data_legit_train + data_phish_train
-        corpus_test = data_legit_test + data_phish_test
-        logger.info("--- %s final count seconds ---" % (time.time() - start_time))
-        return feature_list_dict_train, labels_train, feature_list_dict_test, labels_test, corpus_train, corpus_test
+def Extract_Features_Emails_Testing():
+    #summary=open(config["Summary"]["Path"],'w')
+    start_time = time.time()
+    logger.info("===============================================================")
+    dataset_path_legit_test=config["Dataset Path"]["path_legitimate_testing"]
+    dataset_path_phish_test=config["Dataset Path"]["path_phishing_testing"]
+    feature_list_dict_test=[]
+    extraction_time_dict_test=[]
+    labels_legit_test, data_legit_test=extract_email_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test)
+    labels_all_test, data_phish_test=extract_email_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test)
+    logger.debug(">>>>> Feature extraction: Testing Set >>>>> Done ")
+    logger.info(">>>>> Cleaning >>>>")
+    logger.debug("feature_list_dict_test{}".format(len(feature_list_dict_test)))
+    Cleaning(feature_list_dict_test)
+    logger.debug(">>>>> Cleaning >>>>>> Done")
+    labels_test=[]
+    for i in range(labels_legit_test):
+        labels_test.append(0)
+    for i in range(labels_all_test-labels_legit_test):
+        labels_test.append(1)
+    corpus_test = data_legit_test + data_phish_test
+    logger.info("--- %s final count seconds ---" % (time.time() - start_time))
+    return feature_list_dict_test, labels_test, corpus_test
  
 
-def extract_features_urls():
-    list_dict=[]
-    time_dict=[]
+def Extract_Features_Urls_Training():
     #summary=open(config["Summary"]["Path"],'w')
     if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
         start_time = time.time()
@@ -3209,19 +3211,9 @@ def extract_features_urls():
         labels_legit_train, data_legit_train=extract_url_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
         labels_all_train, data_phish_train=extract_url_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
         logger.debug(">>>>> Feature extraction: Training Set >>>>> Done ")
-        logger.info(">>>>> Feature extraction: Testing Set")
-        dataset_path_legit_test=config["Dataset Path"]["path_legitimate_testing"]
-        dataset_path_phish_test=config["Dataset Path"]["path_phishing_testing"]
-        feature_list_dict_test=[]
-        extraction_time_dict_test=[]
-        labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
-        labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
-        logger.debug(">>>>> Feature extraction: Testing Set >>>>> Done ")
-        logger.info(">>>>> Cleaning >>>>")
-        logger.debug("feature_list_dict_test{}".format(len(feature_list_dict_test)))
-        Cleaning(feature_list_dict_train, feature_list_dict_test)
+        Cleaning(feature_list_dict_train)
         logger.debug(">>>>> Cleaning >>>>>> Done")
-        logger.info("Number of bad URLs: {}".format(len(Bad_URLs_List)))
+        logger.info("Number of bad URLs in training dataset: {}".format(len(Bad_URLs_List)))
 
         labels_train=[]
         for i in range(labels_legit_train):
@@ -3229,19 +3221,38 @@ def extract_features_urls():
         for i in range(labels_all_train-labels_legit_train):
             labels_train.append(1)
 
-        labels_test=[]
-        for i in range(labels_legit_test):
-            labels_test.append(0)
-        for i in range(labels_all_test-labels_legit_test):
-            labels_test.append(1)
-
         corpus_train = data_legit_train + data_phish_train
-        corpus_test = data_legit_test + data_phish_test
 
         logger.info("--- %s final count seconds ---" % (time.time() - start_time))
-        return feature_list_dict_train, labels_train, feature_list_dict_test, labels_test, corpus_train, corpus_test
+        return feature_list_dict_train, labels_train, corpus_train
 
         #print("--- %s final count seconds ---" % (time.time() - start_time))
+   
+def Extract_Features_Urls_Testing():
+    start_time = time.time()
+    logger.info(">>>>> Feature extraction: Testing Set")
+    dataset_path_legit_test=config["Dataset Path"]["path_legitimate_testing"]
+    dataset_path_phish_test=config["Dataset Path"]["path_phishing_testing"]
+    feature_list_dict_test=[]
+    extraction_time_dict_test=[]
+    Bad_URLs_List=[]
+    labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
+    labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
+    logger.debug(">>>>> Feature extraction: Testing Set >>>>> Done ")
+    logger.info(">>>>> Cleaning >>>>")
+    logger.debug("feature_list_dict_test{}".format(len(feature_list_dict_test)))
+    Cleaning(feature_list_dict_test)
+    logger.debug(">>>>> Cleaning >>>>>> Done")
+    logger.info("Number of bad URLs in training dataset: {}".format(len(Bad_URLs_List)))
+    labels_test=[]
+    for i in range(labels_legit_test):
+        labels_test.append(0)
+    for i in range(labels_all_test-labels_legit_test):
+        labels_test.append(1)
+
+    corpus_test = data_legit_test + data_phish_test
+    logger.info("--- %s final count seconds ---" % (time.time() - start_time))
+    return feature_list_dict_test, labels_test, corpus_test
    
 
     

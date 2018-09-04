@@ -652,13 +652,13 @@ def normalizer(Array_Features):
     Array_Features_normalized = preprocessing.normalize(Array_Features, norm='l2')
     return Array_Features_normalized
 
-def Preprocessing(X_train, X_test):
+def Preprocessing(X):
     #summary=open(config["Summary"]["Path"],'w')
     summary=Features.summary
     summary.write("\n\n###### List of Preprocessing steps:\n")
     #Array_Features=Sparse_Matrix_Features.toarray()
-    X_train_array=X_train.toarray()
-    X_test_array=X_test.toarray()
+    X_array=X.toarray()
+    #X_test_array=X_test.toarray()
     #scaled_Array_Features=preprocessing.scale(Sparse_Matrix_Features) # Center data with the mean and then scale it using the std deviation
     #other method that keeps the model for testing
     #if config["Preprocessing"]["mean_scaling"] == "True":
@@ -670,11 +670,11 @@ def Preprocessing(X_train, X_test):
     #    # return the scaler for testing data
     #    # Use min max to scale data because it's robust to very small standard deviations of features and preserving zero
     if config["Preprocessing"]["mix_max_scaling"] == "True":
-        X_train=min_max_scaling(X_train_array)
-        X_test=min_max_scaling(X_test_array)
+        X=min_max_scaling(X_array)
+        #X_test=min_max_scaling(X_test_array)
         summary.write("\n Scaling using the min and max.\n")
         logger.info("Preprocessing: mix_max_scaling")
-        return X_train, X_test
+        return X
         # use abs value to scale
     #elif config["Preprocessing"]["abs_scaler"] == "True":
     #    X_train=abs_scaler(X_train)
@@ -690,22 +690,11 @@ def Preprocessing(X_train, X_test):
     #    print("Preprocessing: Normalizing")
     #    return X_train, X_test
     else:
-        return X_train, X_test
+        return X
     #return scaler, scaled_Array_Features, mean_Array_Features, min_Array_Features #, max_Array_Features
-
-def Cleaning(dict1, dict2):
+def Cleaning(dict1):
     count=0
     for item in dict1:
-        #print(item)
-        for key in item.keys():
-            #print(item[key])
-            #if item[key] == "None" or item[key] == "N/A" or item[key] == "Nan" :
-            if item[key] in ["None", "N/A" ,"NaN", None]:
-                original=item[key]
-                item[key]= 0
-                count+=1
-                logger.debug("Value of {} changed from {} to 0".format(key,original))
-    for item in dict2:
         #print(item)
         for key in item.keys():
             #print(item[key])
@@ -722,12 +711,15 @@ def Cleaning(dict1, dict2):
 #print(list_features)
 #print(list_time)
 
-def Vectorization(list_dict_features_train, list_dict_features_test):
+def Vectorization_Training(list_dict_features_train):
     vec=DictVectorizer()
     vec.fit(list_dict_features_train)
     sparse_matrix_features_train=vec.transform(list_dict_features_train)
+    return sparse_matrix_features_train, vec
+
+def Vectorization_Testing(list_dict_features_test, vec):
     sparse_matrix_features_test=vec.transform(list_dict_features_test)
-    return sparse_matrix_features_train, sparse_matrix_features_test
+    return sparse_matrix_features_test
 
 
 def dump_features(list_features, output_file, list_dict,list_time, time_dict):
@@ -754,7 +746,7 @@ def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url
     Features.Network_updated_date(whois_info, list_features, list_time)
     logger.debug("updated_date")
 
-    Features.Network_as_number(whois_info, list_features, list_time)
+    Features.Network_as_number(IP_whois, list_features, list_time)
     logger.debug("as_number")
 
     Features.Network_number_name_server(dns_info, list_features, list_time)
