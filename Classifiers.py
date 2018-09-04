@@ -206,10 +206,8 @@ def DNN(X,y, X_test, y_test):
 		print("model compile end >>>>>>")
 		model_dnn.fit(X, y, epochs=150, batch_size=100)
 		y_predict=model_dnn.predict(X_test)
-		print("DNN >>>>>>>")
-		score = model_dnn.evaluate(X_test, y_test, batch_size=100)
-		print(score)
-		print("\n")
+		logger.info("DNN >>>>>>>")
+		Evaluation_Metrics.eval_metrics(model_dnn, X, y, y_test, y_predict)
 
 def HDDT():
 	#java -cp <path to weka-hddt.jar> weka.classifiers.trees.HTree -U -A -B -t <training file> -T <testing file>
