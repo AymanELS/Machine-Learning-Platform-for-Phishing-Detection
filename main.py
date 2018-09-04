@@ -43,7 +43,7 @@ def setup_logger():
     if args.verbose:
         logger.setLevel(level=logging.DEBUG)
     else:
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.INFO)
     logger.addHandler(handler)
 
 setup_logger()
