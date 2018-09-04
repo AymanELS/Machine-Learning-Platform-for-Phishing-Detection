@@ -475,8 +475,6 @@ def extract_body(email):
             text_Html=1
         else:
             body_text=part.get_payload(decode=True).decode("utf-8")
-            logger.info("\n")
-            logger.info(body_text)
 
     return body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes
 
@@ -1073,7 +1071,6 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
     logger.debug("compare_sender_return")
             
     Features.Email_compare_sender_domain_message_id_domain(sender_domain , message_id, list_features, list_time)
-    print ("compare_sender_domain_message_id_domain")
 
     #Features.Content_Disposition(cdispo, list_features, list_time)
     #logger.debug("Content_Disposition")
@@ -1269,7 +1266,6 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
             logger.debug("extract_body >>>> Done")
             
             url_All=get_url(body_html)
-            print(url_All)
 
             logger.debug("extract urls from body >>>> Done")
 
