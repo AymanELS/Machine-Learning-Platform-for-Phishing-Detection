@@ -19,6 +19,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.feature_selection import RFE
 import logging
+import math
 logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
@@ -52,8 +53,11 @@ def Feature_Ranking(X,y,k):
 		f=open("Data_Dump/Feature_ranking_rfe.txt",'w')
 		res= dict(zip(vectorizer.get_feature_names(),rfe.ranking_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		f.write(str(sorted_d))
-		f.close()
+		with open("Data_Dump/Feature_ranking_rfe.txt",'w') as f:
+			for (key, value) in sorted_d:
+				f.write("{}: {}\n".format(key,value))
+		#f.write(str(sorted_d))
+		#f.close()
 		#np.savetxt(f,rfe.ranking_)
 			#f.write(str(sorted_d))
 		#logger.info(rfe.ranking_)
@@ -64,37 +68,36 @@ def Feature_Ranking(X,y,k):
 		#model = ExtraTreesClassifier(criterion='entropy')
 		model.fit(X,y)
 		#X=model.transform(X)
-		f=open("Data_Dump/Feature_ranking_IG.txt",'w')
 		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
-		
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		#np.savetxt(f,rfe.ranking_)
-		f.write(str(sorted_d))
-		f.close()
+		with open("Data_Dump/Feature_ranking_IG.txt",'w') as f:
+			for (key, value) in sorted_d:
+				f.write("{}: {}\n".format(key,value))
 		#logger.info(model.feature_importances_)
 
 	#Gini	
 	elif config["Feature Ranking"]["Gini"] == "True":
 		model = DecisionTreeClassifier(criterion='gini')
 		model.fit(X,y)
-		f=open("Data_Dump/Feature_ranking_Gini.txt",'w')
 		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		#np.savetxt(f,rfe.ranking_)
-		f.write(str(sorted_d))
-		f.close()
+		with open("Data_Dump/Feature_ranking_Gini.txt",'w') as f:
+			for (key, value) in sorted_d:
+				f.write("{}: {}\n".format(key,value))
 		#logger.info(model.feature_importances_)
 
 	#Chi-2
 	elif config["Feature Ranking"]["Chi-2"] == "True":
 		model= sklearn.feature_selection.SelectKBest(chi2, k)
 		model.fit(X, y)
-		f=open("Data_Dump/Feature_ranking_chi2.txt",'w')
 		res= dict(zip(vectorizer.get_feature_names(),model.scores_))
+		for key, value in res.items():
+			if math.isnan(res[key]):
+				res[key]=0
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		#np.savetxt(f,rfe.ranking_)
-		f.write(str(sorted_d))
-		f.close()
+		with open("Data_Dump/Feature_ranking_chi2.txt",'w') as f:
+			for (key, value) in sorted_d:
+				f.write("{}: {}\n".format(key,value))
 		X=model.transform(X)
 	return X, model
 
