@@ -1325,7 +1325,7 @@ def Email_Function_Words_Count(body, list_features, list_time):
         Function_Words_Count=0
         try:
             for word in body.split(' '):
-                if word in Features_Support.Function_words_list:
+                if word in Function_words_list:
                     Function_Words_Count=+1
             list_features["Function_Words_Count"]=Function_Words_Count
         except Exception as e:
