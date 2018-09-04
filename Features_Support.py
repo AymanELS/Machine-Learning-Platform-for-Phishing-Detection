@@ -473,6 +473,10 @@ def extract_body(email):
             #if hex_regex.search(body):
             #   hex_log.write(filepath+"\n")
             text_Html=1
+        else:
+            body_text=part.get_payload(decode=True).decode("utf-8")
+            logger.info("\n")
+            logger.info(body_text)
 
     return body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes
 
