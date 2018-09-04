@@ -35,7 +35,7 @@ config.read('Config_file.ini')
 def Confusion_matrix(y_test, y_predict):
 		confusion_matrix=sklearn.metrics.confusion_matrix(y_test, y_predict)
 		tn, fp, fn, tp=confusion_matrix.ravel()
-		logging.info("Confusion Matrix (TN, FP, FN, TP):({}, {}, {}, {})".format(tn, fp, fn, tp))
+		logger.info("Confusion Matrix (TN, FP, FN, TP):({}, {}, {}, {})".format(tn, fp, fn, tp))
 
 def Confusion_matrix2(y_test, y_predict):
 		sess = tf.Session()
@@ -44,55 +44,55 @@ def Confusion_matrix2(y_test, y_predict):
 			y_predict=y_predict.eval()
 		confusion_matrix=sklearn.metrics.confusion_matrix(y_test, y_predict)
 		tn, fp, fn, tp=confusion_matrix.ravel()
-		logging.info("Confusion Matrix (TN, FP, FN, TP):({}, {}, {}, {})".format(tn, fp, fn, tp))
+		logger.info("Confusion Matrix (TN, FP, FN, TP):({}, {}, {}, {})".format(tn, fp, fn, tp))
 
 def Matthews_corrcoef(y_test, y_predict):
 		Mcc=sklearn.metrics.matthews_corrcoef(y_test, y_predict)
-		logging.info("Matthews_CorrCoef: {}".format(Mcc))
+		logger.info("Matthews_CorrCoef: {}".format(Mcc))
 		#return Mcc
 
 def ROC_AUC(y_test, y_predict):
 		ROC_AUC=sklearn.metrics.roc_auc_score(y_test, y_predict)
-		logging.info("ROC_AUC: {}".format(ROC_AUC))
+		logger.info("ROC_AUC: {}".format(ROC_AUC))
 		#return ROC_AUC
 
 def Precision(y_test, y_predict):
 		precision=sklearn.metrics.precision_score(y_test, y_predict)
-		logging.info("Precision: {}".format(precision))
+		logger.info("Precision: {}".format(precision))
 		#return precision
 
 def Recall(y_test, y_predict):
 		recall=sklearn.metrics.recall_score(y_test, y_predict)
-		logging.info("Recall: {}".format(recall))
+		logger.info("Recall: {}".format(recall))
 		#return Recall
 
 def F1_score(y_test, y_predict):
 		f1_score=sklearn.metrics.f1_score(y_test, y_predict)
-		logging.info("F1_score: {}".format(f1_score))
+		logger.info("F1_score: {}".format(f1_score))
 		#return F1_score
 
 def Cross_validation(clf, X, y):
 		score = cross_val_score(clf, X, y, cv=10)
-		logging.info("10 fold Cross_Validation: {}".format(score.mean()))
+		logger.info("10 fold Cross_Validation: {}".format(score.mean()))
 
 def Homogenity(y_test,y_predict):
 		homogenity=sklearn.metrics.homogeneity_score(y_test,y_predict)
-		logging.info("Homogenity: {}".format(homogenity))
+		logger.info("Homogenity: {}".format(homogenity))
 
 def Completeness(y_test,y_predict):
 		completeness=sklearn.metrics.completeness_score(y_test,y_predict)
-		logging.info("Completeness: {}".format(completeness))
+		logger.info("Completeness: {}".format(completeness))
 def V_measure(y_test,y_predict):
 		v_measure=sklearn.metrics.v_measure_score(y_test,y_predict)
-		logging.info("V_measure: {}".format(v_measure))
+		logger.info("V_measure: {}".format(v_measure))
 
 def Geomteric_mean_score(y_test,y_predict):
 		g_mean=geometric_mean_score(y_test,y_predict)
-		logging.info("G_mean: {}".format(g_mean))
+		logger.info("G_mean: {}".format(g_mean))
 
 def Balanced_accuracy_score(y_test,y_predict):
 		b_accuracy=sklearn.metrics.balanced_accuracy_score(y_test,y_predict)
-		logging.info("Balanced_accuracy_score: {}".format(b_accuracy))
+		logger.info("Balanced_accuracy_score: {}".format(b_accuracy))
 
 def eval_metrics(clf, X, y, y_test, y_predict):
 	summary=Features.summary
