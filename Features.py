@@ -1257,11 +1257,13 @@ def Email_Number_Cc(cc, list_features, list_time):
     if config["Email_Features"]["Number_Cc"] == "True":
         start=time.time()
         try:
-            list_features["Number_Cc"]=len(cc)
+            if cc:
+                list_features["Number_Cc"]=len(cc)
+            else:
+                list_features["Number_Cc"]=-1
         except Exception as e:
             logger.warning("exception: "+str(e))
-            list_features["Number_Cc"]="N/A"
-            logger.warning("exception Handled")
+            list_features["Number_Cc"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Number_Cc"]=ex_time
@@ -1270,11 +1272,13 @@ def Email_Number_Bcc(Bcc, list_features, list_time):
     if config["Email_Features"]["Number_Bcc"] == "True":
         start=time.time()
         try:
-            list_features["Number_Bcc"]=len(Bcc)
+            if Bcc:
+                list_features["Number_Bcc"]=len(Bcc)
+            else:
+                list_features["Number_Bcc"]=-1
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Number_Bcc"]="N/A"
-            logger.warning("exception Handled")
+            list_features["Number_Bcc"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Number_Bcc"]=ex_time
@@ -1283,10 +1287,13 @@ def Email_Number_To(To, list_features, list_time):
     if config["Email_Features"]["Number_To"] == "True":
         start=time.time()
         try:
-            list_features["Number_To"]=len(To)
+            if To:
+                list_features["Number_To"]=len(To)
+            else:
+                list_features["Number_To"]=-1
         except Exception as e:
             logger.warning("exception: "+ str(e))
-            list_features["Number_To"]="N/A"
+            list_features["Number_To"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Number_To"]=ex_time
@@ -1300,7 +1307,7 @@ def Email_Number_Of_Scripts(body, list_features, list_time):
              list_features["Email_Number_Of_Scripts"]=len(soup.find_all('script'))
         except Exception as e:
              logger.warning("exception :{}".format(e))
-             list_features["Email_Number_Of_Scripts"]=0
+             list_features["Email_Number_Of_Scripts"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Number_Of_Scripts"]=ex_time
