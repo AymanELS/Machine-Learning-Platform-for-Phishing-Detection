@@ -45,7 +45,7 @@ def Feature_Ranking(X,y,k):
 		logger.info("Load Model ######")
 		model = LogisticRegression()
 		logger.info("Load RFE ######")
-		rfe = RFE(model, k, verbose=1)
+		rfe = RFE(model, k)
 		logger.info("Fit RFE ######")
 		rfe.fit(X,y)
 		logger.info("Transform X ######")
