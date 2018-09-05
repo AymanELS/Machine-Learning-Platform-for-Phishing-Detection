@@ -1041,7 +1041,7 @@ def Email_number_of_characters_body(body, list_features, list_time):
     if config["Email_Features"]["number_of_characters_body"] == "True":
         start=time.time()
         try:
-            number_of_characters_body = len(re.findall(r'\w+', body))
+            number_of_characters_body = len(re.findall(r'\w', body))
         except Exception as e:
             logger.warning("exception: " + str(e))
             number_of_characters_body =  0
@@ -1288,7 +1288,7 @@ def Email_Number_To(To, list_features, list_time):
         start=time.time()
         try:
             if To:
-                list_features["Number_To"]=len(To)
+                list_features["Number_To"]=len(To.split(','))
             else:
                 list_features["Number_To"]=-1
         except Exception as e:
