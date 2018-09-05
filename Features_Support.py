@@ -426,7 +426,8 @@ def extract_body(email):
         #print("Content-Disposition {}".format(content_disposition_list))
         if 'attachment' in cdispo:
             num_attachment=+1
-        charset_list.append(part.get_content_charset())
+        if part.get_content_charset():
+            charset_list.append(part.get_content_charset())
         #print("Charsets list: {}".format(charset_list))
         #print(filepath + '_ ATTACHMENT :' +str(test_attachment))
         # skip any text/plain (txt) attachments

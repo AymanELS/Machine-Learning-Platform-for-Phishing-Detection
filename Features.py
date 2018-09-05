@@ -1288,9 +1288,12 @@ def Email_Number_To(To, list_features, list_time):
         start=time.time()
         try:
             if To:
-                list_features["Number_To"]=len(To.split(','))
+                if len(To.split(',')) >= len(To.split(';')):
+                    list_features["Number_To"]=len(To.split(','))
+                else:
+                    list_features["Number_To"]=len(To.split(';'))
             else:
-                list_features["Number_To"]=-1
+                list_features["Number_To"]=0
         except Exception as e:
             logger.warning("exception: "+ str(e))
             list_features["Number_To"]=-1
