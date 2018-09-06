@@ -1076,11 +1076,6 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
     #Features.Content_Disposition(cdispo, list_features, list_time)
     #logger.debug("Content_Disposition")
 
-    Features.Email_test_text(test_text, list_features, list_time)
-    logger.debug("test_text")
-
-    Features.Email_Text_Html(text_Html, list_features, list_time)
-    logger.debug("Text_Html")
 
     Features.Email_Number_Cc(Cc, list_features, list_time)
     logger.debug("Number_Cc")
@@ -1174,9 +1169,9 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
     logger.debug("Authentication_Results_SPF_Pass")
     Features.Email_Authentication_Results_DKIM_Pass(authentication_results, list_features, list_time)
     logger.debug("Authentication_Results_DKIM_Pass")
-    Features.Email_Text_Html(text_Html, list_features, list_time)
-    logger.debug("Text_Html")
-    Features.Email_test_text(test_text, list_features, list_time)
+    Features.Email_Test_Html(text_Html, list_features, list_time)
+    logger.debug("Test_Html")
+    Features.Email_Test_Text(test_text, list_features, list_time)
     logger.debug("test_text")
     Features.Email_Function_Words_Count(body_text, list_features, list_time)
     logger.debug("Email_Function_Words_Count")

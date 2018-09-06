@@ -209,7 +209,7 @@ def Email_Num_Content_type(content_type_list, list_features, list_time):
             list_features["Email_Num_Content_type"]=len(content_type_list)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_type"]=0
+            list_features["Email_Num_Content_type"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_type"]=ex_time
@@ -221,7 +221,7 @@ def Email_Num_Charset(charset_list, list_features, list_time):
             list_features["Email_Num_Charset"] = len(charset_list)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Charset"] = 0
+            list_features["Email_Num_Charset"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Charset"]=ex_time
@@ -233,7 +233,7 @@ def Email_Num_Unique_Charset(charset_list, list_features, list_time):
             list_features["Email_Num_Unique_Charset"] = len(set(charset_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Charset"] = 0
+            list_features["Email_Num_Unique_Charset"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Unique_Charset"]=ex_time
@@ -251,7 +251,7 @@ def Email_MIME_Version(MIME_version, list_features, list_time):
                 list_features["Email_MIME_Version"]=0
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_MIME_Version"]=0
+            list_features["Email_MIME_Version"]="N/A"
         end=time.time()
         ex_time=end-start
         list_time["Email_MIME_Version"]=ex_time
@@ -263,7 +263,7 @@ def Email_Num_Unique_Content_type(content_type_list, list_features, list_time):
             list_features["Email_Num_Unique_Content_type"]=len(set(content_type_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Content_type"]=0
+            list_features["Email_Num_Unique_Content_type"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Unique_Content_type"]=ex_time
@@ -275,7 +275,7 @@ def Email_Num_Unique_Content_Disposition(content_disposition_list, list_features
             list_features["Email_Num_Unique_Content_Disposition"]=len(set(content_disposition_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Content_Disposition"]=0
+            list_features["Email_Num_Unique_Content_Disposition"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Unique_Content_Disposition"]=ex_time
@@ -287,7 +287,7 @@ def Email_Num_Content_Disposition(content_disposition_list, list_features, list_
             list_features["Email_Num_Content_Disposition"]=len(content_disposition_list)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Disposition"]=0
+            list_features["Email_Num_Content_Disposition"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Disposition"]=ex_time
@@ -299,7 +299,7 @@ def Email_Num_Content_Type_text_plain(content_type_list, list_features, list_tim
             list_features["Email_Num_Content_Type_text_plain"]=content_type_list.count("text/plain")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_text_plain"]=0
+            list_features["Email_Num_Content_Type_text_plain"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_text_plain"]=ex_time
@@ -312,7 +312,7 @@ def Email_Num_Content_Type_text_html(content_type_list, list_features, list_time
             list_features["Email_Num_Content_Type_text_html"]=content_type_list.count("text/html")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_text_html"]=0
+            list_features["Email_Num_Content_Type_text_html"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_text_html"]=ex_time
@@ -324,7 +324,7 @@ def Email_Num_Content_Type_Multipart_Encrypted(content_type_list, list_features,
             list_features["Email_Num_Content_Type_Multipart_Encrypted"]=content_type_list.count("multipart/encrypted")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Encrypted"]=0
+            list_features["Email_Num_Content_Type_Multipart_Encrypted"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_Encrypted"]=ex_time
@@ -336,7 +336,7 @@ def Email_Num_Content_Type_Multipart_Mixed(content_type_list, list_features, lis
             list_features["Email_Num_Content_Type_Multipart_Mixed"]=content_type_list.count("multipart/mixed")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Mixed"] = 0
+            list_features["Email_Num_Content_Type_Multipart_Mixed"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_Mixed"]=ex_time
@@ -348,7 +348,7 @@ def Email_Num_Content_Type_Multipart_form_data(content_type_list, list_features,
             list_features["Email_Num_Content_Type_Multipart_form_data"] = content_type_list.count("multipart/form-data")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_form_data"] = 0
+            list_features["Email_Num_Content_Type_Multipart_form_data"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_form_data"]=ex_time
@@ -360,7 +360,7 @@ def Email_Num_Content_Type_Multipart_byterange(content_type_list, list_features,
             list_features["Email_Num_Content_Type_Multipart_byterange"] = content_type_list.count("multipart/byterange")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_byterange"] = 0
+            list_features["Email_Num_Content_Type_Multipart_byterange"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_byterange"]=ex_time
@@ -372,7 +372,7 @@ def Email_Num_Content_Type_Multipart_Parallel(content_type_list, list_features, 
             list_features["Email_Num_Content_Type_Multipart_Parallel"] = content_type_list.count("multipart/parallel")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Parallel"] = 0
+            list_features["Email_Num_Content_Type_Multipart_Parallel"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_Parallel"]=ex_time
@@ -384,7 +384,7 @@ def Email_Num_Content_Type_Multipart_Report(content_type_list, list_features, li
             list_features["Email_Num_Content_Type_Multipart_Report"] = content_type_list.count("multipart/report")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Report"] = 0
+            list_features["Email_Num_Content_Type_Multipart_Report"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_Report"]=ex_time
@@ -396,7 +396,7 @@ def Email_Num_Content_Type_Multipart_Alternative(content_type_list, list_feature
             list_features["Email_Num_Content_Type_Multipart_Alternative"] = content_type_list.count("multipart/alternative")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Alternative"] = 0
+            list_features["Email_Num_Content_Type_Multipart_Alternative"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_Alternative"]=ex_time
@@ -408,7 +408,7 @@ def Email_Num_Content_Type_Multipart_Digest_Num(content_type_list, list_features
             list_features["Email_Num_Content_Type_Multipart_Digest_Num"] = content_type_list.count("multipart/digest")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Digest_Num"] = 0
+            list_features["Email_Num_Content_Type_Multipart_Digest_Num"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_Digest_Num"]=ex_time
@@ -420,7 +420,7 @@ def Email_Num_Content_Type_Multipart_Signed_Num(content_type_list, list_features
             list_features["Email_Num_Content_Type_Multipart_Signed_Num"] = content_type_list.count("multipart/signed")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Signed_Num"] = 0
+            list_features["Email_Num_Content_Type_Multipart_Signed_Num"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_Signed_Num"]=ex_time
@@ -432,7 +432,7 @@ def Email_Num_Content_Type_Multipart_X_Mixed_Replaced(content_type_list, list_fe
             list_features["Email_Num_Content_Type_Multipart_X_Mixed_Replaced"] = content_type_list.count("multipart/x-mixed-replaced")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_X_Mixed_Replaced"] = 0
+            list_features["Email_Num_Content_Type_Multipart_X_Mixed_Replaced"] = -1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Multipart_X_Mixed_Replaced"]=ex_time
@@ -444,7 +444,7 @@ def Email_Num_Content_Type_Charset_us_ascii(charset_list, list_features, list_ti
             list_features["Email_Num_Content_Type_Charset_us_ascii"]=charset_list.count("us_ascii")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_us_ascii"]=0
+            list_features["Email_Num_Content_Type_Charset_us_ascii"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Charset_us_ascii"]=ex_time
@@ -456,7 +456,7 @@ def Email_Num_Content_Type_Charset_utf_8(charset_list, list_features, list_time)
             list_features["Email_Num_Content_Type_Charset_utf_8"]=charset_list.count("utf_8")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_utf_8"]=0
+            list_features["Email_Num_Content_Type_Charset_utf_8"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Charset_utf_8"]=ex_time
@@ -468,7 +468,7 @@ def Email_Num_Content_Type_Charset_utf_7(charset_list, list_features, list_time)
             list_features["Email_Num_Content_Type_Charset_utf_7"]=charset_list.count("utf_7")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_utf_7"]=0
+            list_features["Email_Num_Content_Type_Charset_utf_7"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Charset_utf_7"]=ex_time
@@ -480,7 +480,7 @@ def Email_Num_Content_Type_Charset_gb2312(charset_list, list_features, list_time
             list_features["Email_Num_Content_Type_Charset_gb2312"]=charset_list.count("gb2312")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_gb2312"]=0
+            list_features["Email_Num_Content_Type_Charset_gb2312"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Charset_gb2312"]=ex_time
@@ -492,7 +492,7 @@ def Email_Num_Content_Type_Charset_shift_jis(charset_list, list_features, list_t
             list_features["Email_Num_Content_Type_Charset_shift_jis"]=charset_list.count("shit_jis")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_shift_jis"]=0
+            list_features["Email_Num_Content_Type_Charset_shift_jis"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Charset_shift_jis"]=ex_time
@@ -504,7 +504,7 @@ def Email_Num_Content_Type_Charset_koi(charset_list, list_features, list_time):
             list_features["Email_Num_Content_Type_Charset_koi"]=charset_list.count("koi")
         except Exception as e:
             logger.warning("exception: " + str(e))
-        list_features["Email_Num_Content_Type_Charset_koi"]=0
+            list_features["Email_Num_Content_Type_Charset_koi"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Charset_koi"]=ex_time
@@ -517,7 +517,7 @@ def Email_Num_Content_Type_Charset_iso2022_jp(charset_list, list_features, list_
             list_features["Email_Num_Content_Type_Charset_iso2022-jp"]=charset_list.count("iso2022-jp")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_iso2022-jp"]=0
+            list_features["Email_Num_Content_Type_Charset_iso2022-jp"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Type_Charset_iso2022-jp"]=ex_time
@@ -530,7 +530,7 @@ def Email_Num_Attachment(num_attachment, list_features, list_time):
             list_features["Email_Num_Attachment"]=num_attachment
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Attachment"]=0
+            list_features["Email_Num_Attachment"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Attachment"]=ex_time
@@ -555,7 +555,7 @@ def Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_t
             list_features["Email_Num_Unique_Attachment_types"]=len(set(file_extension_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Attachment_types"]=0
+            list_features["Email_Num_Unique_Attachment_types"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Unique_Attachment_types"]=ex_time
@@ -568,7 +568,7 @@ def Email_Num_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_fea
             list_features["Email_Num_Content_Transfer_Encoding"]=len(Content_Transfer_Encoding_list)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding"]=0
+            list_features["Email_Num_Content_Transfer_Encoding"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Transfer_Encoding"]=ex_time
@@ -581,7 +581,7 @@ def Email_Num_Unique_Content_Transfer_Encoding(Content_Transfer_Encoding_list, l
             list_features["Email_Num_Unique_Content_Transfer_Encoding"]=len(set(Content_Transfer_Encoding_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Content_Transfer_Encoding"]=0
+            list_features["Email_Num_Unique_Content_Transfer_Encoding"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Unique_Content_Transfer_Encoding"]=ex_time
@@ -594,7 +594,7 @@ def Email_Num_Content_Transfer_Encoding_7bit(Content_Transfer_Encoding_list, lis
             list_features["Email_Num_Content_Transfer_Encoding_7bit"]=Content_Transfer_Encoding_list.count('7bit')
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding_7bit"]=0
+            list_features["Email_Num_Content_Transfer_Encoding_7bit"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Transfer_Encoding_7bit"]=ex_time
@@ -606,7 +606,7 @@ def Email_Num_Content_Transfer_Encoding_8bit(Content_Transfer_Encoding_list, lis
             list_features["Email_Num_Content_Transfer_Encoding_8bit"]=Content_Transfer_Encoding_list.count('8bit')
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding_8bit"]=0
+            list_features["Email_Num_Content_Transfer_Encoding_8bit"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Transfer_Encoding_8bit"]=ex_time
@@ -618,7 +618,7 @@ def Email_Num_Content_Transfer_Encoding_binary(Content_Transfer_Encoding_list, l
             list_features["Email_Num_Content_Transfer_Encoding_binary"]=Content_Transfer_Encoding_list.count('binary')
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding_binary"]=0
+            list_features["Email_Num_Content_Transfer_Encoding_binary"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Transfer_Encoding_binary"]=ex_time
@@ -630,7 +630,7 @@ def Email_Num_Content_Transfer_Encoding_quoted_printable(Content_Transfer_Encodi
             list_features["Email_Num_Content_Transfer_Encoding_quoted_printable"]=Content_Transfer_Encoding_list.count('quoted-printable')
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding_quoted_printable"]=0
+            list_features["Email_Num_Content_Transfer_Encoding_quoted_printable"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Content_Transfer_Encoding_quoted_printable"]=ex_time
@@ -642,7 +642,7 @@ def Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_t
             list_features["Email_Num_Unique_Attachment_types"]=len(set(file_extension_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Attachment_types"]=0
+            list_features["Email_Num_Unique_Attachment_types"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_Num_Unique_Attachment_types"]=ex_time
@@ -654,7 +654,7 @@ def Email_size_in_Bytes(size_in_bytes ,list_features, list_time):
             list_features["Email_size_in_Bytes"]=size_in_bytes
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_size_in_Bytes"]=0
+            list_features["Email_size_in_Bytes"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Email_size_in_Bytes"]=ex_time
@@ -666,7 +666,7 @@ def Email_return_path(return_addr, list_features, list_time):
             list_features["return_path"]=return_addr
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["return_path"]=0
+            list_features["return_path"]=-1
         end=time.time()
         ex_time=end-start
         list_time["return_path"]=ex_time
@@ -678,7 +678,7 @@ def Email_X_mailer(x_mailer,list_features, list_time):
             list_features["X-mailer"]=x_mailer
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-mailer"]=0
+            list_features["X-mailer"]=-1
         #print("x_mailer >> {}".format(x_mailer))
         end=time.time()
         ex_time=end-start
@@ -691,7 +691,7 @@ def Email_X_originating_hostname(x_originating_hostname, list_features, list_tim
             list_features["X-originating-hostname"]=x_originating_hostname
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-originating-hostname"]="None"
+            list_features["X-originating-hostname"]=-1
         end=time.time()
         ex_time=end-start
         list_time["X-originating-hostname"]=ex_time
@@ -703,7 +703,7 @@ def Email_X_originating_ip(x_originating_ip, list_features, list_time):
             list_features["X-originating-ip"]=x_originating_ip
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-originating-ip"]=0
+            list_features["X-originating-ip"]=-1
         end=time.time()
         ex_time=end-start
         list_time["X-originating-ip"]=ex_time
@@ -715,7 +715,7 @@ def Email_X_spam_flag(x_spam_flag, list_features, list_time):
             list_features["X-Spam-flag"]=x_spam_flag
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-Spam-flag"]=0
+            list_features["X-Spam-flag"]=-1
         end=time.time()
         ex_time=end-start
         list_time["X-Spam-flag"]=ex_time
@@ -727,7 +727,7 @@ def Email_X_virus_scanned(x_virus_scanned, list_features, list_time):
             list_features["X-virus-scanned"]=x_virus_scanned
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-virus-scanned"]=0
+            list_features["X-virus-scanned"]=-1
         end=time.time()
         ex_time=end-start
         list_time["X-virus-scanned"]=ex_time
@@ -743,7 +743,7 @@ def Email_Received_count(received, list_features, list_time):
                 list_features["Received_count"]=len(received)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Received_count"]=0
+            list_features["Received_count"]=-1
         #print("Received count >>>> {}".format(received))
         end=time.time()
         ex_time=end-start              
@@ -760,7 +760,7 @@ def Email_Authentication_Results_SPF_Pass(authentication_results, list_features,
                 list_features["Authentication_Results_SPF_Pass"]=0
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Authentication_Results_SPF_Pass"]=0
+            list_features["Authentication_Results_SPF_Pass"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Authentication_Results_SPF_Pass"]=ex_time
@@ -777,7 +777,7 @@ def Email_Authentication_Results_DKIM_Pass(authentication_results, list_features
         except Exception as e:
             logger.warning("exception: " + str(e))
             #list_features["Authentication_Results"]="None"
-            list_features["Authentication_Results_DKIM_Pass"]=0
+            list_features["Authentication_Results_DKIM_Pass"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Authentication_Results_DKIM_Pass"]=ex_time
@@ -789,7 +789,7 @@ def Email_X_Origininal_Authentication_results(x_original_authentication_results,
             list_features["X_Origininal_Authentication_results"]=x_original_authentication_results
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X_Origininal_Authentication_results"]=0
+            list_features["X_Origininal_Authentication_results"]=-1
         #print("X_Origininal_Authentication_results >>>> {}".format(x_original_authentication_results))
         end=time.time()
         ex_time=end-start
@@ -802,7 +802,7 @@ def Email_Received_SPF(received_spf, list_features, list_time):
             list_features["Received_SPF"]=received_spf
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Received_SPF"]=0
+            list_features["Received_SPF"]=-1
         #print("Received_SPF >>>> {}".format(received_spf))
         end=time.time()
         ex_time=end-start
@@ -816,7 +816,7 @@ def Email_Dkim_Signature_Exists(dkim_signature, list_features, list_time):
             list_features["Dkim_Signature_Exists"]=dkim_signature
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Dkim_Signature_Exists"]=0
+            list_features["Dkim_Signature_Exists"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Dkim_Signature_Exists"]=ex_time
@@ -851,11 +851,10 @@ def Email_compare_sender_return(sender_full_address, return_addr, list_features,
         start=time.time()
         try:
             compare_sender_return=int(bool(sender_full_address==return_addr))
-            list_features["compare_sender_return"]=compare_sender_return
         except Exception as e:
             logger.warning("exception: " + str(e))
-            compare_sender_return=0
-            list_features["compare_sender_return"]=compare_sender_return
+            compare_sender_return=-1
+        list_features["compare_sender_return"]=compare_sender_return    
         end=time.time()
         ex_time=end-start
         list_time["compare_sender_return"]=ex_time
@@ -873,29 +872,29 @@ def Email_compare_sender_return(sender_full_address, return_addr, list_features,
 #        ex_time=end-start
 #        list_time["Content_Disposition"]=ex_time
 
-def Email_Text_Html(text_Html, list_features, list_time):
-    if config["Email_Features"]["Text_Html"] == "True":
+def Email_Test_Html(test_Html, list_features, list_time):
+    if config["Email_Features"]["Test_Html"] == "True":
         start=time.time()
         try:
-            list_features["Text_Html"]=text_Html
+            list_features["Test_Html"]=test_Html
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Text_Html"]="N/A"     
+            list_features["Test_Html"]=-1    
         end=time.time()
         ex_time=end-start
-        list_time["Text_Html"]=ex_time
+        list_time["Test_Html"]=ex_time
 
-def Email_test_text(test_text, list_features, list_time):
-    if config["Email_Features"]["test_text"] == "True":
+def Email_Test_Text(test_text, list_features, list_time):
+    if config["Email_Features"]["Test_Text"] == "True":
         start=time.time()
         try:
-            list_features["test_text"]=test_text
+            list_features["Test_Text"]=test_text
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["test_text"]="N/A"     
+            list_features["Test_Text"]=-1    
         end=time.time()
         ex_time=end-start
-        list_time["test_text"]=ex_time
+        list_time["Test_Text"]=ex_time
 
 ##### Email URL features
 def Email_Number_Url(url_All, list_features, list_time):
@@ -905,7 +904,7 @@ def Email_Number_Url(url_All, list_features, list_time):
             list_features["Number_Url"]=len(url_All)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Number_Url"]=0    
+            list_features["Number_Url"]=-1    
         end=time.time()
         ex_time=end-start
         list_time["Number_Url"]=ex_time
@@ -924,7 +923,7 @@ def Email_Number_Diff_Domain(url_All, list_features, list_time):
             list_features["Number_Diff_Domain"]=len(set(list_Domains))
         except Exception as e:
             logger.warning("exception: "+str(e))
-            list_features["Number_Diff_Domain"]=0
+            list_features["Number_Diff_Domain"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Number_Diff_Domain"]=ex_time
@@ -944,7 +943,7 @@ def Email_Number_Diff_Subdomain(url_All, list_features, list_time):
             list_features["Number_Diff_Subdomain"]=len(set(list_Subdomains))
         except Exception as e:
             logger.warning("exception: "+str(e))
-            list_features["Number_Diff_Subdomain"]=0
+            list_features["Number_Diff_Subdomain"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Number_Diff_Subdomain"]=ex_time
@@ -960,7 +959,7 @@ def Email_Number_link_at(url_All, list_features, list_time):
                     list_features["Number_link_at"]=count
         except Exception  as e:
             logger.warning("exception: " + str(e))
-            list_features["Number_link_at"]=0
+            list_features["Number_link_at"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Number_link_at"]=ex_time
@@ -976,7 +975,7 @@ def Email_Number_link_sec_port(url_All, list_features, list_time):
                     list_features["Number_link_sec_port"]=count
         except Exception  as e:
             logger.warning("exception: " + str(e))
-            list_features["Number_link_sec_port"]=0
+            list_features["Number_link_sec_port"]=-1
         end=time.time()
         ex_time=end-start
         list_time["Number_link_sec_port"]=ex_time
@@ -990,7 +989,7 @@ def Email_recipient_name_body(body,recipient_name, list_features, list_time):
             recipient_name_body= int(bool(recipient_name in body))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            recipient_name_body=0
+            recipient_name_body=-1
         list_features["recipient_name_body"]=recipient_name_body
         end=time.time()
         ex_time=end-start
@@ -1018,7 +1017,7 @@ def Email_number_of_words_body(body, list_features, list_time):
             number_of_words_body = len(re.findall(r'\w+', body))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            number_of_words_body = 0
+            number_of_words_body = -1
         list_features["number_of_words_body"]=number_of_words_body
         end=time.time()
         ex_time=end-start
@@ -1031,7 +1030,7 @@ def Email_number_of_unique_words_body(body, list_features, list_time):
             number_of_words_body = len(set(re.findall(r'\w+', body)))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            number_of_words_body = 0
+            number_of_words_body = -1
         list_features["number_of_unique_words_body"]=number_of_words_body
         end=time.time()
         ex_time=end-start
@@ -1044,7 +1043,7 @@ def Email_number_of_characters_body(body, list_features, list_time):
             number_of_characters_body = len(re.findall(r'\w', body))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            number_of_characters_body =  0
+            number_of_characters_body =  -1
         list_features["number_of_characters_body"]=number_of_characters_body
         end=time.time()
         ex_time=end-start
@@ -1058,7 +1057,7 @@ def Email_number_of_special_characters_body(body, list_features, list_time):
             number_of_special_characters_body = len(body)-number_of_characters_body-len(re.findall(r' ', body))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            number_of_special_characters_body = 0
+            number_of_special_characters_body = -1
         list_features["number_of_special_characters_body"]=number_of_special_characters_body
         end=time.time()
         ex_time=end-start
@@ -1072,7 +1071,7 @@ def Email_vocab_richness_body(body, list_features, list_time):
             vocab_richness_body=yule(body)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            vocab_richness_body = 0
+            vocab_richness_body = -1
         list_features["vocab_richness_body"]=vocab_richness_body
         end=time.time()
         ex_time=end-start
@@ -1083,10 +1082,13 @@ def Email_number_of_html_tags_body(body, list_features, list_time):
     if config["Email_Features"]["number_of_html_tags_body"] == "True":
         start=time.time()
         try:
-            number_of_html_tags_body=len(re.findall(r'<.*>',body))
+            if body:
+                number_of_html_tags_body=len(re.findall(r'<.*>',body))
+            else:
+                number_of_html_tags_body=0
         except Exception as e:
             logger.warning("exception: " + str(e))
-            number_of_html_tags_body= 0 
+            number_of_html_tags_body= -1 
         list_features["number_of_html_tags_body"]=number_of_html_tags_body
         end=time.time()
         ex_time=end-start
@@ -1096,10 +1098,13 @@ def Email_number_unique_words_body(body, list_features, list_time):
     if config["Email_Features"]["number_unique_words_body"] == "True":
         start=time.time()
         try:
-            number_unique_words_body=len(set(body))
+            if body:
+                number_unique_words_body=len(set(body))
+            else:
+                number_unique_words_body=0
         except Exception as e:
             logger.warning("exception: " + str(e))
-            number_unique_words_body = 0
+            number_unique_words_body = -1
         list_features["number_unique_words_body"]=number_unique_words_body
         end=time.time()
         ex_time=end-start
@@ -1110,12 +1115,15 @@ def Email_greetings_body(body, list_features, list_time):
     if config["Email_Features"]["greetings_body"] == "True":
         start=time.time()
         try:
-            dear_user=re.compile(r'Dear User', flags=re.IGNORECASE)
-            greetings_body=int(bool(re.search(dear_user, body)))
-            list_features["greetings_body"]=greetings_body
+            if body:
+                dear_user=re.compile(r'Dear User', flags=re.IGNORECASE)
+                greetings_body=int(bool(re.search(dear_user, body)))
+            else:
+                greetings_body=0
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["greetings_body"]=0
+            greetings_body=-1
+        list_features["greetings_body"]=greetings_body
         end=time.time()
         ex_time=end-start
         list_time["greetings_body"]=ex_time
@@ -1126,11 +1134,14 @@ def Email_hidden_text(body, list_features, list_time):
         start=time.time()
         regex_font_color=re.compile(r'<font +color="#FFFFF[0-9A-F]"',flags=re.DOTALL)
         try:
-            font_color=int(bool(regex_font_color.search(body)))
-            list_features["hidden_text"]=hidden_text
+            if body:
+                hidden_text=int(bool(regex_font_color.search(body)))
+            else:
+                hidden_text=0
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["hidden_text"]=0
+            hidden_text=-1
+        list_features["hidden_text"]=hidden_text
         end=time.time()
         ex_time=end-start
         list_time["hidden_text"]=ex_time
@@ -1141,11 +1152,15 @@ def Email_count_href_tag(body, list_features, list_time):
         ultimate_regexp =re.compile(r"(?i)<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>", flags=re.MULTILINE)
         count_href_tag=0
         try:
-            for match in re.finditer(ultimate_regexp,body):
-                if repr(match.group()).startswith("'<a"):
-                    count_href_tag+=1
+            if body:
+                for match in re.finditer(ultimate_regexp,body):
+                    if repr(match.group()).startswith("'<a"):
+                        count_href_tag+=1
+            else:
+                count_href_tag=0
         except Exception as e:
             logger.warning("exception: " + str(e))
+            count_href_tag=-1
         list_features["count_href_tag"]=count_href_tag
         end=time.time()
         ex_time=end-start
@@ -1158,11 +1173,15 @@ def Email_end_tag_count(body, list_features, list_time):
         open_tag_count=0
         end_tag_count=0
         try:
-            for match in re.finditer(ultimate_regexp,body):
-                if repr(match.group()).startswith("'</"):
-                    end_tag_count += 1
+            if body:
+                for match in re.finditer(ultimate_regexp,body):
+                    if repr(match.group()).startswith("'</"):
+                        end_tag_count += 1
+            else:
+                end_tag_count=0
         except Exception as e:
             logger.warning("exception: " + str(e))
+            end_tag_count=-1
         list_features["end_tag_count"]=end_tag_count
         end=time.time()
         ex_time=end-start
@@ -1176,18 +1195,21 @@ def Email_open_tag_count(body, list_features, list_time):
         open_tag_count=0
         end_tag_count=0
         try:
-            for match in re.finditer(ultimate_regexp,body):
-                if repr(match.group()).startswith("'</"):
-                    end_tag_count += 1
-                else:
-                    open_tag_count += 1
+            if body:
+                for match in re.finditer(ultimate_regexp,body):
+                    if repr(match.group()).startswith("'</"):
+                        end_tag_count += 1
+                    else:
+                        open_tag_count += 1
+            else:
+                open_tag_count=0
         except Exception as e:
             logger.warning("exception: " + str(e))
+            open_tag_count=-1
         list_features["open_tag_count"]=open_tag_count
         end=time.time()
         ex_time=end-start
         list_time["open_tag_count"]=ex_time
-       #list_features[""]=
 
 def Email_on_mouse_over(body, list_features, list_time):
     if config["Email_Features"]["on_mouse_over"] == "True":
@@ -1195,11 +1217,15 @@ def Email_on_mouse_over(body, list_features, list_time):
         ultimate_regexp =re.compile(r"(?i)<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>", flags=re.MULTILINE)
         on_mouse_over=0
         try:
-            for match in re.finditer(ultimate_regexp,body):
-                if repr(match.group()).startswith("'<a onmouseover"):
-                    on_mouse_over += 1
+            if body:
+                for match in re.finditer(ultimate_regexp,body):
+                    if repr(match.group()).startswith("'<a onmouseover"):
+                        on_mouse_over += 1
+            else:
+                on_mouse_over=0
         except Exception as e:
             logger.warning("exception: " + str(e))
+            on_mouse_over=-1
         list_features["on_mouse_over"]=on_mouse_over
         #list_features[""]=
         end=time.time()
@@ -1212,14 +1238,18 @@ def Email_blacklisted_words_body(body, list_features, list_time):
         blacklist_body=["urgent", "account", "closing", "act now", "click here", "limitied", "suspension", "your account", "verify your account", "agree", 'bank', 'dear'
                         ,"update", "comfirm", "customer", "client", "Suspend", "restrict", "verify", "login", "ssn", 'username','click','log','inconvenien','alert', 'paypal']        
         blacklist_body_count=[]
-        for word in blacklist_body:
-            try:
-                word_count=len(re.findall(word,body.lower()))
-                #blakclist_body_count.append(word_count)
-                list_features[word+"_count_in_body"]=word_count
-            except Exception as e:
-                logger.warning("exception: " + str(e))
-                list_features[word+"_count_in_body"]='N/A'
+        if body:
+            for word in blacklist_body:
+                try:
+                    word_count=len(re.findall(word,body.lower()))
+                    #blakclist_body_count.append(word_count)
+                    list_features[word+"_count_in_body"]=word_count
+                except Exception as e:
+                    logger.warning("exception: " + str(e))
+                    list_features[word+"_count_in_body"]=-1
+        else:
+            for word in blacklist_body:
+                list_features[word+"_count_in_body"]=0
         #list_features["blacklisted_words"]=blacklisted_words
         end=time.time()
         ex_time=end-start
@@ -1232,23 +1262,17 @@ def Email_blacklisted_words_subject(subject, list_features, list_time):
         blacklist_subject=["urgent", "account", "closing", "act now", "click here", "limitied", "suspension", "your account", "verify your account", "agree", 'bank', 'dear'
                         ,"update", "comfirm", "customer", "client", "Suspend", "restrict", "verify", "login", "ssn", 'username','click','log','inconvenien','alert', 'paypal']        
         blacklist_subject_count=[]
-        for word in blacklist_subject:
-            try:
-                word_count=len(re.findall(word,subject.lower()))
-                list_features[word+"_count_in_subject"]=word_count
-            except Exception as e:
-                logger.warning("exception: " + str(e))
-                list_features[word+"_count_in_subject"]="N/A"
-        #try:
-        #    for word in blacklist_subject:
-        #        word_count=len(re.findall(word,subject.lower()))
-        #        #blakclist_body_count.append(word_count)
-        #        list_features[word+"_count_in_subject"]=word_count
-        #except Exception as e:
-        #    logger.warning("exception: " + str(e))
-        #    for word in blacklist_subject:
-        #        list_features[word+"_count_in_subject"]="N/A"
-        ##list_features["blacklisted_words"]=blacklisted_words
+        if subject:
+            for word in blacklist_subject:
+                try:
+                    word_count=len(re.findall(word,subject.lower()))
+                    list_features[word+"_count_in_subject"]=word_count
+                except Exception as e:
+                    logger.warning("exception: " + str(e))
+                    list_features[word+"_count_in_subject"]=-1
+        else:
+            for word in blacklist_subject:
+                list_features[word+"_count_in_subject"]=0
         end=time.time()
         ex_time=end-start
         list_time["blacklisted_words_subject"]=ex_time
@@ -1260,7 +1284,7 @@ def Email_Number_Cc(cc, list_features, list_time):
             if cc:
                 list_features["Number_Cc"]=len(cc)
             else:
-                list_features["Number_Cc"]=-1
+                list_features["Number_Cc"]=0
         except Exception as e:
             logger.warning("exception: "+str(e))
             list_features["Number_Cc"]=-1
@@ -1275,7 +1299,7 @@ def Email_Number_Bcc(Bcc, list_features, list_time):
             if Bcc:
                 list_features["Number_Bcc"]=len(Bcc)
             else:
-                list_features["Number_Bcc"]=-1
+                list_features["Number_Bcc"]=0
         except Exception as e:
             logger.warning("exception: " + str(e))
             list_features["Number_Bcc"]=-1
@@ -1305,12 +1329,15 @@ def Email_Number_Of_Scripts(body, list_features, list_time):
     if config["Email_Features"]["Number_Of_Scripts"] == "True":
         start=time.time()
         Number_Of_Scripts=0
-        soup = BeautifulSoup(body, "html.parser")
-        try:
-             list_features["Email_Number_Of_Scripts"]=len(soup.find_all('script'))
-        except Exception as e:
-             logger.warning("exception :{}".format(e))
-             list_features["Email_Number_Of_Scripts"]=-1
+        if body:
+            soup = BeautifulSoup(body, "html.parser")
+            try:
+                 list_features["Email_Number_Of_Scripts"]=len(soup.find_all('script'))
+            except Exception as e:
+                 logger.warning("exception :{}".format(e))
+                 list_features["Email_Number_Of_Scripts"]=-1
+        else:
+            list_features["Email_Number_Of_Scripts"]=0
         end=time.time()
         ex_time=end-start
         list_time["Email_Number_Of_Scripts"]=ex_time
@@ -1320,11 +1347,14 @@ def Email_Number_Of_Img_Links(body, list_features, list_time):
         start=time.time()
         Number_Of_Img_Links=0
         soup = BeautifulSoup(body, "html.parser")
-        try:
-             list_features["Email_Number_Of_Img_Links"]=len(soup.find_all('img'))
-        except Exception as e:
-             logger.warning("exception :{}".format(e))
-             list_features["Email_Number_Of_Img_Links"]=0
+        if body:
+            try:
+                 list_features["Email_Number_Of_Img_Links"]=len(soup.find_all('img'))
+            except Exception as e:
+                 logger.warning("exception :{}".format(e))
+                 list_features["Email_Number_Of_Img_Links"]=-1
+        else:
+            list_features["Email_Number_Of_Img_Links"]=0
         end=time.time()
         ex_time=end-start
         list_time["Email_Number_Of_Img_Links"]=ex_time
@@ -1333,14 +1363,16 @@ def Email_Function_Words_Count(body, list_features, list_time):
     if config["Email_Features"]["Function_Words_Count"] == "True":
         start=time.time()
         Function_Words_Count=0
-        try:
-            for word in body.split(' '):
-                if word in Function_words_list:
-                    Function_Words_Count=+1
-            list_features["Function_Words_Count"]=Function_Words_Count
-        except Exception as e:
-            logger.warning("exception: {}".format(e))
-            list_features["Function_Words_Count"]=Function_Words_Count 
+        if body:
+            try:
+                for word in body.split(' '):
+                    if word in Function_words_list:
+                        Function_Words_Count=+1   
+            except Exception as e:
+                logger.warning("exception: {}".format(e))
+                Function_Words_Count = -1
+
+        list_features["Function_Words_Count"]=Function_Words_Count
         end=time.time()
         ex_time=end-start
         list_time["Email_Function_Words_Count"]=ex_time
@@ -1363,10 +1395,13 @@ def Email_Function_Words_Count(body, list_features, list_time):
 def Email_flesh_read_score(body, list_features, list_time):
     if config["Email_Features"]["flesh_read_score"] == "True":
         start=time.time()
-        try:
-            flesh_read_score=textstat.flesch_reading_ease(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:
+            try:
+                flesh_read_score=textstat.flesch_reading_ease(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                flesh_read_score=-1
+        else:
             flesh_read_score=0
         list_features["flesh_read_score"]=flesh_read_score
         end=time.time()
@@ -1377,10 +1412,13 @@ def Email_flesh_read_score(body, list_features, list_time):
 def Email_smog_index(body, list_features, list_time):
     if config["Email_Features"]["smog_index"] == "True":
         start=time.time()
-        try:
-            smog_index=textstat.smog_index(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:
+            try:
+                smog_index=textstat.smog_index(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                smog_index=-1
+        else:
             smog_index=0
         list_features["smog_index"]=smog_index
         end=time.time()
@@ -1391,10 +1429,13 @@ def Email_smog_index(body, list_features, list_time):
 def Email_flesh_kincaid_score(body, list_features, list_time):
     if config["Email_Features"]["flesh_kincaid_score"] == "True":
         start=time.time()
-        try:
-            flesh_kincaid_score=textstat.flesch_kincaid_grade(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:
+            try:
+                flesh_kincaid_score=textstat.flesch_kincaid_grade(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                flesh_kincaid_score=-1
+        else:
             flesh_kincaid_score=0
         list_features["flesh_kincaid_score"]=flesh_kincaid_score
         end=time.time()
@@ -1405,10 +1446,13 @@ def Email_flesh_kincaid_score(body, list_features, list_time):
 def Email_coleman_liau_index(body, list_features, list_time):
     if config["Email_Features"]["coleman_liau_index"] == "True":
         start=time.time()
-        try:
-            coleman_liau_index=textstat.coleman_liau_index(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:    
+            try:
+                coleman_liau_index=textstat.coleman_liau_index(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                coleman_liau_index=-1
+        else:
             coleman_liau_index=0
         list_features["coleman_liau_index"]=coleman_liau_index
         end=time.time()
@@ -1419,11 +1463,13 @@ def Email_coleman_liau_index(body, list_features, list_time):
 def Email_automated_readability_index(body, list_features, list_time):
     if config["Email_Features"]["automated_readability_index"] == "True":
         start=time.time()
-        try:
-            automated_readability_index=textstat.automated_readability_index(body)
-
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:    
+            try:
+                automated_readability_index=textstat.automated_readability_index(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                automated_readability_index=-1
+        else:
             automated_readability_index=0
         list_features["automated_readability_index"]=automated_readability_index
         end=time.time()
@@ -1434,10 +1480,13 @@ def Email_automated_readability_index(body, list_features, list_time):
 def Email_dale_chall_readability_score(body, list_features, list_time):
     if config["Email_Features"]["dale_chall_readability_score"] == "True":
         start=time.time()
-        try:
-            dale_chall_readability_score=textstat.dale_chall_readability_score(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:
+            try:
+                dale_chall_readability_score=textstat.dale_chall_readability_score(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                dale_chall_readability_score=-1
+        else:
             dale_chall_readability_score=0
         list_features["dale_chall_readability_score"]=dale_chall_readability_score
         end=time.time()
@@ -1448,10 +1497,13 @@ def Email_dale_chall_readability_score(body, list_features, list_time):
 def Email_difficult_words(body, list_features, list_time):
     if config["Email_Features"]["difficult_words"] == "True":
         start=time.time()
-        try:
-            difficult_words=textstat.difficult_words(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:
+            try:
+                difficult_words=textstat.difficult_words(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                difficult_words=-1
+        else:
             difficult_words=0
         list_features["difficult_words"]=difficult_words
         end=time.time()
@@ -1461,10 +1513,13 @@ def Email_difficult_words(body, list_features, list_time):
 def Email_linsear_score(body, list_features, list_time):
     if config["Email_Features"]["linsear_score"] == "True":
         start=time.time()
-        try:
-            linsear_score=textstat.linsear_write_formula(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:
+            try:
+                linsear_score=textstat.linsear_write_formula(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                linsear_score=-1
+        else:
             linsear_score=0
         list_features["linsear_score"]=linsear_score
         end=time.time()
@@ -1475,10 +1530,13 @@ def Email_linsear_score(body, list_features, list_time):
 def Email_gunning_fog(body, list_features, list_time):
     if config["Email_Features"]["gunning_fog"] == "True":
         start=time.time()
-        try:
-            gunning_fog=textstat.gunning_fog(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:
+            try:
+                gunning_fog=textstat.gunning_fog(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                gunning_fog=-1
+        else:
             gunning_fog=0
         list_features["gunning_fog"]=gunning_fog
         end=time.time()
@@ -1488,10 +1546,13 @@ def Email_gunning_fog(body, list_features, list_time):
 def Email_text_standard(body, list_features, list_time):
     if config["Email_Features"]["text_standard"] == "True":
         start=time.time()
-        try:
-            text_standard=textstat.text_standard(body)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if body:
+            try:
+                text_standard=textstat.text_standard(body)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                text_standard=-1
+        else:
             text_standard=0
         list_features["text_standard"]=text_standard
         end=time.time()
@@ -1502,12 +1563,15 @@ def Email_text_standard(body, list_features, list_time):
 def Email_number_of_words_subject(subject, list_features, list_time):
     if config["Email_Features"]["number_of_words_subject"] == "True":
         start=time.time()
-        try:
-            logger.debug("subject: {}".format(subject))
-            number_of_words_subject = len(re.findall(r'\w+', subject))
-        except Exception as e:
+        if subject:
+            try:
+                logger.debug("subject: {}".format(subject))
+                number_of_words_subject = len(re.findall(r'\w+', subject))
+            except Exception as e:
+                number_of_words_subject=-1
+                logger.warning("exception: " + str(e))
+        else:
             number_of_words_subject=0
-            logger.warning("exception: " + str(e))
         list_features["number_of_words_subject"]=number_of_words_subject
         end=time.time()
         ex_time=end-start
@@ -1516,11 +1580,14 @@ def Email_number_of_words_subject(subject, list_features, list_time):
 def Email_number_of_characters_subject(subject, list_features, list_time):
     if config["Email_Features"]["number_of_characters_subject"] == "True":
         start=time.time()
-        try:
-            number_of_characters_subject = len(re.findall(r'\w', subject))
-        except Exception as e:
-            number_of_characters_subject=0
-            logger.warning("exception: " + str(e))
+        if subject:    
+            try:
+                number_of_characters_subject = len(re.findall(r'\w', subject))
+            except Exception as e:
+                number_of_characters_subject=-1
+                logger.warning("exception: " + str(e))
+        else:
+            number_of_characters_subject = 0
         list_features["number_of_characters_subject"]=number_of_characters_subject
         end=time.time()
         ex_time=end-start
@@ -1529,12 +1596,15 @@ def Email_number_of_characters_subject(subject, list_features, list_time):
 def Email_number_of_special_characters_subject(subject, list_features, list_time):
     if config["Email_Features"]["number_of_special_characters_subject"] == "True":
         start=time.time()
-        try:
-            number_of_characters_subject = len(re.findall(r'\w', subject))
-            number_of_special_characters_subject = len(subject)-number_of_characters_subject-len(re.findall(r' ', subject))
-        except Exception as e:
+        if subject:    
+            try:
+                number_of_characters_subject = len(re.findall(r'\w', subject))
+                number_of_special_characters_subject = len(subject)-number_of_characters_subject-len(re.findall(r' ', subject))
+            except Exception as e:
+                number_of_special_characters_subject=-1
+                logger.warning("exception: " + str(e))
+        else:
             number_of_special_characters_subject=0
-            logger.warning("exception: " + str(e))
         list_features["number_of_special_characters_subject"]=number_of_special_characters_subject
         end=time.time()
         ex_time=end-start
@@ -1544,12 +1614,15 @@ def Email_number_of_special_characters_subject(subject, list_features, list_time
 def Email_binary_fwd(subject, list_features, list_time):
     if config["Email_Features"]["binary_fwd"] == "True":
         start=time.time()
-        try:
-            email_forward_subject = re.compile(r"^FW:", flags=re.IGNORECASE)
-            binary_fwd= int(bool(re.search(email_forward_subject, subject)))
-        except Exception as e:
-            binary_fwd=0
-            logger.warning("exception: " + str(e))
+        if subject:    
+            try:
+                email_forward_subject = re.compile(r"^FW:", flags=re.IGNORECASE)
+                binary_fwd= int(bool(re.search(email_forward_subject, subject)))
+            except Exception as e:
+                binary_fwd=-1
+                logger.warning("exception: " + str(e))
+        else:
+            binary_fwd = 0
         list_features["binary_fwd"]=binary_fwd
         end=time.time()
         ex_time=end-start
@@ -1558,12 +1631,15 @@ def Email_binary_fwd(subject, list_features, list_time):
 def Email_binary_re(subject, list_features, list_time):
     if config["Email_Features"]["binary_re"] == "True":
         start=time.time()
-        try:
-            email_forward_subject = re.compile(r"^re:", flags=re.IGNORECASE)
-            binary_fwd= int(bool(re.search(email_forward_subject, subject)))
-        except Exception as e:
-            binary_fwd=0
-            logger.warning("exception: " + str(e))
+        if subject:    
+            try:
+                email_re_subject = re.compile(r"^re:", flags=re.IGNORECASE)
+                binary_re= int(bool(re.search(email_re_subject, subject)))
+            except Exception as e:
+                binary_re=-1
+                logger.warning("exception: " + str(e))
+        else:
+            binary_re=0
         list_features["binary_fwd"]=binary_fwd
         end=time.time()
         ex_time=end-start
@@ -1572,11 +1648,14 @@ def Email_binary_re(subject, list_features, list_time):
 def Email_vocab_richness_subject(subject, list_features, list_time):
     if config["Email_Features"]["vocab_richness_subject"] == "True":
         start=time.time()
-        try:
-            vocab_richness_subject=yule(subject)
-        except Exception as e:
+        if subject:
+            try:
+                vocab_richness_subject=yule(subject)
+            except Exception as e:
+                vocab_richness_subject=-1
+                logger.warning("exception: " + str(e))
+        else:
             vocab_richness_subject=0
-            logger.warning("exception: " + str(e))
         list_features["vocab_richness_subject"]=vocab_richness_subject
         end=time.time()
         ex_time=end-start
@@ -1590,11 +1669,15 @@ def HTML_number_of_tags(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_tags"] == "True":
         start=time.time()
         number_of_tags=0
-        try:
-            all_tags = soup.find_all()
-            number_of_tags = len(all_tags)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                all_tags = soup.find_all()
+                number_of_tags = len(all_tags)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_tags=-1
+        else:
+            number_of_tags=0
         list_features["number_of_tags"]=number_of_tags
         end=time.time()
         ex_time=end-start
@@ -1605,10 +1688,12 @@ def HTML_number_of_head(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_head"] == "True":
         start=time.time()
         number_of_head=0
-        try:
-            number_of_head = len(soup.find_all('head'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                number_of_head = len(soup.find_all('head'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_head=-1
         list_features["number_of_head"]=number_of_head
         end=time.time()
         ex_time=end-start
@@ -1619,10 +1704,12 @@ def HTML_number_of_html(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_html"] == "True":
         start=time.time()
         number_of_html=0
-        try:
-            number_of_html = len(soup.find_all('html'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:    
+            try:
+                number_of_html = len(soup.find_all('html'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_html=-1
         list_features["number_of_html"]=number_of_html
         end=time.time()
         ex_time=end-start
@@ -1633,10 +1720,12 @@ def HTML_number_of_body(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_body"] == "True":
         start=time.time()
         number_of_body=0
-        try:
-            number_of_body = len(soup.find_all('body'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:    
+            try:
+                number_of_body = len(soup.find_all('body'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_body = -1
         list_features["number_of_body"]=number_of_body
         end=time.time()
         ex_time=end-start
@@ -1647,10 +1736,12 @@ def HTML_number_of_titles(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_titles"] == "True":
         start=time.time()
         number_of_titles=0
-        try:
-            number_of_titles = len(soup.find_all('title'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:    
+            try:
+                number_of_titles = len(soup.find_all('title'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_titles=-1
         list_features["number_of_titles"]=number_of_titles
         end=time.time()
         ex_time=end-start
@@ -1662,13 +1753,15 @@ def HTML_number_suspicious_content(soup, list_features, list_time):
         start=time.time()
         all_tags = soup.find_all()
         number_suspicious_content = 0
-        try:
-            for tag in all_tags:
-                str_tag = str(tag)
-                if  len(str_tag) > 128 and (str_tag.count(' ')/len(str_tag) < 0.05):
-                    number_suspicious_content = number_suspicious_content + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                for tag in all_tags:
+                    str_tag = str(tag)
+                    if  len(str_tag) > 128 and (str_tag.count(' ')/len(str_tag) < 0.05):
+                        number_suspicious_content = number_suspicious_content + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_suspicious_content=-1
         list_features["number_suspicious_content"]=number_suspicious_content
         end=time.time()
         ex_time=end-start
@@ -1679,11 +1772,13 @@ def HTML_number_of_iframes(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_iframes"] == "True":
         start=time.time()
         number_of_iframes=0
-        try:
-            iframe_tags = soup.find_all('iframe')
-            number_of_iframes = len(iframe_tags)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:    
+            try:
+                iframe_tags = soup.find_all('iframe')
+                number_of_iframes = len(iframe_tags)
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_iframes=-1
         list_features["number_of_iframes"]=number_of_iframes
         end=time.time()
         ex_time=end-start
@@ -1694,10 +1789,12 @@ def HTML_number_of_input(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_input"] == "True":
         start=time.time()
         number_of_input=0
-        try:
-            number_of_input = len(soup.find_all('input'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                number_of_input = len(soup.find_all('input'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_input = -1
         list_features["number_of_input"]=number_of_input
         end=time.time()
         ex_time=end-start
@@ -1708,10 +1805,12 @@ def HTML_number_of_img(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_img"] == "True":
         start=time.time()
         number_of_img=0
-        try:
-            number_of_img = len(soup.find_all('img'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                number_of_img = len(soup.find_all('img'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_img = -1
         list_features["number_of_img"]=number_of_img
         end=time.time()
         ex_time=end-start
@@ -1723,10 +1822,12 @@ def HTML_number_of_scripts(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_scripts"] == "True":
         start=time.time()
         number_of_scripts=0
-        try:
-            number_of_scripts = len(soup.find_all('script'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                number_of_scripts = len(soup.find_all('script'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_scripts = -1
         list_features["number_of_scripts"]=number_of_scripts
         end=time.time()
         ex_time=end-start
@@ -1737,10 +1838,12 @@ def HTML_number_of_anchor(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_anchor"] == "True":
         start=time.time()
         number_of_anchor=0
-        try:
-            number_of_anchor = len(soup.find_all('a'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                number_of_anchor = len(soup.find_all('a'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_anchor=-1
         list_features["number_of_anchor"]=number_of_anchor
         end=time.time()
         ex_time=end-start
@@ -1751,10 +1854,12 @@ def HTML_number_of_embed(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_embed"] == "True":
         start=time.time()
         number_of_embed=0
-        try:
-            number_of_embed = len(soup.find_all('embed'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                number_of_embed = len(soup.find_all('embed'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_embed=-1
         list_features["number_of_embed"]=number_of_embed
         end=time.time()
         ex_time=end-start
@@ -1765,10 +1870,12 @@ def HTML_number_object_tags(soup, list_features, list_time):
     if config["HTML_Features"]["number_object_tags"] == "True":
         start=time.time()
         number_object_tags=0
-        try:
-            object_tags = len(soup.find_all('object'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                object_tags = len(soup.find_all('object'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_object_tags = -1
         list_features["number_object_tags"]=number_object_tags
         end=time.time()
         ex_time=end-start
@@ -1779,10 +1886,12 @@ def HTML_number_of_video(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_video"] == "True":
         start=time.time()
         number_of_video=0
-        try:
-            number_of_video = len(soup.find_all('video'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                number_of_video = len(soup.find_all('video'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_video = -1
         list_features["number_of_video"]=number_of_video
         end=time.time()
         ex_time=end-start
@@ -1793,10 +1902,12 @@ def HTML_number_of_audio(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_audio"] == "True":
         start=time.time()
         number_of_audio=0
-        try:
-            number_of_audio = len(soup.find_all('audio'))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                number_of_audio = len(soup.find_all('audio'))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_audio=-1
         list_features["number_of_audio"]=number_of_audio
         end=time.time()
         ex_time=end-start
@@ -1807,13 +1918,15 @@ def HTML_number_of_hidden_iframe(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_hidden_iframe"] == "True":
         start=time.time()
         number_of_hidden_iframe = 0
-        iframe_tags = soup.find_all('iframe')
-        try:
-            for tag in iframe_tags:
-                if tag.get('height') == 0 or tag.get('width') == 0:
-                    number_of_hidden_iframe = number_of_hidden_iframe + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:   
+            try:
+                iframe_tags = soup.find_all('iframe') 
+                for tag in iframe_tags:
+                    if tag.get('height') == 0 or tag.get('width') == 0:
+                        number_of_hidden_iframe = number_of_hidden_iframe + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_hidden_iframe= -1
         list_features["number_of_hidden_iframe"]=number_of_hidden_iframe
         end=time.time()
         ex_time=end-start
@@ -1824,13 +1937,15 @@ def HTML_number_of_hidden_div(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_hidden_div"] == "True":
         start=time.time()
         number_of_hidden_div=0
-        try:
-            tags = soup.find_all('div')
-            for tag in tags:
-                if tag.get('height') == 0 or tag.get('width') == 0:
-                    number_of_hidden_div = number_of_hidden_div + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                tags = soup.find_all('div')
+                for tag in tags:
+                    if tag.get('height') == 0 or tag.get('width') == 0:
+                        number_of_hidden_div = number_of_hidden_div + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_hidden_div=-1
         list_features["number_of_hidden_div"]=number_of_hidden_div
         end=time.time()
         ex_time=end-start
@@ -1841,13 +1956,15 @@ def HTML_number_of_hidden_object(soup, list_features, list_time):
     if config["HTML_Features"]["number_of_hidden_object"] == "True":
         start=time.time()
         number_of_hidden_object = 0
-        try:
-            object_tags = soup.find_all('object')
-            for tag in object_tags:
-                if tag.get('height') == 0 or tag.get('width') == 0:
-                    number_of_hidden_object = number_of_hidden_object + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:    
+            try:
+                object_tags = soup.find_all('object')
+                for tag in object_tags:
+                    if tag.get('height') == 0 or tag.get('width') == 0:
+                        number_of_hidden_object = number_of_hidden_object + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_hidden_object=-1
         list_features["number_of_hidden_object"]=number_of_hidden_object
         end=time.time()
         ex_time=end-start
@@ -1858,27 +1975,29 @@ def HTML_inbound_count(soup, url, list_features, list_time):
     if config["HTML_Features"]["inbound_count"] == "True":
         start=time.time()
         inbound_count = 0
-        try:
-            url_extracted = tldextract.extract(url)
-            local_domain = '{}.{}'.format(url_extracted .domain, url_extracted .suffix)
-            tags = soup.find_all(['audio', 'embed', 'iframe', 'img', 'input', 'script', 'source', 'track', 'video'])
-            for tag in tags:
-                src_address = tag.get('src')
-                if src_address != None:
-                    if src_address.lower().startswith(("https", "http")):
-                        extracted = tldextract.extract(src_address)
-                        filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
-                        if filtered_link == local_domain:
+        if soup:
+            try:
+                url_extracted = tldextract.extract(url)
+                local_domain = '{}.{}'.format(url_extracted .domain, url_extracted .suffix)
+                tags = soup.find_all(['audio', 'embed', 'iframe', 'img', 'input', 'script', 'source', 'track', 'video'])
+                for tag in tags:
+                    src_address = tag.get('src')
+                    if src_address != None:
+                        if src_address.lower().startswith(("https", "http")):
+                            extracted = tldextract.extract(src_address)
+                            filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
+                            if filtered_link == local_domain:
+                                inbound_count = inbound_count + 1
+                        elif src_address.startswith("//"):
+                            extracted = tldextract.extract("http:" + src_address)
+                            filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
+                            if filtered_link == local_domain:
+                                inbound_count = inbound_count + 1
+                        else:
                             inbound_count = inbound_count + 1
-                    elif src_address.startswith("//"):
-                        extracted = tldextract.extract("http:" + src_address)
-                        filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
-                        if filtered_link == local_domain:
-                            inbound_count = inbound_count + 1
-                    else:
-                        inbound_count = inbound_count + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                inbound_count=-1
         list_features["inbound_count"]=inbound_count
         end=time.time()
         ex_time=end-start
@@ -1889,25 +2008,27 @@ def HTML_outbound_count(soup, url, list_features, list_time):
     if config["HTML_Features"]["outbound_count"] == "True":
         start=time.time()
         outbound_count = 0
-        try:
-            url_extracted = tldextract.extract(url)
-            local_domain = '{}.{}'.format(url_extracted .domain, url_extracted .suffix)
-            tags = soup.find_all(['audio', 'embed', 'iframe', 'img', 'input', 'script', 'source', 'track', 'video'])
-            for tag in tags:
-                src_address = tag.get('src')
-                if src_address != None:
-                    if src_address.lower().startswith(("https", "http")):
-                        extracted = tldextract.extract(src_address)
-                        filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
-                        if filtered_link != local_domain:
-                            outbound_count = outbound_count + 1
-                    elif src_address.startswith("//"):
-                        extracted = tldextract.extract("http:" + src_address)
-                        filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
-                        if filtered_link != local_domain:
-                            outbound_count = outbound_count + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                url_extracted = tldextract.extract(url)
+                local_domain = '{}.{}'.format(url_extracted .domain, url_extracted .suffix)
+                tags = soup.find_all(['audio', 'embed', 'iframe', 'img', 'input', 'script', 'source', 'track', 'video'])
+                for tag in tags:
+                    src_address = tag.get('src')
+                    if src_address != None:
+                        if src_address.lower().startswith(("https", "http")):
+                            extracted = tldextract.extract(src_address)
+                            filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
+                            if filtered_link != local_domain:
+                                outbound_count = outbound_count + 1
+                        elif src_address.startswith("//"):
+                            extracted = tldextract.extract("http:" + src_address)
+                            filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
+                            if filtered_link != local_domain:
+                                outbound_count = outbound_count + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                outbound_count=-1
         list_features["outbound_count"]=outbound_count
         end=time.time()
         ex_time=end-start
@@ -1918,27 +2039,29 @@ def HTML_inbound_href_count(soup, url, list_features, list_time):
     if config["HTML_Features"]["inbound_href_count"] == "True":
         start=time.time()
         inbound_href_count = 0
-        try:    
-            url_extracted = tldextract.extract(url)
-            local_domain = '{}.{}'.format(url_extracted.domain, url_extracted.suffix)
-            tags = soup.find_all(['a', 'area', 'base', 'link'])
-            for tag in tags:
-                src_address = tag.get('href')
-                if src_address is not None:
-                    if src_address.lower().startswith(("https", "http")):
-                        extracted = tldextract.extract(src_address)
-                        filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
-                        if filtered_link == local_domain:
+        if soup:
+            try:    
+                url_extracted = tldextract.extract(url)
+                local_domain = '{}.{}'.format(url_extracted.domain, url_extracted.suffix)
+                tags = soup.find_all(['a', 'area', 'base', 'link'])
+                for tag in tags:
+                    src_address = tag.get('href')
+                    if src_address is not None:
+                        if src_address.lower().startswith(("https", "http")):
+                            extracted = tldextract.extract(src_address)
+                            filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
+                            if filtered_link == local_domain:
+                                inbound_href_count = inbound_href_count + 1
+                        elif src_address.startswith("//"):
+                            extracted = tldextract.extract("http:" + src_address)
+                            filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
+                            if filtered_link == local_domain:
+                                inbound_href_count = inbound_href_count + 1
+                        else:
                             inbound_href_count = inbound_href_count + 1
-                    elif src_address.startswith("//"):
-                        extracted = tldextract.extract("http:" + src_address)
-                        filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
-                        if filtered_link == local_domain:
-                            inbound_href_count = inbound_href_count + 1
-                    else:
-                        inbound_href_count = inbound_href_count + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                inbound_href_count=-1
         list_features["inbound_href_count"]=inbound_href_count
         end=time.time()
         ex_time=end-start
@@ -1949,25 +2072,27 @@ def HTML_outbound_href_count(soup, url, list_features, list_time):
     if config["HTML_Features"]["outbound_href_count"] == "True":
         start=time.time()
         outbound_href_count = 0
-        try:
-            url_extracted = tldextract.extract(url)
-            local_domain = '{}.{}'.format(url_extracted.domain, url_extracted.suffix)
-            tags = soup.find_all(['a', 'area', 'base', 'link'])
-            for tag in tags:
-                src_address = tag.get('href')
-                if src_address is not None:
-                    if src_address.lower().startswith(("https", "http")):
-                        extracted = tldextract.extract(src_address)
-                        filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
-                        if filtered_link != local_domain:
-                            outbound_href_count = outbound_href_count + 1
-                    elif src_address.startswith("//"):
-                        extracted = tldextract.extract("http:" + src_address)
-                        filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
-                        if filtered_link != local_domain:
-                            outbound_href_count = outbound_href_count + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:    
+            try:
+                url_extracted = tldextract.extract(url)
+                local_domain = '{}.{}'.format(url_extracted.domain, url_extracted.suffix)
+                tags = soup.find_all(['a', 'area', 'base', 'link'])
+                for tag in tags:
+                    src_address = tag.get('href')
+                    if src_address is not None:
+                        if src_address.lower().startswith(("https", "http")):
+                            extracted = tldextract.extract(src_address)
+                            filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
+                            if filtered_link != local_domain:
+                                outbound_href_count = outbound_href_count + 1
+                        elif src_address.startswith("//"):
+                            extracted = tldextract.extract("http:" + src_address)
+                            filtered_link = '{}.{}'.format(extracted.domain, extracted.suffix)
+                            if filtered_link != local_domain:
+                                outbound_href_count = outbound_href_count + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                outbound_href_count=-1
         list_features["outbound_href_count"]=outbound_href_count
         end=time.time()
         ex_time=end-start
@@ -1980,13 +2105,12 @@ def URL_length(url, list_features, list_time):
     if config["URL_Features"]["length"] == "True":
         start=time.time()
         url_length=0
-        try:
-            if url=='':
-                url_length=0
-            else:
+        if url:
+            try:
                 url_length=len(url)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                url_length=-1
         list_features["url_length"]=url_length
         end=time.time()
         ex_time=end-start
@@ -1998,15 +2122,14 @@ def URL_domain_length(url, list_features, list_time):
     if config["URL_Features"]["domain_length"] == "True":
         start=time.time()
         domain_length=0
-        try:
-            if url=='':
-                domain_length=0
-            else:
+        if url:    
+            try:
                 parsed_url = urlparse(url)
                 domain = parsed_url.hostname
                 domain_length = len(domain)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                domain_length=-1
         list_features["domain_length"]=domain_length
         end=time.time()
         ex_time=end-start
@@ -2017,17 +2140,24 @@ def URL_letter_occurence(url, list_features, list_time):
     #global list_features
     if config["URL_Features"]["letter_occurence"] == "True":
         start=time.time()
-        try:
-            if url=='':
-                letter_occurence=0
-            else:
+        if url:
+            ####
+            try:
                 domain = '{uri.scheme}://{uri.hostname}/'.format(uri=parsed_url).lower()
-                #letter_occ = []
+            except Exception as e:
+                logger.warning("exception: " + str(e))
                 for x in range(26):
-                #letter_occ.append(domain.count(chr(x + ord('a'))))
+                    list_features["letter_occurence_"+chr(x+ ord('a'))]=-1
+            ####   
+            for x in range(26):
+                try:
                     list_features["letter_occurence_"+chr(x+ ord('a'))]=domain.count(chr(x + ord('a')))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+                except Exception as e:
+                    logger.warning("exception: " + str(e))
+                    list_features["letter_occurence_"+chr(x+ ord('a'))]=-1
+        else:
+            for x in range(26):
+                list_features["letter_occurence_"+chr(x+ ord('a'))]=0
         end=time.time()
         ex_time=end-start
         list_time["letter_occurence"]=ex_time
@@ -2039,19 +2169,18 @@ def URL_char_distance(url, list_features, list_time):
     #global list_features
     if config["URL_Features"]["char_distance"] == "True":
         start=time.time()
-        try:
-            if url=='':
-                #print("URL {}".format(url))
-                url_char_dist="NaN"
-                for x in range(26):
-                    list_features["url_char_distance_"+chr(x + ord('a'))]=url_char_dist
-            else:
-                count = lambda l1, l2: len(list(filter(lambda c: c in l2, l1)))
-                for x in range(26):
+        if url:
+            count = lambda l1, l2: len(list(filter(lambda c: c in l2, l1))) 
+            for x in range(26):
+                try:
                     url_char_dist=(url.count(chr(x + ord('a'))) / (count(url,string.ascii_letters)))
                     list_features["url_char_distance_"+chr(x + ord('a'))]=url_char_dist
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+                except Exception as e:
+                    logger.warning("exception: " + str(e))
+                    list_features["url_char_distance_"+chr(x + ord('a'))]=-1
+        else:
+            for x in range(26):
+                list_features["url_char_distance_"+chr(x + ord('a'))]=0
         end=time.time()
         ex_time=end-start
         list_time["url_char_distance_"]=ex_time
@@ -2062,21 +2191,22 @@ def URL_kolmogorov_shmirnov(list_features, list_time):
         start=time.time()
         char_dist = [.08167, .01492, .02782, .04253, .12702, .02228, .02015, .06094, .06966, .00153, .00772, .04025, .02406,
                  .06749, .07507, .01929, .00095, .05987, .06327, .09056, .02758, .00978, .02360, .00150, .01974, .00074]
+        
         try:
-            if list_features.get("url_char_distance") == 0:
-                list_features["kolmogorov_shmirnov"]= 0
+            #if list_features.get("url_char_distance") == 0:
+            #    list_features["kolmogorov_shmirnov"]= 0
+            #else:
+            url_char_distance=[]
+            for x in range(26):
+                url_char_distance.append(list_features["url_char_distance_" + chr(x+ ord('a'))])
+            if any(distance == -1 for distance in url_char_distance):
+                ks=-1
             else:
-                url_char_distance=[]
-                for x in range(26):
-                    url_char_distance.append(list_features["url_char_distance_" + chr(x+ ord('a'))])
-                if any(distance == "NaN" for distance in url_char_distance):
-                    ks="NaN"
-                else:
-                    ks = stats.ks_2samp(url_char_distance, char_dist)
+                ks = stats.ks_2samp(url_char_distance, char_dist)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            ks="NaN"
-        if ks=="NaN":
+            ks=-1
+        if ks==-1:
             list_features["kolmogorov_shmirnov"]=ks
         else:
             list_features["kolmogorov_shmirnov"]=ks[0]
@@ -2091,19 +2221,16 @@ def URL_Kullback_Leibler_Divergence(list_features, list_time):
         char_dist = [.08167, .01492, .02782, .04253, .12702, .02228, .02015, .06094, .06966, .00153, .00772, .04025, .02406,
                  .06749, .07507, .01929, .00095, .05987, .06327, .09056, .02758, .00978, .02360, .00150, .01974, .00074]
         try:
-            if list_features.get("url_char_distance") == 0:
-                list_features["Kullback_Leibler_Divergence"]= 0
+            url_char_distance=[]
+            for x in range(26):
+                url_char_distance.append(list_features["url_char_distance_" + chr(x+ ord('a'))])
+            if any(distance == -1 for distance in url_char_distance):
+                kl=-1
             else:
-                url_char_distance=[]
-                for x in range(26):
-                    url_char_distance.append(list_features["url_char_distance_" + chr(x+ ord('a'))])
-                if any(distance == "NaN" for distance in url_char_distance):
-                    kl="NaN"
-                else:
-                    kl = stats.entropy(url_char_distance, char_dist)
+                kl = stats.entropy(url_char_distance, char_dist)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            kl="NaN"
+            kl=-1
         logger.debug("KL: >>>> {}".format(kl))
         list_features["Kullback_Leibler_Divergence"]=kl
         end=time.time()
@@ -2123,13 +2250,14 @@ def URL_edit_distance(list_features, list_time):
             url_char_distance=[]
             for x in range(26):
                 url_char_distance.append(list_features["url_char_distance_" + chr(x+ ord('a'))])
-            if any(distance=="NaN" for distance in url_char_distance):
-                ed="NaN"
+            if any(distance==-1 for distance in url_char_distance):
+                ed=-1
             else:
                 ed = distance.euclidean(url_char_distance, char_dist)
-                list_features["edit_distance"]=ed
         except Exception as e:
             logger.warning("exception: " + str(e))
+            ed=-1
+        list_features["edit_distance"]=ed
         end=time.time()
         ex_time=end-start
         list_time["edit_distance"]=ex_time
@@ -2139,14 +2267,13 @@ def URL_num_punctuation(url, list_features, list_time):
     if config["URL_Features"]["num_punctuation"] == "True":
         start=time.time()
         num_punct=0
-        try:
-            if url=='':
-                num_punct=0
-            else:
+        if url:
+            try:
                 count = lambda l1, l2: len(list(filter(lambda c: c in l2, l1)))
                 num_punct = count(url, string.punctuation)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                num_punct=-1
         list_features["num_punctuation"]=num_punct
         end=time.time()
         ex_time=end-start
@@ -2157,17 +2284,16 @@ def URL_has_port(url, list_features, list_time):
     if config["URL_Features"]["has_port"] == "True":
         start=time.time()
         has_port=0
-        try:
-            if url=='':
-                has_port=0
-            else:
+        if url:
+            try:
                 parsed_url=urlparse(url)
                 port_number = '{uri.port}'.format(uri=parsed_url)
                 has_port = 1
                 if port_number == 'None':
                     has_port = 0
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                has_port=-1
         list_features["has_port"]=has_port
         end=time.time()
         ex_time=end-start
@@ -2178,17 +2304,16 @@ def URL_has_https(url, list_features, list_time):
     if config["URL_Features"]["has_https"] == "True":
         start=time.time()
         has_https=0
-        try:
-            if url=='':
-                has_https=0
-            else:
+        if url:    
+            try:
                 parsed_url=urlparse(url)
                 domain = '{uri.scheme}://{uri.hostname}/'.format(uri=parsed_url)
                 has_https = 0
                 if domain.startswith("https:"):
                     has_https = 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                has_https = -1
         list_features["has_https"]=has_https
         end=time.time()
         ex_time=end-start
@@ -2199,13 +2324,12 @@ def URL_number_of_digits(url, list_features, list_time):
     if config["URL_Features"]["number_of_digits"] == "True":
         number_of_digits=0
         start=time.time()
-        try:
-            if url=='':
-                number_of_digits=0
-            else:
+        if url:
+            try:
                 number_of_digits = sum(c.isdigit() for c in url)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_digits=-1
         list_features["number_of_digits"]=number_of_digits
         end=time.time()
         ex_time=end-start
@@ -2216,13 +2340,12 @@ def URL_number_of_dots(url, list_features, list_time):
     if config["URL_Features"]["number_of_dots"] == "True":
         start=time.time()
         number_of_dots=0
-        try:
-            if url=='':
-                number_of_slashes=0
-            else:
+        if url:
+            try:
                 number_of_dots=url.count('.')
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_dots=-1
         list_features["number_of_dots"]=number_of_dots
         end=time.time()
         ex_time=end-start
@@ -2233,13 +2356,12 @@ def URL_number_of_slashes(url, list_features, list_time):
     if config["URL_Features"]["number_of_slashes"] == "True":
         start=time.time()
         number_of_slashes=0
-        try:
-            if url=='':
-                number_of_slashes=0
-            else:
+        if url:
+            try:
                 number_of_slashes = url.count('/')
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_slashes=-1
         list_features["number_of_slashes"]=number_of_slashes
         end=time.time()
         ex_time=end-start
@@ -2250,17 +2372,16 @@ def URL_digit_letter_ratio(url, list_features, list_time):
     if config["URL_Features"]["digit_letter_ratio"] == "True":
         start=time.time()
         digit_letter_ratio=0
-        try:
-            if url=='':
-                digit_letter_ratio=0
-            else:
+        if url:
+            try:
                 number_of_digits = sum(c.isdigit() for c in url)
                 letters = sum(c.isalpha() for c in url)
                 digit_letter_ratio = number_of_digits/letters
                 list_features["digit_letter_ratio"]=digit_letter_ratio
-        except Exception as e:
-            logger.warning("exception: " + str(e))
-            list_features["digit_letter_ratio"]=0
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                list_features["digit_letter_ratio"]=-1
+        list_features["digit_letter_ratio"]= digit_letter_ratio
         end=time.time()
         ex_time=end-start
         list_time["digit_letter_ratio"]=ex_time
@@ -2270,13 +2391,12 @@ def URL_special_char_count(url, list_features, list_time):
     if config["URL_Features"]["special_char_count"] == "True":
         start=time.time()
         special_char_count=0
-        try:
-            if url=='':
-                special_char_count=0
-            else:
+        if url:
+            try:
                 special_char_count = url.count('@') + url.count('-')
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                special_char_count=-1
         list_features["special_char_count"]=special_char_count
         end=time.time()
         ex_time=end-start
@@ -2287,14 +2407,13 @@ def URL_Top_level_domain(url, list_features, list_time):
     if config["URL_Features"]["Top_level_domain"] == "True":
         start=time.time()
         tld=0
-        try:
-            if url=='':
-                tld=0
-            else:
+        if url:
+            try:
                 extracted = tldextract.extract(url)
                 tld = "{}".format(extracted.suffix)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                tld=-1
         list_features["Top_level_domain"]=tld
         end=time.time()
         ex_time=end-start
@@ -2304,18 +2423,17 @@ def URL_Is_IP_Addr(url, list_features, list_time):
     #global list_features
     if config["URL_Features"]["Is_IP_Addr"] == "True":
         start=time.time()
-        Is_IP_Addr=0
-        try:
-            if url=='':
-                Is_IP_Addr=0
-            else:
-                Is_IP_Addr=1
+        Is_IP_Addr=1
+        if url:    
+            try:
                 parsed_url = urlparse(url)
                 domain = '{uri.hostname}'.format(uri=parsed_url)
                 if re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", domain) == None:
                     Is_IP_Addr= 0
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                Is_IP_Addr=-1
+
         list_features["Is_IP_Addr"]=Is_IP_Addr
         end=time.time()
         ex_time=end-start
@@ -2327,13 +2445,12 @@ def URL_number_of_dashes(url, list_features, list_time):
     if config["URL_Features"]["number_of_dashes"] == "True":
         start=time.time()
         number_of_dashes=0
-        try:
-            if url=='':
-                number_of_dashes=0
-            else:
+        if url:    
+            try:
                 number_of_dashes = url.count('-')
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_dashes = -1
         list_features["number_of_dashes"]=number_of_dashes
         end=time.time()
         ex_time=end-start
@@ -2345,14 +2462,13 @@ def URL_Http_middle_of_URL(url, list_features, list_time):
         start=time.time()
         Http_middle_of_URL=0
         #regex_http=re.compile(r'')
-        try:
-            if url=='':
-                Http_middle_of_URL=0
-            else:
+        if url:    
+            try:
                 if 'http' in url and url.startswith('http') == False:
                     Http_middle_of_URL=1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                Http_middle_of_URL=-1
         list_features["Http_middle_of_URL"]=Http_middle_of_URL
         end=time.time()
         ex_time=end-start
@@ -2361,20 +2477,19 @@ def URL_Http_middle_of_URL(url, list_features, list_time):
 def URL_Has_More_than_3_dots(url, list_features, list_time):
     if config["URL_Features"]["Has_More_than_3_dots"] == "True":
         start=time.time()
-        count_dots=0
         #regex_http=re.compile(r'')
-        try:
-            if url=='':
-                count_dots=0
-            else:
+        if url:
+            try:
                 url=url.replace('www.','')
                 count_dots=url.count('.')
                 if count_dots >= 3:
                     list_features["URL_Has_More_than_3_dots"]=1
                 else:
                     list_features["URL_Has_More_than_3_dots"]=0
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                list_features["URL_Has_More_than_3_dots"]=-1
+        else:
             list_features["URL_Has_More_than_3_dots"]=0
         end=time.time()
         ex_time=end-start
@@ -2384,16 +2499,14 @@ def URL_Has_at_symbole(url, list_features, list_time):
     if config["URL_Features"]["Has_at_symbole"] == "True":
         start=time.time()
         flag=0
-        try:
-            if url=='':
-                flag=0
-            else:
+        if url:
+            try:
                 if "@" in url:
                     flag=1
-                    list_features["URL_Has_at_symbole"]=flag
-        except Exception  as e:
-            logger.warning("Exception: " + str(e))
-            list_features["URL_Has_at_symbole"]=0
+            except Exception  as e:
+                logger.warning("Exception: " + str(e))
+                flag=-1
+        list_features["URL_Has_at_symbole"]=flag
         end=time.time()
         ex_time=end-start
         list_time["URL_Has_at_symbole"]=ex_time
@@ -2404,15 +2517,13 @@ def URL_Has_anchor_tag(url, list_features, list_time):
         start=time.time()
         regex_anchor=re.compile(r'<\?a>')
         flag=0
-        try:
-            if url=='':
-                flag=0
-            else:
+        if url:
+            try:
                 flag=int(bool(re.findall(regex_anchor,url)))
-                list_features["URL_Has_anchor_tag"]=flag
-        except Exception  as e:
-            logger.warning("Exception: " + str(e))
-            list_features["URL_Has_anchor_tag"]="N/A"
+            except Exception  as e:
+                logger.warning("Exception: " + str(e))
+                flag=-1
+        list_features["URL_Has_anchor_tag"]=flag
         end=time.time()
         ex_time=end-start
         list_time["URL_Has_anchor_tag"]=ex_time
@@ -2422,15 +2533,13 @@ def URL_Null_in_Domain(url, list_features, list_time):
         start=time.time()
         regex_null=re.compile(r'null', flags=re.IGNORECASE)
         flag=0
-        try:
-            if url=='':
-                flag=0
-            else:
+        if url:
+            try:
                 flag=int(bool(re.findall(regex_null,url)))
-                list_features["URL_Null_in_Domain"]=flag
-        except Exception  as e:
-            logger.warning("Exception: " + str(e))
-            list_features["URL_Null_in_Domain"]="N/A"
+            except Exception  as e:
+                logger.warning("Exception: " + str(e))
+                flag=-1
+        list_features["URL_Null_in_Domain"]=flag
         end=time.time()
         ex_time=end-start
         list_time["URL_Null_in_Domain"]=ex_time
@@ -2439,15 +2548,13 @@ def URL_Token_Count(url, list_features, list_time):
     if config["URL_Features"]["Token_Count"]:
         start=time.time()
         count=0
-        try:
-            if url=='':
-                count=0
-            else:
+        if url:
+            try:
                 count=len(url.split('.'))
-                list_features["URL_Token_Count"]=count
-        except Exception  as e:
-            logger.warning("Exception: " + str(e))
-            list_features["URL_Token_Count"]="N/A"
+            except Exception  as e:
+                logger.warning("Exception: " + str(e))
+                count=-1
+        list_features["URL_Token_Count"]=count
         end=time.time()
         ex_time=end-start
         list_time["URL_Token_Count"]=ex_time
@@ -2456,10 +2563,8 @@ def URL_Average_Path_Token_Length(url, list_features, list_time):
     if config["URL_Features"]["Average_Path_Token_Length"] == "True":
         start=time.time()
         average_token_length=0
-        try:
-            if url=='':
-                average_token_length=0
-            else:
+        if url:
+            try:
                 parsed_url=urlparse(url)
                 path='{uri.path}'.format(uri=parsed_url)
                 list_tokens=path.split('.')
@@ -2467,10 +2572,10 @@ def URL_Average_Path_Token_Length(url, list_features, list_time):
                 for token in list_tokens:
                     list_len_tokens[list_tokens.index(token)]=len(token)
                 average_token_length= sum(list_len_tokens)/len(list_len_tokens)
-                list_features["URL_Average_Path_Token_Length"]=average_token_length
-        except Exception  as e:
-            logger.warning("Exception: " + str(e))
-            list_features["URL_Average_Path_Token_Length"]="N/A"
+            except Exception  as e:
+                logger.warning("Exception: " + str(e))
+                average_token_length=-1
+        list_features["URL_Average_Path_Token_Length"]=average_token_length
         end=time.time()
         ex_time=end-start
         list_time["URL_Average_Path_Token_Length"]=ex_time
@@ -2479,10 +2584,8 @@ def URL_Average_Domain_Token_Length(url, list_features, list_time):
     if config["URL_Features"]["Average_Domain_Token_Length"] == "True":
         start=time.time()
         average_token_length=0
-        try:
-            if url=='':
-                average_token_length=0
-            else:
+        if url:
+            try:
                 parsed_url=urlparse(url)
                 domain='{uri.hostname}'.format(uri=parsed_url)
                 list_len_tokens=[]
@@ -2490,10 +2593,10 @@ def URL_Average_Domain_Token_Length(url, list_features, list_time):
                 for token in list_tokens:
                     list_len_tokens.append(len(token))
                 average_token_length= sum(list_len_tokens)/len(list_len_tokens)
-                list_features["URL_Average_Domain_Token_Length"]=average_token_length
-        except Exception  as e:
-            logger.warning("Exception: " + str(e))
-            list_features["URL_Average_Domain_Token_Length"]="N/A"
+            except Exception  as e:
+                logger.warning("Exception: " + str(e))
+                average_token_length=-1
+        list_features["URL_Average_Domain_Token_Length"]=average_token_length
         end=time.time()
         ex_time=end-start
         list_time["URL_Average_Domain_Token_Length"]=ex_time
@@ -2513,10 +2616,11 @@ def URL_Longest_Domain_Token(url, list_features, list_time):
                 for token in list_tokens:
                     list_len_tokens.append(len(token))
                 longest_token_len=max(list_len_tokens)
-                list_features["URL_Longest_Domain_Token"]=longest_token_len
+                
         except Exception  as e:
             logger.warning("Exception: " + str(e))
-            list_features["URL_Longest_Domain_Token"]="N/A"
+            longest_token_len=-1
+        list_features["URL_Longest_Domain_Token"]=longest_token_len
         end=time.time()
         ex_time=end-start
         list_time["URL_Longest_Domain_Token"]=ex_time
@@ -2525,17 +2629,21 @@ def URL_Protocol_Port_Match(url, list_features, list_time):
     if config["URL_Features"]["Protocol_Port_Match"]=="True":
         start=time.time()
         match = 1
-        try:
-            parsed_url = urlparse(url)
-            scheme = '{uri.scheme}'.format(uri=parsed_url).lower()
-            port = '{uri.port}'.format(uri=parsed_url)
-            protocol_port_list=[('http',8080), ('http',80), ('https',443), ('ftp',20), ('tcp',20), ('scp',20),('ftp',21), ('ssh',22), ('telnet',23), ('smtp',25), ('dns',53), ("pop3", 110), ("sftp", 115), ("imap", 143), ("smtp",465), ("rlogin", 513), ("imap", 993), ("pop3", 995)]
-            if port != 'None' and ((scheme, int(port)) not in protocol_port_list):
-                match = 0
-            list_features["URL_Protocol_Port_Match"] = match
-        except Exception as e:
-            logger.warning("Exception: {}".format(e))
-            list_features["URL_Protocol_Port_Match"]="N/A"
+        if url:
+            try:
+                parsed_url = urlparse(url)
+                scheme = '{uri.scheme}'.format(uri=parsed_url).lower()
+                port = '{uri.port}'.format(uri=parsed_url)
+                protocol_port_list=[('http',8080), ('http',80), ('https',443), ('ftp',20), ('tcp',20), ('scp',20),('ftp',21), ('ssh',22), ('telnet',23), ('smtp',25), ('dns',53), ("pop3", 110), ("sftp", 115), ("imap", 143), ("smtp",465), ("rlogin", 513), ("imap", 993), ("pop3", 995)]
+                if port != 'None' and ((scheme, int(port)) not in protocol_port_list):
+                    match = 0
+                list_features["URL_Protocol_Port_Match"] = match
+            except Exception as e:
+                logger.warning("Exception: {}".format(e))
+                match=-1
+        else:
+            match=0
+        list_features["URL_Protocol_Port_Match"]=match
         end=time.time()
         ex_time=end-start
         list_time["URL_Protocol_Port_Match"]=ex_time
@@ -2545,42 +2653,42 @@ def URL_DNS_Info_Exists(url, list_features, list_time):
     if config["URL_Features"]["DNS_Info_Exists"]=="True":
         start=time.time()
         flag=1
-        try:
-            parsed_url = urlparse(url)
-            domain='{uri.hostname}'.format(uri=parsed_url)
+        if url:    
             try:
-                dns_info = dns.resolver.query(domain, 'A')
-                flag=1
-                list_features["URL_DNS_Info_Ex"]=flag
-            except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout):
+                parsed_url = urlparse(url)
+                domain='{uri.hostname}'.format(uri=parsed_url)
+                try:
+                    dns_info = dns.resolver.query(domain, 'A')
+                    flag=1
+                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout):
+                    logger.warning("Exception: {}".format(e))
+                    flag=0
+            except Exception as e:
                 logger.warning("Exception: {}".format(e))
-                flag=0
-                list_features["URL_DNS_Info_Ex"]=flag
-        except Exception as e:
-            logger.warning("Exception: {}".format(e))
-            list_features["URL_DNS_Info_Ex"]="N/A"
-            logger.debug(list_features["URL_DNS_Info_Ex"])
+                flag=-1
+                logger.debug(list_features["URL_DNS_Info_Exists"])
+        else:
+            flag=0
+        list_features["URL_DNS_Info_Exists"]=flag
         end=time.time()
         ex_time=end-start
-        list_time["URL_DNS_Info_Ex"]=ex_time
+        list_time["URL_DNS_Info_Exists"]=ex_time
 
 def URL_Has_WWW_in_Middle(url, list_features, list_time):
     if config["URL_Features"]["Has_WWW_in_Middle"] == "True":
         start=time.time()
         flag=0
         #regex_www=re.compile(r'www')
-        try:
-            if url=='':
-                flag=0
-            else:
+        if url:
+            try:
                 parsed_url = urlparse(url)
                 domain = '{uri.hostname}'.format(uri=parsed_url).lower()
                 if 'www' in domain and domain.startswith('www') == False:
                     flag=1
-                list_features["Has_WWW_in_Middle"]=0
-        except Exception as e:
-            logger.warning("exception: " + str(e))
-            list_features["Has_WWW_in_Middle"]="N/A"
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                flag=-1
+        list_features["Has_WWW_in_Middle"]=flag
         end=time.time()
         ex_time=end-start
         list_time["Has_WWW_in_Middle"]=ex_time
@@ -2590,17 +2698,15 @@ def URL_Has_Hex_Characters(url, list_features, list_time):
         start=time.time()
         flag=0
         regex_hex=re.compile(r'%[1-9A-Z][1-9A-Z]')
-        try:
-            if url=='':
-                flag=0
-            else:
+        if url:
+            try:
                 #parsed_url = urlparse(url)
                 #domain = '{uri.netloc}'.format(uri=parsed_url).lower()
                 flag=int((bool(re.findall(regex_hex,url))))
-                list_features["URL_Has_Hex_Characters"]=flag
-        except Exception as e:
-            logger.warning("Exception: {}".format(e))
-            list_features['URL_Has_Hex_Characters']='N/A'
+            except Exception as e:
+                logger.warning("Exception: {}".format(e))
+                flag=-1
+        list_features["URL_Has_Hex_Characters"]=flag
         end=time.time()
         ex_time=end-start
         list_time["Has_WWW_in_Middle"]=ex_time
@@ -2610,17 +2716,16 @@ def URL_Double_Slashes_Not_Beginning_Count(url, list_features, list_time):
         start=time.time()
         flag=0
         regex_2slashes=re.compile(r'//')
-        try:
-            if url=='':
-                flag=0
-            else:
+        if url:
+            try:
                 parsed_url = urlparse(url)
                 path = '{uri.path}'.format(uri=parsed_url)
                 flag=int((bool(re.findall(regex_2slashes,path))))
                 list_features["URL_Double_Slashes_Not_Beginning_Count"]=flag
-        except Exception as e:
-            logger.warning("Exception: {}".format(e))
-            list_features['URL_Double_Slashes_Not_Beginning_Count']='N/A'
+            except Exception as e:
+                logger.warning("Exception: {}".format(e))
+                flag=-1
+        list_features["URL_Double_Slashes_Not_Beginning_Count"]=flag
         end=time.time()
         ex_time=end-start
         list_time["URL_Double_Slashes_Not_Beginning_Count"]=ex_time
@@ -2656,18 +2761,20 @@ def Network_creation_date(whois_info, list_features, list_time):
     if config["Network_Features"]["creation_date"] == "True":
         start=time.time()
         creation_date = 0.0
-        try:
-            if "creation_date" in whois_info:
-                dateTime = whois_info.get("creation_date")
-                if dateTime is not None:
-                    if type(dateTime) is list:
-                        creation_date = dateTime[0].timestamp()
-                    elif type(dateTime) is str:
-                        creation_date = datetime(year = 1996, month = 1, day = 1).timestamp()
-                    else:
-                        creation_date = dateTime.timestamp()
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if whois_info:
+            try:
+                if "creation_date" in whois_info:
+                    dateTime = whois_info.get("creation_date")
+                    if dateTime is not None:
+                        if type(dateTime) is list:
+                            creation_date = dateTime[0].timestamp()
+                        elif type(dateTime) is str:
+                            creation_date = datetime(year = 1996, month = 1, day = 1).timestamp()
+                        else:
+                            creation_date = dateTime.timestamp()
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                creation_date=-1
         list_features["creation_date"]=creation_date
         end=time.time()
         ex_time=end-start
@@ -2678,18 +2785,20 @@ def Network_expiration_date(whois_info, list_features, list_time):
     if config["Network_Features"]["expiration_date"] == "True":
         start=time.time()
         expiration_date=0.0
-        try:
-            if "expiration_date" in whois_info:
-                dateTime = whois_info.get("expiration_date")
-                if dateTime is not None:
-                    if type(dateTime) is list:
-                        expiration_date = dateTime[0].timestamp()
-                    elif type(dateTime) is str:
-                        expiration_date = 0.0
-                    else:
-                        expiration_date = dateTime.timestamp()
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if whois_info:
+            try:
+                if "expiration_date" in whois_info:
+                    dateTime = whois_info.get("expiration_date")
+                    if dateTime is not None:
+                        if type(dateTime) is list:
+                            expiration_date = dateTime[0].timestamp()
+                        elif type(dateTime) is str:
+                            expiration_date = 0.0
+                        else:
+                            expiration_date = dateTime.timestamp()
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                expiration_date=-1
         list_features["expiration_date"]=expiration_date
         end=time.time()
         ex_time=end-start
@@ -2700,19 +2809,21 @@ def Network_updated_date(whois_info, list_features, list_time):
     if config["Network_Features"]["updated_date"] == "True":
         start=time.time()
         updated_date = 0.0
-        try:
-            if "updated_date" in whois_info:
-                dateTime = whois_info.get("updated_date")
-                logger.debug(dateTime)
-                if dateTime is not None:
-                    if type(dateTime) is list:
-                        updated_date = dateTime[0].timestamp()
-                    elif type(dateTime) is str:
-                        updated_date = 0.0
-                    else:
-                        updated_date = dateTime.timestamp()
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if whois_info:    
+            try:
+                if "updated_date" in whois_info:
+                    dateTime = whois_info.get("updated_date")
+                    logger.debug(dateTime)
+                    if dateTime is not None:
+                        if type(dateTime) is list:
+                            updated_date = dateTime[0].timestamp()
+                        elif type(dateTime) is str:
+                            updated_date = 0.0
+                        else:
+                            updated_date = dateTime.timestamp()
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                updated_date=-1
         list_features["updated_date"]=updated_date
         #print("----Update_date: {}".format(updated_date))
         end=time.time()
@@ -2727,11 +2838,13 @@ def Network_as_number(IP_whois_list, list_features, list_time):
         #print(IP_whois_list)
         #if 'status' in IP_whois_list:
         #    print(IP_whois_list['status'])
-        try: 
-            if 'asn' in IP_whois_list:
-                as_number = IP_whois_list['asn']
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if IP_whois_list:    
+            try: 
+                if 'asn' in IP_whois_list:
+                    as_number = IP_whois_list['asn']
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                as_number=-1
         list_features["as_number"]=as_number
         end=time.time()
         ex_time=end-start
@@ -2743,15 +2856,17 @@ def Network_number_name_server(dns_info, list_features, list_time):
         start=time.time()
         number_name_server = 0
         #print(dns_info)
-        try:
-            for val in dns_info:  # dns_info is a list
-                if 'NS' in val:
-                    number_name_server += 1 
-                #else:
-                #    number_name_server = len(dns_info['NS'])
-            #print("number_name_server: " + str(number_name_server))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if dns_info:    
+            try:
+                for val in dns_info:  # dns_info is a list
+                    if 'NS' in val:
+                        number_name_server += 1 
+                    #else:
+                    #    number_name_server = len(dns_info['NS'])
+                #print("number_name_server: " + str(number_name_server))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_name_server=-1
         list_features["number_name_server"]=number_name_server
         end=time.time()
         ex_time=end-start
@@ -2763,31 +2878,31 @@ def Network_dns_ttl(url, list_features, list_time):
         start=time.time()
         dns_ttl = 0
         retry_count = 0
-        try:
-            parsed_url = urlparse(url)
-            domain = parsed_url.hostname
-        except Exception as e:
-            logger.warning("exception: " + str(e))
-            list_features["dns_ttl"]=-1
-        try:
-            while True:
-                try:
-                    dns_complete_info = dns.resolver.query(domain, 'A')
-                    dns_ttl = dns_complete_info.rrset.ttl
-                except dns.exception.Timeout:
-                    if retry_count > 3: 
+        if url:
+            try:
+                parsed_url = urlparse(url)
+                domain = parsed_url.hostname
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                dns_ttl=-1
+            try:
+                while True:
+                    try:
+                        dns_complete_info = dns.resolver.query(domain, 'A')
+                        dns_ttl = dns_complete_info.rrset.ttl
+                    except dns.exception.Timeout:
+                        if retry_count > 3: 
+                            break
+                        retry_count = retry_count + 1
+                        continue
+                    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers):
+                        logger.warning("Exception: {}".format(e))
+                        dns_ttl=0
                         break
-                    retry_count = retry_count + 1
-                    continue
-                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers):
-                    logger.warning("Exception: {}".format(e))
-                    dns_ttl=0
-                    list_features["dns_ttl"]=dns_ttl
                     break
-                break
-        except Exception as e:
-            logger.warning("exception: " + str(e))
-            list_features["dns_ttl"]="N/A"
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                dns_ttl=-1
         list_features["dns_ttl"]=dns_ttl
         end=time.time()
         ex_time=end-start
@@ -2798,13 +2913,16 @@ def Network_Website_content_type(html, list_features, list_time):
     if config["Network_Features"]["Website_content_type"] == "True":
         start=time.time()
         #print(html.headers)
-        try:
-            if 'Content-Type' in html.headers:
-                content_type = html.headers['Content-Type'].split(';')[0]
-                list_features["Website_content_type"]=content_type
-        except Exception as e:
-            logger.warning("exception: " + str(e))
-            list_features["Website_content_type"]=""
+        if html:
+            try:
+                if 'Content-Type' in html.headers:
+                    content_type = html.headers['Content-Type'].split(';')[0]
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                content_type="N/A"
+        else:
+            content_type=''
+        list_features["Website_content_type"]=content_type    
         end=time.time()
         ex_time=end-start
         list_time["content_type"]=ex_time
@@ -2814,14 +2932,14 @@ def Network_content_length(html, list_features, list_time):
     if config["Network_Features"]["content_length"] == "True":
         start=time.time()
         content_length = 0
-        try:
-            if 'Content-Length' in html.headers:
-                content_length = html.headers['Content-Length']
-                list_features["content_length"]=int(content_length)
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if html:
+            try:
+                if 'Content-Length' in html.headers:
+                    content_length = html.headers['Content-Length']
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                content_length=-1
         list_features["content_length"]=int(content_length)
-        #print("content_length: >>>>>>>>>>>> " + str(content_length))
         end=time.time()
         ex_time=end-start
         list_time["content_length"]=ex_time
@@ -2830,16 +2948,17 @@ def Network_x_powered_by(html, list_features, list_time):
     #global list_features
     if config["Network_Features"]["x_powered_by"] == "True":
         start=time.time()
-        x_powered_by = 'N/A'
-        try:
-            if 'X-Powered-By' in html.headers:
-                #x_powered_by = html.headers['X-Powered-By']
-                x_powered_by = 1
-            else:
-                x_powered_by = 0
-        except Exception as e:
-            logger.warning("exception: " + str(e))
-        #print("x_powered_by >>>>>>: " + str(x_powered_by))
+        x_powered_by = 0
+        if html:
+            try:
+                if 'X-Powered-By' in html.headers:
+                    #x_powered_by = html.headers['X-Powered-By']
+                    x_powered_by = 1
+                else:
+                    x_powered_by = 0
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                x_powered_by = -1
         list_features["x_powered_by"]=x_powered_by
         end=time.time()
         ex_time=end-start
@@ -2849,13 +2968,14 @@ def Network_URL_Is_Redirect(html, url, list_features, list_time):
     if config["Network_Features"]["URL_Is_Redirect"]=="True":
         start=time.time()
         flag=0
-        try:
-            if url != html.url:
-                flag=1
-            list_features["URL_Is_Redirect"]=flag
-        except Exception as e:
-            logger.warning("Exception: {}".format(e))
-            list_features["URL_Is_Redirect"]="N/A"
+        if html:
+            try:
+                if url != html.url:
+                    flag=1
+            except Exception as e:
+                logger.warning("Exception: {}".format(e))
+                flag=-1
+        list_features["URL_Is_Redirect"]=flag
         end=time.time()
         ex_time=end-start
         list_time["URL_Is_Redirect"]=ex_time
@@ -2866,15 +2986,17 @@ def Javascript_number_of_exec(soup, html, list_features, list_time):
     if config["Javascript_Features"]["number_of_exec"] == "True":
         start=time.time()
         number_of_exec=0
-        try:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    if 'exec(' in script_text:
-                        number_of_exec = number_of_exec + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                scripts = soup.find_all('script')
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        if 'exec(' in script_text:
+                            number_of_exec = number_of_exec + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_exec=-1
         list_features["number_of_exec"]=number_of_exec
         end=time.time()
         ex_time=end-start
@@ -2885,15 +3007,17 @@ def Javascript_number_of_escape(soup, html, list_features, list_time):
     if config["Javascript_Features"]["number_of_escape"] == "True":
         start=time.time()
         number_of_escape=0
-        try:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    if 'escape(' in script_text:
-                        number_of_escape = number_of_escape + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                scripts = soup.find_all('script')
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        if 'escape(' in script_text:
+                            number_of_escape = number_of_escape + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_escape=-1
         list_features["number_of_escape"]=number_of_escape
         end=time.time()
         ex_time=end-start
@@ -2904,15 +3028,17 @@ def Javascript_number_of_eval(soup, html, list_features, list_time):
     if config["Javascript_Features"]["number_of_eval"] == "True":
         start=time.time()
         number_of_eval=0
-        try:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    if 'eval(' in script_text:
-                        number_of_eval = number_of_eval + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                scripts = soup.find_all('script')
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        if 'eval(' in script_text:
+                            number_of_eval = number_of_eval + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_eval=-1
         list_features["number_of_eval"]=number_of_eval
         end=time.time()
         ex_time=end-start
@@ -2924,15 +3050,17 @@ def Javascript_number_of_link(soup, html, list_features, list_time):
     if config["Javascript_Features"]["number_of_link"] == "True":
         start=time.time()
         number_of_link=0
-        try:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    if 'link(' in script_text:
-                        number_of_link = number_of_link + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                scripts = soup.find_all('script')
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        if 'link(' in script_text:
+                            number_of_link = number_of_link + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_link=-1
         list_features["number_of_link"]=number_of_link
         end=time.time()
         ex_time=end-start
@@ -2944,14 +3072,16 @@ def Javascript_number_of_unescape(soup, html, list_features, list_time):
         start=time.time()
         number_of_unescape=0
         scripts = soup.find_all('script')
-        try:
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    if 'unescape(' in script_text:
-                        number_of_unescape = number_of_unescape + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        if 'unescape(' in script_text:
+                            number_of_unescape = number_of_unescape + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_unescape=-1
         list_features["number_of_unescape"]=number_of_unescape
         end=time.time()
         ex_time=end-start
@@ -2962,15 +3092,17 @@ def Javascript_number_of_search(soup, html, list_features, list_time):
     if config["Javascript_Features"]["number_of_search"] == "True":
         start=time.time()
         number_of_search=0
-        try:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    if 'search(' in script_text:
-                        number_of_search = number_of_search + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                scripts = soup.find_all('script')
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        if 'search(' in script_text:
+                            number_of_search = number_of_search + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_search=-1
         list_features["number_of_search"]=number_of_search
         end=time.time()
         ex_time=end-start
@@ -2981,15 +3113,17 @@ def Javascript_number_of_setTimeout(soup, html, list_features, list_time):
     if config["Javascript_Features"]["number_of_setTimeout"] == "True":
         start=time.time()
         number_of_setTimeout=0
-        try:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    if 'setTimeout(' in script_text:
-                        number_of_setTimeout = number_of_setTimeout + 1
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                scripts = soup.find_all('script')
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        if 'setTimeout(' in script_text:
+                            number_of_setTimeout = number_of_setTimeout + 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_setTimeout=-1
         list_features["number_of_setTimeout"]=number_of_setTimeout
         end=time.time()
         ex_time=end-start
@@ -3000,14 +3134,16 @@ def Javascript_number_of_iframes_in_script(soup, html, list_features, list_time)
     if config["Javascript_Features"]["number_of_iframes_in_script"] == "True":
         start=time.time()
         number_of_iframes_in_script=0
-        try:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    number_of_iframes_in_script = number_of_iframes_in_script + script_text.count("iframe")
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                scripts = soup.find_all('script')
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        number_of_iframes_in_script = number_of_iframes_in_script + script_text.count("iframe")
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_iframes_in_script=-1
         list_features["number_of_iframes_in_script"]=number_of_iframes_in_script
         end=time.time()
         ex_time=end-start
@@ -3018,16 +3154,18 @@ def Javascript_number_of_event_attachment(soup, html, list_features, list_time):
     if config["Javascript_Features"]["number_of_event_attachment"] == "True":
         start=time.time()
         number_of_event_attachment=0
-        try:
-            scripts = soup.find_all('script')
-            for script in scripts:
-                if script.get("type") is None or script.get("type") == 'text/javascript':
-                    script_text = str(script)
-                    number_of_event_attachment = number_of_event_attachment + len(re.findall(
-                        "(?:addEventListener|attachEvent|dispatchEvent|fireEvent)\('(?:error|load|beforeunload|unload)'",
-                        script_text.replace(" ", "")))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if soup:
+            try:
+                scripts = soup.find_all('script')
+                for script in scripts:
+                    if script.get("type") is None or script.get("type") == 'text/javascript':
+                        script_text = str(script)
+                        number_of_event_attachment = number_of_event_attachment + len(re.findall(
+                            "(?:addEventListener|attachEvent|dispatchEvent|fireEvent)\('(?:error|load|beforeunload|unload)'",
+                            script_text.replace(" ", "")))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_event_attachment=-1
         list_features["number_of_event_attachment"]=number_of_event_attachment
         end=time.time()
         ex_time=end-start
@@ -3038,14 +3176,15 @@ def Javascript_rightclick_disabled(html, list_features, list_time):
     if config["Javascript_Features"]["rightclick_disabled"] == "True":
         start=time.time()
         rightclick_disabled = 0
-        try:
-            rightclick_disabled = 0
-            #print(html.text.lower())
-            if 'addEventListener(\'contextmenu\'' in html.text.lower():
-                rightclick_disabled = 1
-
-        except Exception as e:
-            logger.warning("exception: " + str(e))
+        if html:
+            try:
+                rightclick_disabled = 0
+                #print(html.text.lower())
+                if 'addEventListener(\'contextmenu\'' in html.text.lower():
+                    rightclick_disabled = 1
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                rightclick_disabled=-1
         list_features["rightclick_disabled"]=rightclick_disabled
         end=time.time()
         ex_time=end-start
@@ -3060,6 +3199,7 @@ def Javascript_number_of_total_suspicious_features(list_features,list_time):
             +list_features["rightclick_disabled"] + list_features["number_of_event_attachment"] + list_features["number_of_iframes_in_script"] + list_features["number_of_event_attachment"] + list_features["number_of_setTimeout"]
         except Exception as e:
             logger.warning("exception: " + str(e))
+            number_of_total_suspicious_features=-1
         list_features["number_of_total_suspicious_features"]=number_of_total_suspicious_features
         end=time.time()
         ex_time=end-start
