@@ -49,7 +49,7 @@ config.read('Config_file.ini')
 
 def load_dataset():
 	email_training_regex=re.compile(r"email_features_training_?\d?.txt")
-	email_testing_regex=re.compile(r"email_features_testing_?\d?.txt")
+	email_testing_regex=re.compile(r"verbose=1email_features_testing_?\d?.txt")
 
 	link_training_regex=re.compile(r"link_features_training_?\d?.txt")
 	link_testing_regex=re.compile(r"link_features_testing_?\d?.txt")
@@ -204,7 +204,7 @@ def DNN(X,y, X_test, y_test):
 		model_dnn.add(Dense(1, activation='sigmoid'))
 		model_dnn.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 		print("model compile end >>>>>>")
-		model_dnn.fit(X, y, epochs=150, batch_size=100)
+		model_dnn.fit(X, y, epochs=150, batch_size=100, verbose=2)
 		y_predict=model_dnn.predict(X_test)
 		logger.info("DNN >>>>>>>")
 		Evaluation_Metrics.eval_metrics(model_dnn, X, y, y_test, y_predict)
