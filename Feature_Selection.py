@@ -40,7 +40,10 @@ def Feature_Selection(X,y):
 
 def Feature_Ranking(X,y,k):
 	#RFE
-	vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
+	if config["Email or URL feature Extraction"]["extract_features_emails"] == "True"
+		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
+	elif: config["Email or URL feature Extraction"]["extract_features_urls"] == "True"
+		vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
 	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
 		model = LogisticRegression()
 		rfe = RFE(model, k)
