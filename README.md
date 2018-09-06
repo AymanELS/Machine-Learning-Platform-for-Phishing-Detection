@@ -14,11 +14,17 @@ all the modules can be run using the python command like so: "python main.py" or
 ## First run update.py
 This will create or update the User_options.py that contains the list of all the features, classifiers, evaluation metrics, and imbalanced dataset options.
 The values take either "True" or "False" like so:
+```
 "Confusion_matrix = True" 
 "Cross_validation = False"
+```
 The entries that are "True" will be executed, the "False" will be ignored. 
 It has the option to specify the source of emails and URLs datasets, under  "###### Specify the path for Datasets"
-It has the option to choose whether to extract features from emails or from urls: "extract_features_emails = True" and "extract_features_urls = True" respectively
+It has the option to choose whether to extract features from emails or from urls: 
+```"extract_features_emails = True" 
+and "extract_features_urls = True" 
+``` 
+respectively
 
 Note: In the package that I will upload, the file is already updated, so no need to run it unless you want to add other features or classifiers. If you do, make sure to turn again the values that you previously turned to "False"
 
