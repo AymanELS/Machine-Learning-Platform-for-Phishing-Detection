@@ -116,10 +116,7 @@ def classifier_name():
         print("\n")
 '''
 
-
-
-
-######## LIST OF COMMANDS TO INSTALL MODULES
+## LIST OF COMMANDS TO INSTALL MODULES
 pip install -U scikit-learn or pip install sklearn
 pip install slimit
 pip install tldextract
