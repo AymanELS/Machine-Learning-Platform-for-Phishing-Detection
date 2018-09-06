@@ -33,7 +33,7 @@ IMPORTANT: At this moment the program needs to be run twice: Once for the traini
 ## Features.py
 This module has the definition of all the features that are going to be extracted by the program.
 If the user want to add a feature, they should follow the following template: 
-'''
+```
 def feature_name(inputs, list_features, list_time):
     if User_options.feature_name is True:
         start=timeit.timeit()
@@ -42,10 +42,10 @@ def feature_name(inputs, list_features, list_time):
         end=timeit.timeit()
         time=end-start
         list_time["feature_name"]=time
-'''
+```
 
 if we take the example of a feature that uses 'url' as input then the fucntion will look like this:
-'''
+```
 def url_length(url, list_features, list_time):
     ##global list_features
     if User_options.url_length is True:
@@ -58,52 +58,57 @@ def url_length(url, list_features, list_time):
         end=timeit.timeit()
         time=end-start
         list_time["url_length"]=time
-'''
+```
 Notice the test to check if 'url' is empty, then the feature gets 0.
 The output of this module are the following:
+```
 -email_feature_vector_.txt:
 -email_features_testing_.txt  (if testing)
 -email_features_training_.txt (if training)
 -url_feature_vector_.txt
 -link_features_testing_.txt (if testing)
 -link_features_training_.txt (if training)
+```
 
 
 ## Features_Support.py
 This module has all the functions that need to run the feature extractions, but are not features per se.
 The module is imported into Features.py so any function defined in Features_Support can be called in Feature.py
 IMPORTANT: If the user adds a feature in Features.py, then they should also add the following in Feature_Support.py:
-'''
+```
 Features.feature_name(inputs, list_features, list_time)
 print("feature_name")
-'''
+```
 This piece of code should be added in one of these different functions in Features_Support.py depending on the nature of the feature: 
+```
 single_network_features()
 single_javascript_features()
 single_url_feature()
 single_html_features()
 single_email_features()
+```
 
 ## Evaluation_Metrics.py:
 The modules have all the code for the evaluation metrics.
 If the user wants to add a metric, then they should follow this template:
-'''
+```
 def metric(y_test, y_predict):
     if User_options.metric is True:
         code
         print("metric")
         print(result)
-'''
+```
 and then add the function call in one of the following functions depending on the type of the metric:
+```
 eval_metrics()
 eval_metrics_cluster()
-
+```
 
 ## Classifiers.py
 This module contains all the classifier that can be run by the platform.
 If the user wants to add their own classifier, than they should use the following template:
 
-'''
+```
 def classifier_name():
     if User_options.classifier_name is True:
         X,y=load_dataset("feature_vector_extract.txt")
@@ -114,9 +119,10 @@ def classifier_name():
         print("classifier_name >>>>>>>")
         Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
         print("\n")
-'''
+```
 
 ## LIST OF COMMANDS TO INSTALL MODULES
+```
 pip install -U scikit-learn or pip install sklearn
 pip install slimit
 pip install tldextract
@@ -136,3 +142,4 @@ pip install ipwhois
 pip install python-whois
 pip install keras
 pip install tensorflow
+```
