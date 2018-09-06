@@ -2948,17 +2948,15 @@ def Network_x_powered_by(html, list_features, list_time):
     #global list_features
     if config["Network_Features"]["x_powered_by"] == "True":
         start=time.time()
-        x_powered_by = 0
+        x_powered_by = ''
         if html:
             try:
                 if 'X-Powered-By' in html.headers:
                     #x_powered_by = html.headers['X-Powered-By']
-                    x_powered_by = 1
-                else:
-                    x_powered_by = 0
+                    x_powered_by = html.headers["X-Powered-By"]
             except Exception as e:
                 logger.warning("exception: " + str(e))
-                x_powered_by = -1
+                x_powered_by = "N/A"
         list_features["x_powered_by"]=x_powered_by
         end=time.time()
         ex_time=end-start
