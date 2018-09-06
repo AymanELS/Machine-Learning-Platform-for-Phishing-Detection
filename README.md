@@ -134,3 +134,8 @@ pip install nltk
 pip install textstat
 pip install textblob
 pip install dnspython
+pip install Cython
+pip install ipwhois
+pip install python-whois
+pip install keras
+pip install tensorflow
