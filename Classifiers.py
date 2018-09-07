@@ -196,15 +196,13 @@ def DNN(X,y, X_test, y_test):
 		#X_test, y_test = load_dataset("feature_vector_extract_test.txt")
 		K.set_learning_phase(1) #set learning phase
 		model_dnn = Sequential()
-		print(X.shape)
 		dim=X.shape[1]
-		print(dim) ##
-		print("Start Building Model")
+		logger.debug("Start Building DNN Model")
 		model_dnn.add(Dense(80, kernel_initializer='normal', activation='relu', input_dim=dim)) #units in Dense layer as same as the input dim
 		model_dnn.add(Dense(1, activation='sigmoid'))
 		model_dnn.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-		print("model compile end >>>>>>")
-		model_dnn.fit(X, y, epochs=150, batch_size=100, verbose=2)
+		logger.debug("model compile end >>>>>>")
+		model_dnn.fit(X, y, epochs=150, batch_size=100, verbose=0)
 		y_predict=model_dnn.predict(X_test)
 		logger.info("DNN >>>>>>>")
 		Evaluation_Metrics.eval_metrics(model_dnn, X, y, y_test, y_predict.round())
