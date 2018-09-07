@@ -1,6 +1,6 @@
-from sklearn import svm  
+from sklearn import svm
 from sklearn import datasets
-from collections import Counter 
+from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn
@@ -40,9 +40,9 @@ def Feature_Selection(X,y):
 
 def Feature_Ranking(X,y,k):
 	#RFE
-	if config["Email or URL feature Extraction"]["extract_features_emails"] == "True"
+	if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
 		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
-	elif: config["Email or URL feature Extraction"]["extract_features_urls"] == "True"
+	elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 		vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
 	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
 		model = LogisticRegression()
@@ -56,7 +56,7 @@ def Feature_Ranking(X,y,k):
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
 
-	# Information Gain 
+	# Information Gain
 	elif config["Feature Ranking"]["Information Gain"] == "True":
 		model = DecisionTreeClassifier(criterion='entropy')
 		model.fit(X,y)
@@ -66,7 +66,7 @@ def Feature_Ranking(X,y,k):
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
 
-	#Gini	
+	#Gini
 	elif config["Feature Ranking"]["Gini"] == "True":
 		model = DecisionTreeClassifier(criterion='gini')
 		model.fit(X,y)
@@ -98,11 +98,15 @@ def Select_Best_Features_Training(X, y, k):
 	# Print out the list of best features
 	return X, selection
 
-	
+
 
 def Select_Best_Features_Testing(X, selection):
-	X = selection.transform(X)
+	print (selection)
+	try:
+		X = selection.transform(X)
 	# Print out the list of best features
+	except AttributeError as e:
+		print (e)
 	return X
 
 def load_dataset():
@@ -115,13 +119,13 @@ def load_dataset():
 			file_feature_training=re.findall(email_training_regex,''.join(os.listdir('.')))[-1]
 			logger.debug("file_feature_training: {}".format(file_feature_training))
 			#file_feature_testing=re.findall(email_testing_regex,''.join(os.listdir('.')))[-1]
-		
+
 		if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 			file_feature_training=re.findall(link_training_regex,''.join(os.listdir('.')))[-1]
 			#file_feature_testing=re.findall(link_testing_regex,''.join(os.listdir('.')))[-1]
 	except Exception as e:
 		logger.warning("exception: " + str(e))
-	
+
 	if config["Imbalanced Datasets"]["Load_imbalanced_dataset"] == "True":
 		X, y = Imbalanced_Dataset.load_imbalanced_dataset(file_feature_training)
 		#X_test, y_test=Imbalanced_Dataset.load_imbalanced_dataset(file_feature_testing)
