@@ -58,8 +58,8 @@ PAYLOAD_NOT_FOUND = False # for filtering
 Function_words_list=["a", "about", "above", "after", "again", "against", "ago", "ahead", "all", "almost", "almost", "along", "already", "also", "", "although", "always", "am", "among", "an", "and", "any", "are", "aren't", "around", "as", "at", "away", "backward", "backwards", "be", "because", "before", "behind", "below", "beneath", "beside", "between", "both", "but", "by", "can", "cannot", "can't", "cause", "'cos", "could", "couldn't", "'d", "had", "despite", "did", "didn't", "do", "does", "doesn't", "don't", "down", "during", "each", "either", "even", "ever", "every", "except", "for", "faw", "forward", "from", "frm", "had", "hadn't", "has", "hasn't", "have", "hv", "haven't", "he", "hi", "her", "here", "hers", "herself", "him", "hm", "himself", "his", "how", "however", "I", "if", "in", "inside", "inspite", "instead", "into", "is", "isn't", "it", "its", "itself", "just", "'ll", "will", "shall", "least", "less", "like", "'m", "them", "many", "may", "mayn't", "me", "might", "mightn't", "mine", "more", "most", "much", "must", "mustn't", "my", "myself", "near", "need", "needn't", "needs", "neither", "never", "no", "none", "nor", "not", "now", "of", "off", "often", "on", "once", "only", "onto", "or", "ought", "oughtn't", "our", "ours", "ourselves", "out", "outside", "over", "past", "perhaps", "quite", "'re", "rather", "'s", "", "seldom", "several", "shall", "shan't", "she", "should", "shouldn't", "since", "so", "some", "sometimes", "soon", "than", "that", "the", "their", "theirs", "them", "themselves", "then", "there", "therefore", "these", "they", "this", "those", "though", "", "through", "thus", "till", "to", "together", "too", "towards", "under", "unless", "until", "up", "upon", "us", "used", "usedn't", "usen't", "usually", "'ve", "very", "was", "wasn't", "we", "well", "were", "weren't", "what", "when", "where", "whether", "which", "while", "who", "whom", "whose", "why", "will", "with", "without", "won't", "would", "wouldn't", "yet", "you", "your", "yours", "yourself", "yourselves"]
 ''' Returns frequency of function words. Source:  https://stackoverflow.com/questions/5819840/calculate-frequency-of-function-words'''
 def get_func_word_freq(words,funct_words):
-    fdist = nltk.FreqDist([funct_word for funct_word in funct_words if funct_word in words]) 
-    funct_freq = {}    
+    fdist = nltk.FreqDist([funct_word for funct_word in funct_words if funct_word in words])
+    funct_freq = {}
     for key,value in fdist.iteritems():
         funct_freq[key] = value
     return funct_freq
@@ -82,7 +82,7 @@ def load_liwc_funct():
 def words(entry):
     return filter(lambda w: len(w) > 0,
                   [w.strip("0123456789!:,.?(){}[]") for w in entry.split()])
- 
+
 def yule(entry):
     # yule's I measure (the inverse of yule's K measure)
     # higher number is higher diversity - richer vocabulary
@@ -94,7 +94,7 @@ def yule(entry):
             d[w] += 1
         except KeyError:
             d[w] = 1
- 
+
     M1 = float(len(d))
     M2 = sum([len(list(g))*(freq**2) for freq,g in groupby(sorted(d.values()))])
     try:
@@ -107,7 +107,7 @@ def yule(entry):
 def extract_header_fields(email):
     #with open(filepath,'r') as f:
         #email=f.read()
-    
+
     email_address_regex=re.compile(r"<.*@[a-zA-Z0-9.\-_]*", flags=re.MULTILINE|re.IGNORECASE)
     email_address_name_regex=re.compile(r'"?.*"? <?', flags=re.MULTILINE|re.IGNORECASE)
     email_address_domain_regex=re.compile(r"@.*", flags=re.MULTILINE|re.IGNORECASE)
@@ -127,7 +127,7 @@ def extract_header_fields(email):
         if msg['Return-Path'] != None:
             #return_addr=msg['Return-Path'].strip('>').strip('<')
             return_addr=1
-        else: 
+        else:
             return_addr=0
     except Exception as e:
         logger.warning("exception: " + str(e))
@@ -148,7 +148,7 @@ def extract_header_fields(email):
         logger.warning("exception: " + str(e))
         sender_name="None"
     #print(sender_name)
-    
+
     try:
         if re.findall(email_address_regex,sender_full)!=[]:
             sender_full_address=re.findall(email_address_regex,sender_full)[0]
@@ -166,7 +166,7 @@ def extract_header_fields(email):
     except Exception as e:
         logger.warning("exception: " + str(e))
         sender_domain="None"
-    
+
     try:
         recipient_full=msg['To']
         if recipient_full==None:
@@ -191,7 +191,7 @@ def extract_header_fields(email):
     except Exception as e:
         logger.warning("exception: " + str(e))
         recipient_name="None"
-    
+
     try:
         recipient_full_address=re.findall(email_address_regex,recipient_full)
         for address in recipient_full_address:
@@ -228,7 +228,7 @@ def extract_header_fields(email):
     #    recipient_name=recipient_full.split("<")[0].strip('"')
      #   recipient_full_address=recipient_full.split("<")[1].strip('>')
       #  recipient_domain=sender_full_address.split("@")[1]
-    
+
     #print(str(recipient_name),recipient_full_address,recipient_domain)
     try:
         if msg['Message-Id']!=None:
@@ -315,8 +315,8 @@ def extract_header_fields(email):
             x_original_authentication_results =0
     except Exception as e:
         logger.warning("exception: " + str(e))
-        x_original_authentication_results="None" 
-           
+        x_original_authentication_results="None"
+
     try:
         if msg["Authentication-Results"] != None:
             authentication_results = msg["Authentication-Results"]
@@ -324,7 +324,7 @@ def extract_header_fields(email):
             authentication_results = "None"
     except Exception as e:
         logger.warning("exception: " + str(e))
-        authentication_results="None" 
+        authentication_results="None"
 
     try:
         if msg["Received"] != []:
@@ -370,7 +370,7 @@ def extract_header_fields(email):
             MIME_version=0
     except Exception as e:
         logger.warning("exception: "+ str(e))
-        MIME_version="None"    
+        MIME_version="None"
 
     #print(message_id)
     return subject, sender_full, recipient_full, recipient_name, recipient_full_address, recipient_domain,message_id,\
@@ -598,7 +598,7 @@ def my_isIPAddr(url):
 
 def dns_ip_retrieve(dns_input_file):
     """
-    Reads the the dns information from the input file 
+    Reads the the dns information from the input file
     dns_input_file: dump file created by the download_url.py
     return: list of dns entries and ip addresses
     """
@@ -672,11 +672,11 @@ def Preprocessing(X):
     #    return X_train, X_test
     #    # return the scaler for testing data
     #    # Use min max to scale data because it's robust to very small standard deviations of features and preserving zero
-    if config["Preprocessing"]["mix_max_scaling"] == "True":
+    if config["Preprocessing"]["min_max_scaling"] == "True":
         X=min_max_scaling(X_array)
         #X_test=min_max_scaling(X_test_array)
         summary.write("\n Scaling using the min and max.\n")
-        logger.info("Preprocessing: mix_max_scaling")
+        logger.info("Preprocessing: min_max_scaling")
         return X
         # use abs value to scale
     #elif config["Preprocessing"]["abs_scaler"] == "True":
@@ -808,7 +808,7 @@ def single_javascript_features(soup, html, list_features, list_time):
 def single_url_feature(url, list_features,list_time):
     Features.URL_length(url, list_features, list_time)
     logger.debug("url_length")
-    
+
     Features.URL_domain_length(url, list_features, list_time)
     logger.debug("domain_length")
 
@@ -831,7 +831,7 @@ def single_url_feature(url, list_features,list_time):
     logger.debug("has_port")
 
     Features.URL_has_https(url, list_features, list_time)
-    logger.debug("has_https") 
+    logger.debug("has_https")
 
     Features.URL_number_of_digits(url, list_features, list_time)
     logger.debug("number_of_digits")
@@ -909,7 +909,7 @@ def single_html_features(soup, url, list_features, list_time):
 
     Features.HTML_number_of_body(soup, list_features, list_time)
     logger.debug("number_of_body")
-        
+
     Features.HTML_number_of_titles(soup, list_features, list_time)
     logger.debug("number_of_titles")
 
@@ -921,7 +921,7 @@ def single_html_features(soup, url, list_features, list_time):
 
     Features.HTML_number_of_input(soup, list_features, list_time)
     logger.debug("number_of_input")
-                
+
     Features.HTML_number_of_img(soup, list_features, list_time)
     logger.debug("number_of_img")
 
@@ -970,7 +970,7 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
                 , sender_name,sender_full_address,sender_domain,return_addr,x_virus_scanned,x_spam_flag,x_originating_ip, x_mailer
                 , x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results
                 , received, Cc, Bcc, To, MIME_version, list_features, list_time):
-    
+
     Features.Email_return_path(return_addr, list_features, list_time)
     logger.debug("return_path")
     Features.Email_X_mailer(x_mailer,list_features, list_time)
@@ -995,82 +995,82 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
 
     Features.Email_number_of_characters_subject(subject, list_features, list_time)
     logger.debug("number_of_characters_subject")
-    
+
     Features.Email_number_of_special_characters_subject(subject, list_features, list_time)
     logger.debug("numer_of_special_characters_subject")
 
     Features.Email_binary_fwd(subject, list_features, list_time)
     logger.debug("binary_fwd")
-            
+
     Features.Email_vocab_richness_subject(subject, list_features, list_time)
     logger.debug("vocab_richness_subject")
-            
+
     Features.Email_flesh_read_score(body_text, list_features, list_time)
     logger.debug("flesh_read_score")
-            
+
     Features.Email_smog_index(body_text, list_features, list_time)
     logger.debug("smog_index")
 
     Features.Email_flesh_kincaid_score(body_text, list_features, list_time)
     logger.debug("flesh_kincaid_score")
-            
+
     Features.Email_coleman_liau_index(body_text, list_features, list_time)
     logger.debug("coleman_liau_index")
-            
+
     Features.Email_automated_readability_index(body_text, list_features, list_time)
     logger.debug("automated_readability_index")
-            
+
     Features.Email_dale_chall_readability_score(body_text, list_features, list_time)
     logger.debug("dale_chall_readability_score")
-            
+
     Features.Email_difficult_words(body_text, list_features, list_time)
     logger.debug("difficult_words")
-            
+
     Features.Email_linsear_score(body_text, list_features, list_time)
     logger.debug("linsear_score")
-            
+
     Features.Email_gunning_fog(body_text, list_features, list_time)
     logger.debug("gunning_fog")
-            
+
     #Features.html_in_body(body, list_features, list_time)
     #print("html_in_body")
-            
+
     Features.Email_number_of_words_body(body_text, list_features, list_time)
     logger.debug("number_of_words_body")
-            
+
     Features.Email_number_of_characters_body(body_text, list_features, list_time)
     logger.debug("number_of_characters_body")
-            
+
     Features.Email_number_of_special_characters_body(body_text, list_features, list_time)
     logger.debug("number_of_special_characters_body")
-            
+
     Features.Email_vocab_richness_body(body_text, list_features, list_time)
     logger.debug("vocab_richness_body")
-            
+
     Features.Email_number_of_html_tags_body(body_html, list_features, list_time)
     logger.debug("number_of_html_tags_body")
-            
+
     Features.Email_number_unique_words_body(body_text, list_features, list_time)
     logger.debug("number_unique_words_body")
-            
+
     Features.Email_end_tag_count(body_html, list_features, list_time)
     logger.debug("end_tag_count")
-        
+
     Features.Email_open_tag_count(body_html, list_features, list_time)
     logger.debug("open_tag_count")
-            
-    Features.Email_recipient_name_body(body_text,recipient_name, list_features, list_time) 
+
+    Features.Email_recipient_name_body(body_text,recipient_name, list_features, list_time)
     logger.debug("recipient_name_body")
-            
+
     Features.Email_on_mouse_over(body_html, list_features, list_time)
     logger.debug("on_mouse_over")
-            
+
     Features.Email_count_href_tag(body_html, list_features, list_time)
     logger.debug("count_href_tag")
-            
+
     Features.Email_compare_sender_return(sender_full_address, return_addr, list_features, list_time)
     logger.debug("compare_sender_return")
-            
+
     Features.Email_compare_sender_domain_message_id_domain(sender_domain , message_id, list_features, list_time)
 
     #Features.Content_Disposition(cdispo, list_features, list_time)
@@ -1223,7 +1223,7 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                 #####################
                 if rawurl == '':
                     pass
-                #####################  
+                #####################
                 logger.debug("#############################################")
                 logger.debug("rawurl:" + str(rawurl))
                 Features.summary.write("URL: {}".format(rawurl))
@@ -1233,7 +1233,7 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                     Features.summary.write("This URL will not be considered for further processing because It's registred in out list of dead URLs")
                 else:
                     html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = Download_url.download_url(rawurl)
-                
+
                     if Error == 1:
                         logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                         Bad_URLs_List.append(rawurl)
@@ -1260,7 +1260,7 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
             email=f.read()
             body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes = extract_body(email)
             logger.debug("extract_body >>>> Done")
-            
+
             url_All=get_url(body_html)
 
             logger.debug("extract urls from body >>>> Done")
@@ -1294,7 +1294,7 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
             print("URL features extracted")
             '''
             dump_features(list_features, features_output, list_dict, list_time, time_dict)
-            
+
 
     except Exception as e:
         logger.warning("exception: " + str(e))

@@ -87,7 +87,7 @@ def Confirmation():
         print("extract_features_emails = {}".format(config["Email or URL feature Extraction"]["extract_features_emails"]))
     elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
         print("extract_features_urls = {}".format(config["Email or URL feature Extraction"]["extract_features_urls"]))
-    
+
     print("###Paths to datasets:")
     print("Legitimate Dataset (Training): {}".format(config["Dataset Path"]["path_legitimate_training"]))
     print("Phishing Dataset (Training):: {}".format(config["Dataset Path"]["path_phishing_training"]))
@@ -103,11 +103,11 @@ def Confirmation():
     return answer
 
 def main():
-    Feature_extraction=False
+    Feature_extraction=False #flag for feature extraction
     flag_training=False
     # Feature dumping and loading methods
-    #flag_saving_pickle=config["Features Format"]["Pikle"]
-    #flag_saving_svmlight=config["Features Format"]["Svmlight format"]
+    # flag_saving_pickle=config["Features Format"]["Pikle"]
+    # flag_saving_svmlight=config["Features Format"]["Svmlight format"]
 
 
     if config["Extraction"]["Feature Extraction"]=='True':
@@ -218,10 +218,10 @@ def main():
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_train, y_train=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_train, y_train)
                 # dump features and labels and vectorizers
-                
+
                 joblib.dump(X_train,"Data_Dump/URLs_Training/X_train.pkl")
                 joblib.dump(y_train,"Data_Dump/URLs_Training/y_train.pkl")
-                
+
                 # flag to mark if training was done
                 flag_training=True
                 logger.info("Feature Extraction for training dataset: Done!")
