@@ -149,12 +149,17 @@ def eval_metrics_cluster(y_test, y_predict):
 	summary=Features.summary
 	summary.write("\n\nEvaluation metrics used:\n")
 	summary.write("\n\n clustering metrics:\n")
+	eval_metrics_dict_cluster = {}
 	if config["Evaluation Metrics"]["Homogenity"] == "True":
-		Homogenity(y_test, y_predict)
+		homogeneity_score = Homogenity(y_test, y_predict)
+		eval_metrics_dict_cluster['Homogenity'] = homogeneity_score
 		summary.write("Homogenity\n")
 	if config["Evaluation Metrics"]["Completeness"] == "True":
-		Completeness(y_test, y_predict)
+		completeness_score = Completeness(y_test, y_predict)
+		eval_metrics_dict_cluster['Completeness'] = completeness_score
 		summary.write("Completeness\n")
 	if config["Evaluation Metrics"]["V_measure"] == "True":
-		V_measure(y_test,y_predict)
+		v_measure_score = V_measure(y_test,y_predict)
+		eval_metrics_dict_cluster['V_measure'] = v_measure_score
 		summary.write("V_measure\n")
+	return (eval_metrics_dict_cluster)

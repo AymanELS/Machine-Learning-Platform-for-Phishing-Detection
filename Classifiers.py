@@ -224,6 +224,29 @@ def HDDT():
 	subprocess.call(['java', '-cp', weka_hhdt_path,'weka.classifiers.trees.HTree', '-U', '-A' '-B' '-t', y_predict, y_test])
 ##To-Do: Add DNN and OLL
 ####
+def rank_classifier(eval_clf_dict, metric_str):
+	"""
+
+	"""
+	dict_metric_str = {}
+	sorted_eval_clf_dict = {}
+	#create the dictionary with the metric
+	for clf, val in eval_clf_dict.items():
+		# print (clf)
+		# print (val[metric_str])
+		try:
+			dict_metric_str[clf] = val[metric_str]
+		except KeyError:
+			print ("Does not work for classifier:",clf)
+	print ("The ranked classifiers on the metric: {}".format(metric_str))
+	sorted_dict_metric_str = sorted(((value, key) for (key,value) in dict_metric_str.items()), reverse=True)
+	# print (sorted_dict_metric_str)
+	for tuple in sorted_dict_metric_str:
+		sorted_eval_clf_dict[tuple[1]] = eval_clf_dict[tuple[1]]
+	print (sorted_eval_clf_dict)
+
+
+
 def classifiers(X,y, X_test, y_test):
 	logger.info("##### Classifiers #####")
 	summary=Features.summary
@@ -261,21 +284,26 @@ def classifiers(X,y, X_test, y_test):
 		summary.write("kNearest Neighbor\n")
 	if config["Classifiers"]["KMeans"] == "True":
 		eval_kmeans = KMeans(X,y, X_test, y_test)
-		eval_metrics_per_classifier_dict['kMeans'] = eval_kmeans
+		eval_metrics_per_classifier_dict['KMeans'] = eval_kmeans
 		summary.write("kMeans \n")
 	if config["Classifiers"]["Bagging"] == "True":
 		eval_bagging = Bagging(X,y, X_test, y_test)
-		eval_metrics_per_classifier_dict['bagging'] = eval_bagging
+		eval_metrics_per_classifier_dict['Bagging'] = eval_bagging
 		summary.write("Bagging \n")
 	if config["Classifiers"]["Boosting"] == "True":
 		eval_boosting = Boosting(X,y, X_test, y_test)
-		eval_metrics_per_classifier_dict['boosting'] = eval_boosting
+		eval_metrics_per_classifier_dict['Boosting'] = eval_boosting
 		summary.write("Boosting \n")
 	if config["Classifiers"]["DNN"] == "True":
 		eval_dnn = DNN(X,y, X_test, y_test)
-		eval_metrics_per_classifier_dict['dnn'] = eval_dnn
+		eval_metrics_per_classifier_dict['DNN'] = eval_dnn
 		summary.write("DNN \n")
-	print (eval_metrics_per_classifier_dict)
+	# print (eval_metrics_per_classifier_dict)
+	if config["Classification"]["Rank Classifiers"] == "True":
+		# print (eval_metrics_per_classifier_dict)
+		# print ("The classifiers ranked: ")
+		rank_classifier(eval_metrics_per_classifier_dict, config["Classification"]["rank on metric"])
+
 
 def fit_MNB(X,y):
 	mnb=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
