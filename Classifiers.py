@@ -100,7 +100,8 @@ def SVM(X,y, X_test, y_test):
 	clf.fit(X, y)
 	y_predict=clf.predict(X_test)
 	logger.info("SVM >>>>>>>")
-	Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+	eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+	return (eval_metrics_SVM)
 
 ######## Random Forest
 def RandomForest(X,y, X_test, y_test):
@@ -111,7 +112,8 @@ def RandomForest(X,y, X_test, y_test):
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
 		logger.info("RF >>>>>>>")
-		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		eval_metrics_RF = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return eval_metrics_RF
 
 ###### Decition Tree
 def DecisionTree(X,y, X_test, y_test):
@@ -121,7 +123,8 @@ def DecisionTree(X,y, X_test, y_test):
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
 		logger.info("DT >>>>>>>")
-		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		eval_metrics_DT = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return eval_metrics_DT
 
 ##### Gaussian Naive Bayes
 def GaussianNaiveBayes(X,y, X_test, y_test):
@@ -131,7 +134,8 @@ def GaussianNaiveBayes(X,y, X_test, y_test):
 		gnb.fit(X,y)
 		y_predict=gnb.predict(X_test)
 		logger.info("GNB >>>>>>>")
-		Evaluation_Metrics.eval_metrics(gnb, X, y, y_test, y_predict)
+		eval_metrics_NB = Evaluation_Metrics.eval_metrics(gnb, X, y, y_test, y_predict)
+		return eval_metrics_NB
 
 ##### Multinomial Naive Bayes
 def MultinomialNaiveBayes(X,y, X_test, y_test):
@@ -141,7 +145,8 @@ def MultinomialNaiveBayes(X,y, X_test, y_test):
 		mnb.fit(X,y)
 		y_predict=mnb.predict(X_test)
 		logger.info("MNB >>>>>>>")
-		Evaluation_Metrics.eval_metrics(mnb, X, y, y_test, y_predict)
+		eval_metrics_MNB = Evaluation_Metrics.eval_metrics(mnb, X, y, y_test, y_predict)
+		return eval_metrics_MNB
 
 ##### Logistic Regression
 def LogisticRegression(X,y, X_test, y_test):
@@ -151,7 +156,8 @@ def LogisticRegression(X,y, X_test, y_test):
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
 		logger.info("LR >>>>>>>")
-		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		eval_metrics_LR = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return eval_metrics_LR
 
 ##### k-Nearest Neighbor
 def kNearestNeighbor(X,y, X_test, y_test):
@@ -160,7 +166,8 @@ def kNearestNeighbor(X,y, X_test, y_test):
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
 		logger.info("KNN >>>>>>>")
-		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		eval_metrics_KNN = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return eval_metrics_KNN
 
 ##### KMeans
 def KMeans(X,y, X_test, y_test):
@@ -169,7 +176,8 @@ def KMeans(X,y, X_test, y_test):
 		clf.fit(X,y)
 		logger.info("Kmeans")
 		y_predict=clf.predict(X_test)
-		Evaluation_Metrics.eval_metrics_cluster(y_test, y_predict)
+		eval_metrics_kmeans = Evaluation_Metrics.eval_metrics_cluster(y_test, y_predict)
+		return eval_metrics_kmeans
 		#Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
 
 ##### Bagging
@@ -180,7 +188,8 @@ def Bagging(X,y, X_test, y_test):
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
 		logger.info("Bagging_scores >>>>>>>")
-		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		eval_metrics_bagging = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return eval_metrics_bagging
 
 #### Boosting
 def Boosting(X,y, X_test, y_test):
@@ -189,7 +198,8 @@ def Boosting(X,y, X_test, y_test):
 		clf.fit(X,y)
 		y_predict=clf.predict(X_test)
 		logger.info("Boosting >>>>>>>")
-		Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		eval_metrics_boosting = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return eval_metrics_boosting
 
 ############### imbalanced learning
 def DNN(X,y, X_test, y_test):
@@ -207,7 +217,8 @@ def DNN(X,y, X_test, y_test):
 		model_dnn.fit(X, y, epochs=150, batch_size=100)
 		y_predict=model_dnn.predict(X_test)
 		logger.info("DNN >>>>>>>")
-		Evaluation_Metrics.eval_metrics(model_dnn, X, y, y_test, y_predict)
+		eval_metrics_DNN = Evaluation_Metrics.eval_metrics(model_dnn, X, y, y_test, y_predict.round())
+		return eval_metrics_DNN
 
 def HDDT():
 	#java -cp <path to weka-hddt.jar> weka.classifiers.trees.HTree -U -A -B -t <training file> -T <testing file>
@@ -219,45 +230,57 @@ def classifiers(X,y, X_test, y_test):
 	logger.info("##### Classifiers #####")
 	summary=Features.summary
 	summary.write("\n##############\n\nClassifiers Used:\n")
+	eval_metrics_per_classifier_dict = {}
 	#X,y, X_test, y_test=load_dataset()
 	#X,y, X_test, y_test=load_dictionary()
 	if config["Classifiers"]["SVM"] == "True":
-		SVM(X,y, X_test, y_test)
+		eval_SVM = SVM(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['SVM'] = eval_SVM
 		summary.write("SVM\n")
 	if config["Classifiers"]["RandomForest"] == "True":
-		RandomForest(X,y, X_test, y_test)
+		eval_RF = RandomForest(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['RF'] = eval_RF
 		summary.write("Random Forest\n")
 	if config["Classifiers"]["DecisionTree"] == "True":
-		DecisionTree(X,y, X_test, y_test)
+		eval_DT = DecisionTree(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['Dec_tree'] = eval_DT
 		summary.write("Decision Tree \n")
 	if config["Classifiers"]["GaussianNaiveBayes"] == "True":
-		GaussianNaiveBayes(X,y, X_test, y_test)
+		eval_NB = GaussianNaiveBayes(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['NB'] = eval_NB
 		summary.write("Gaussian Naive Bayes \n")
 	if config["Classifiers"]["MultinomialNaiveBayes"] == "True":
-		MultinomialNaiveBayes(X,y, X_test, y_test)
+		eval_MNB =  MultinomialNaiveBayes(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['MNB'] = eval_MNB
 		summary.write("Multinomial Naive Bayes \n")
 	if config["Classifiers"]["LogisticRegression"] == "True":
-		LogisticRegression(X,y, X_test, y_test)
+		eval_LR = LogisticRegression(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['LR'] = eval_LR
 		summary.write("Logistic Regression\n")
 	if config["Classifiers"]["kNearestNeighbor"] == "True":
-		kNearestNeighbor(X,y, X_test, y_test)
+		eval_knn = kNearestNeighbor(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['KNN'] = eval_knn
 		summary.write("kNearest Neighbor\n")
 	if config["Classifiers"]["KMeans"] == "True":
-		KMeans(X,y, X_test, y_test)
+		eval_kmeans = KMeans(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['kMeans'] = eval_kmeans
 		summary.write("kMeans \n")
 	if config["Classifiers"]["Bagging"] == "True":
-		Bagging(X,y, X_test, y_test)
+		eval_bagging = Bagging(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['bagging'] = eval_bagging
 		summary.write("Bagging \n")
 	if config["Classifiers"]["Boosting"] == "True":
-		Boosting(X,y, X_test, y_test)
+		eval_boosting = Boosting(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['boosting'] = eval_boosting
 		summary.write("Boosting \n")
 	if config["Classifiers"]["DNN"] == "True":
-		DNN(X,y, X_test, y_test)
+		eval_dnn = DNN(X,y, X_test, y_test)
+		eval_metrics_per_classifier_dict['dnn'] = eval_dnn
 		summary.write("DNN \n")
+	print (eval_metrics_per_classifier_dict)
 
 def fit_MNB(X,y):
 	mnb=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
 	mnb.fit(X,y)
 	logger.info("MNB >>>>>>>")
 	joblib.dump(mnb,"Data_Dump/Emails_Training/MNB_model.pkl")
-	
