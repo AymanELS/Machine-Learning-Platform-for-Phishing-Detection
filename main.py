@@ -87,7 +87,7 @@ def Confirmation():
         print("extract_features_emails = {}".format(config["Email or URL feature Extraction"]["extract_features_emails"]))
     elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
         print("extract_features_urls = {}".format(config["Email or URL feature Extraction"]["extract_features_urls"]))
-    
+
     print("###Paths to datasets:")
     print("Legitimate Dataset (Training): {}".format(config["Dataset Path"]["path_legitimate_training"]))
     print("Phishing Dataset (Training):: {}".format(config["Dataset Path"]["path_phishing_training"]))
@@ -103,13 +103,31 @@ def Confirmation():
     return answer
 
 def main():
-    Feature_extraction=False
+    Feature_extraction=False #flag for feature extraction
     flag_training=False
     # Feature dumping and loading methods
-    #flag_saving_pickle=config["Features Format"]["Pikle"]
-    #flag_saving_svmlight=config["Features Format"]["Svmlight format"]
+    # flag_saving_pickle=config["Features Format"]["Pikle"]
+    # flag_saving_svmlight=config["Features Format"]["Svmlight format"]
 
 
+### Feature ranking only
+    # if config["Ranking"]["Feature Ranking Only"]=='True':
+    #     if not os.path.exists("Data_Dump/Feature_Ranking"):
+    #         os.makedirs("Data_Dump/Feature_Ranking")
+    #     if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
+    #         (feature_list_dict_train, y, corpus)=Features.Extract_Features_Emails_Training()
+    #         X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
+    #     if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+    #         (feature_list_dict_train, y, corpus_train)=Features.Extract_Features_Urls_Training()
+    #         X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
+
+    #     logger.info("Select Best Features ######")
+    #     k = int(config["Feature Selection"]["number of best features"])
+    #     #X, selection = Feature_Selection.Select_Best_Features_Training(X, y, k)
+    #     X, selection = Feature_Selection.Feature_Ranking(X, y,k, feature_list_dict_train)
+    #     joblib.dump(selection,"Data_Dump/Feature_Ranking/selection.pkl")
+
+###
     if config["Extraction"]["Feature Extraction"]=='True':
         Feature_extraction=True
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
@@ -236,10 +254,10 @@ def main():
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_train, y_train=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_train, y_train)
                 # dump features and labels and vectorizers
-                
+
                 joblib.dump(X_train,"Data_Dump/URLs_Training/X_train.pkl")
                 joblib.dump(y_train,"Data_Dump/URLs_Training/y_train.pkl")
-                
+
                 # flag to mark if training was done
                 flag_training=True
                 logger.info("Feature Extraction for training dataset: Done!")

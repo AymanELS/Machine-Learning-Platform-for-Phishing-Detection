@@ -1,6 +1,6 @@
-from sklearn import svm  
+from sklearn import svm
 from sklearn import datasets
-from collections import Counter 
+from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
 import sklearn
@@ -72,7 +72,7 @@ def Feature_Ranking(X,y,k, feature_list_dict_train):
 		X=model.transform(X)
 		return X, model
 
-	# Information Gain 
+	# Information Gain
 	elif config["Feature Ranking"]["Information Gain"] == "True":
 		model = DecisionTreeClassifier(criterion='entropy')
 		model.fit(X,y)
@@ -137,8 +137,9 @@ def Select_Best_Features_Training(X, y, k):
 	# Print out the list of best features
 	return X, selection
 
-	
 
+
+<<<<<<< HEAD
 def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
 	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
 		X = selection.transform(X)
@@ -190,6 +191,16 @@ def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
 		return X
 
 	
+=======
+def Select_Best_Features_Testing(X, selection):
+	print (selection)
+	try:
+		X = selection.transform(X)
+	# Print out the list of best features
+	except AttributeError as e:
+		print (e)
+	return X
+>>>>>>> b62393cd258add9238fd4d2d3d8dc626851086d7
 
 def load_dataset():
 	email_training_regex=re.compile(r"email_features_training_?\d?.txt")
@@ -201,13 +212,13 @@ def load_dataset():
 			file_feature_training=re.findall(email_training_regex,''.join(os.listdir('.')))[-1]
 			logger.debug("file_feature_training: {}".format(file_feature_training))
 			#file_feature_testing=re.findall(email_testing_regex,''.join(os.listdir('.')))[-1]
-		
+
 		if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 			file_feature_training=re.findall(link_training_regex,''.join(os.listdir('.')))[-1]
 			#file_feature_testing=re.findall(link_testing_regex,''.join(os.listdir('.')))[-1]
 	except Exception as e:
 		logger.warning("exception: " + str(e))
-	
+
 	if config["Imbalanced Datasets"]["Load_imbalanced_dataset"] == "True":
 		X, y = Imbalanced_Dataset.load_imbalanced_dataset(file_feature_training)
 		#X_test, y_test=Imbalanced_Dataset.load_imbalanced_dataset(file_feature_testing)
