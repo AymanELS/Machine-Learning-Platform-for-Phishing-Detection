@@ -139,7 +139,7 @@ def Select_Best_Features_Training(X, y, k):
 
 
 
-<<<<<<< HEAD
+#<<<<<<< HEAD
 def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
 	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
 		X = selection.transform(X)
@@ -191,16 +191,16 @@ def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
 		return X
 
 	
-=======
-def Select_Best_Features_Testing(X, selection):
-	print (selection)
-	try:
-		X = selection.transform(X)
-	# Print out the list of best features
-	except AttributeError as e:
-		print (e)
-	return X
->>>>>>> b62393cd258add9238fd4d2d3d8dc626851086d7
+#=======
+#def Select_Best_Features_Testing(X, selection):
+#	print (selection)
+#	try:
+#		X = selection.transform(X)
+#	# Print out the list of best features
+#	except AttributeError as e:
+#		print (e)
+#	return X
+#>>>>>>> b62393cd258add9238fd4d2d3d8dc626851086d7
 
 def load_dataset():
 	email_training_regex=re.compile(r"email_features_training_?\d?.txt")
