@@ -18,7 +18,7 @@ import re
 import logging
 
 logger = logging.getLogger('root')
-
+whois_info = {}
 def dns_lookup(domain):
     ids = ['NONE',
         'A',
@@ -105,7 +105,11 @@ def download_url(rawurl):
             ipwhois = obj.lookup_whois(get_referral=True)
         ipwhois_time = time.time() - t0
 
-        whois_output = whois.whois(domain)
+        if domain in whois_info:
+            whois_output = whois_info[domain]
+        else:
+            whois_output = whois.whois(domain)
+            whois_info[domain] = whois_output
         time.sleep(3)
 
         content = html.text
