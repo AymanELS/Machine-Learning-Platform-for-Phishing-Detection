@@ -38,7 +38,7 @@ def Feature_Selection(X,y):
 	#return X_Best
 
 
-def Feature_Ranking(X,y,k):
+def Feature_Ranking(X,y,k, feature_list_dict_train):
 	#RFE
 	if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
 		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
@@ -55,26 +55,7 @@ def Feature_Ranking(X,y,k):
 		with open("Data_Dump/Feature_ranking_rfe.txt",'w') as f:
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
-
-	# Information Gain 
-	elif config["Feature Ranking"]["Information Gain"] == "True":
-		model = DecisionTreeClassifier(criterion='entropy')
-		model.fit(X,y)
-		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
-		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_ranking_IG.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
-
-	#Gini	
-	elif config["Feature Ranking"]["Gini"] == "True":
-		model = DecisionTreeClassifier(criterion='gini')
-		model.fit(X,y)
-		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
-		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_ranking_Gini.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
+		return X, rfe
 
 	#Chi-2
 	elif config["Feature Ranking"]["Chi-2"] == "True":
@@ -89,7 +70,65 @@ def Feature_Ranking(X,y,k):
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
 		X=model.transform(X)
-	return X, model
+		return X, model
+
+	# Information Gain 
+	elif config["Feature Ranking"]["Information Gain"] == "True":
+		model = DecisionTreeClassifier(criterion='entropy')
+		model.fit(X,y)
+		# dump feature Ranking in a file
+		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
+		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		with open("Data_Dump/Feature_ranking_IG.txt",'w') as f:
+			for (key, value) in sorted_d:
+				f.write("{}: {}\n".format(key,value))
+		# create new model with the best k features
+		new_list_dict_features=[]
+		for i in range(k):
+			key = sorted_d[i][0]
+			#logger.info("key: {}".format(key))
+			if "=" in key:
+				key=key.split("=")[0]
+			if i==0:
+				for j in range(len(feature_list_dict_train)):
+					#logger.info("key: {}, value {}".format(key, feature_list_dict_train[j][key]))
+					new_list_dict_features.append({key: feature_list_dict_train[j][key]})
+					#logger.info(new_list_dict_features)
+			else:
+				for j in range(len(feature_list_dict_train)):
+					new_list_dict_features[j][key]=feature_list_dict_train[j][key]
+					#logger.info(new_list_dict_features)
+		#logger.info("new_list_dict_features: {}".format(len(new_list_dict_features[0])))
+		vectorizer=DictVectorizer()
+		X_train=vectorizer.fit_transform(new_list_dict_features)
+		return X_train, vectorizer
+
+	#Gini
+	elif config["Feature Ranking"]["Gini"] == "True":
+		model = DecisionTreeClassifier(criterion='gini')
+		model.fit(X,y)
+		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
+		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		with open("Data_Dump/Feature_ranking_Gini.txt",'w') as f:
+			for (key, value) in sorted_d:
+				f.write("{}: {}\n".format(key,value))
+		
+		new_list_dict_features=[]
+		for i in range(k):
+			key = sorted_d[i][0]
+			if "=" in key:
+				key=key.split("=")[0]
+			if i==0:
+				for j in range(len(feature_list_dict_train)):
+					new_list_dict_features.append({key: feature_list_dict_train[j][key]})
+			else:
+				for j in range(len(feature_list_dict_train)):
+					new_list_dict_features[j][key]=feature_list_dict_train[j][key]
+
+		vectorizer=DictVectorizer()
+		X_train=vectorizer.fit_transform(new_list_dict_features)
+		return X_train, vectorizer
+	
 
 def Select_Best_Features_Training(X, y, k):
 	selection= sklearn.feature_selection.SelectKBest(chi2, k)
@@ -100,10 +139,57 @@ def Select_Best_Features_Training(X, y, k):
 
 	
 
-def Select_Best_Features_Testing(X, selection):
-	X = selection.transform(X)
-	# Print out the list of best features
-	return X
+def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
+	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
+		X = selection.transform(X)
+		logger.info("X_Shape: {}".format(X.shape))
+		return X
+	elif config["Feature Ranking"]["Chi-2"] == "True":
+		X = selection.transform(X)
+		logger.info("X_Shape: {}".format(X.shape))
+		return X
+	elif config["Feature Ranking"]["Information Gain"] == "True":
+		best_features=[]
+		with open("Data_Dump/Feature_ranking_IG.txt", 'r') as f:
+			for line in f.readlines():
+				best_features.append(line.split(':')[0])
+		new_list_dict_features=[]
+		for i in range(k):
+			key=best_features[i]
+			if "=" in key:
+				key=key.split("=")[0]
+			if i==0:
+				for j in range(len(feature_list_dict_test)):
+					new_list_dict_features.append({key: feature_list_dict_test[j][key]})
+			else:
+				for j in range(len(feature_list_dict_test)):
+					new_list_dict_features[j][key]=feature_list_dict_test[j][key]
+		X=selection.transform(new_list_dict_features)
+		logger.info("X_Shape: {}".format(X.shape))
+		return X
+	elif config["Feature Ranking"]["Gini"] == "True":
+		best_features=[]
+		with open("Data_Dump/Feature_ranking_Gini.txt", 'r') as f:
+			for line in f.readlines():
+				best_features.append(line.split(':')[0])
+		new_list_dict_features=[]
+		for i in range(k):
+			key=best_features[i]
+			#logger.info("key: {}".format(key))
+			if "=" in key:
+				key=key.split("=")[0]
+			if i==0:
+				for j in range(len(feature_list_dict_test)):
+					new_list_dict_features.append({key: feature_list_dict_test[j][key]})
+			else:
+				for j in range(len(feature_list_dict_test)):
+					new_list_dict_features[j][key]=feature_list_dict_test[j][key]
+		logger.info(new_list_dict_features)
+		logger.info("new_list_dict_features shape: {}".format(len(new_list_dict_features[0])))
+		X=selection.transform(new_list_dict_features)
+		return X
+
+	
 
 def load_dataset():
 	email_training_regex=re.compile(r"email_features_training_?\d?.txt")

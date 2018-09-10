@@ -704,9 +704,9 @@ def Cleaning(dict1):
             #if item[key] == "None" or item[key] == "N/A" or item[key] == "Nan" :
             if item[key] in ["None", "N/A" ,"NaN", None]:
                 original=item[key]
-                item[key]= 0
+                item[key]= -1
                 count+=1
-                logger.debug("Value of {} changed from {} to 0".format(key,original))
+                logger.debug("Value of {} changed from {} to {}".format(key,original,item[key]))
 
 
 #list_id=list(range(1,len(list_features)+1))

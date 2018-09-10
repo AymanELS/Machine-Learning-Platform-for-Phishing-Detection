@@ -30,32 +30,16 @@ def build_corpus():
 	return data
 
 
-
-def tfidf_emails_training(corpus):
-	#corpus=[]
-	#data=build_corpus()
-	data=corpus
-	#for filepath in data:
-	#	try:
-	#		print(filepath)
-	#		with open(filepath,'r', encoding = "ISO-8859-1") as f:
-	#			email=f.read()
-#
-#	#			body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes =Features_Support.extract_body(email)
-#	#			corpus.append(body_text)
-#	#	except Exception as e:
-	#		print("exception: " + str(e))
+def tfidf_training(corpus):
 	tf= TfidfVectorizer(analyzer='word', ngram_range=(1,1),
                      min_df = 0, stop_words = 'english', sublinear_tf=True)		
 	tfidf_matrix = tf.fit_transform(corpus)
 	return tfidf_matrix, tf
 
-def tfidf_emails_testing(corpus, tf):
-	#corpus=[]
-	#data=build_corpus()
-	data=corpus		
+def tfidf_testing(corpus):
 	tfidf_matrix = tf.transform(corpus)
 	return tfidf_matrix
+
 
 
 def Header_Tokenizer(corpus):
@@ -80,39 +64,6 @@ def Header_Tokenizer(corpus):
 	header_tokenizer = cv.fit_transform(corpus)
 	return header_tokenizer	
 
-
-def tfidf_websites_training(corpus):
-	# data=list()
-	# corpus=[]
-	# corpus_data = Features_Support.read_corpus(config["Dataset Path"]["path_legit_urls"])
-	# data.extend(corpus_data)
-	# corpus_data = Features_Support.read_corpus(config["Dataset Path"]["path_phish_urls"])
-	# data.extend(corpus_data)
-	#data=corpus
-	#for filepath in data:
-	#		print("===================")
-	#		print(filepath)
-	#		try:
-	#			with open(filepath,'r', encoding = "ISO-8859-1") as f:
-	#				for rawurl in f:
-	#					print("URL >>>>>>>>> {}".format(rawurl))
-	#					if rawurl in Bad_URLs_list:
-	#						print("This URL will not be considered for further processing because It's registred in out list of dead URLs")
-	#					else:
-	#						content=Download_url.download_url_content(rawurl)
-	#						#print('%s' % ', '.join(map(str, content)))
-	#						#print(''.join(content))
-	#						corpus.append(''.join(content))
-	#		except Exception as e:
-	#			print("exception: " + str(e))
-	tf= TfidfVectorizer(analyzer='word', ngram_range=(5,5),
-                     min_df = 0, stop_words = 'english', sublinear_tf=True)
-	tfidf_matrix = tf.fit_transform(corpus)
-	return tfidf_matrix, tf
-
-def tfidf_websites_testing(corpus, tf):
-	tfidf_matrix = tf.transform(corpus)
-	return tfidf_matrix
 
 if __name__ == '__main__':
 	matrix=tfidf_website()
