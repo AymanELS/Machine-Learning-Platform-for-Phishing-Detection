@@ -16,6 +16,8 @@ from bs4 import BeautifulSoup
 import sys
 import re
 import logging
+import traceback
+import tldextract
 
 logger = logging.getLogger('root')
 whois_info = {}
@@ -87,8 +89,8 @@ def download_url(rawurl):
                 pass
         html_time = time.time() - t0
         landing_url = html.url            
-        parsed_url = urlparse(landing_url)
-        domain = '{uri.hostname}'.format(uri=parsed_url)
+        extracted = tldextract.extract(landing_url)
+        domain = "{}.{}".format(extracted.domain, extracted.suffix)
 
         t0 = time.time()
         #dns_lookup=dns_lookup(domain, output = dns_output_file)
@@ -116,6 +118,7 @@ def download_url(rawurl):
 
     except Exception as e:
         logger.error(e)
+        logger.error(traceback.format_exc())
         Error=1
     return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
