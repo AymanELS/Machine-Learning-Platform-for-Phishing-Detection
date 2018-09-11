@@ -237,13 +237,13 @@ def rank_classifier(eval_clf_dict, metric_str):
 		try:
 			dict_metric_str[clf] = val[metric_str]
 		except KeyError:
-			print ("Does not work for classifier:",clf)
-	print ("The ranked classifiers on the metric: {}".format(metric_str))
+			logger.warning("Does not work for classifier: {}".format(clf))
+	logger.info("The ranked classifiers on the metric: {}".format(metric_str))
 	sorted_dict_metric_str = sorted(((value, key) for (key,value) in dict_metric_str.items()), reverse=True)
 	# print (sorted_dict_metric_str)
 	for tuple in sorted_dict_metric_str:
 		sorted_eval_clf_dict[tuple[1]] = eval_clf_dict[tuple[1]]
-	print (sorted_eval_clf_dict)
+	logger.info(sorted_eval_clf_dict)
 
 
 

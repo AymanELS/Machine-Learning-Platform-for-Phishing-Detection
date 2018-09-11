@@ -16,9 +16,11 @@ from bs4 import BeautifulSoup
 import sys
 import re
 import logging
+import traceback
+import tldextract
 
 logger = logging.getLogger('root')
-
+whois_info = {}
 def dns_lookup(domain):
     ids = ['NONE',
         'A',
@@ -51,31 +53,22 @@ def download_url(rawurl):
 
     headers.update(
         {
-            'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729)',
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q = 0.8',
             'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q = 0.7',
             'Keep-Alive': '300',
             'Pragma': 'no-cache',
             'Cache-Control': 'no-cache',
-            'Accept-Language': '*'
+            'Accept-Language': '*',
+            'Accept-Encoding': 'gzip, deflate'
         }
     )
-    #urls_file = open("url_list_URL_CHANGED.txt", 'w')
-    #urls_file = open(file_list_urls, 'w')
-    #counter = 19267   
-    #for rawurl in open("file_folder_list_random_continue_filtered.txt", 'rU'):
-    #for rawurl in open(file_output_urls, 'rU'):
-    #    if counter == 400000:
-    #        break
-    #print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
-    #print(rawurl)
+
     try:
         url = rawurl.strip().rstrip('\n')
         if url == '':
             pass
         
-        #parsed_url = urlparse(url)
-        #domain = '{uri.netloc}'.format(uri=parsed_url)
         t0 = time.time()
         html = requests.get(url=url, headers = headers, timeout = 20)
         if html.status_code != 200:
@@ -87,17 +80,16 @@ def download_url(rawurl):
                 pass
         html_time = time.time() - t0
         landing_url = html.url            
-        parsed_url = urlparse(landing_url)
-        domain = '{uri.hostname}'.format(uri=parsed_url)
+        extracted = tldextract.extract(landing_url)
+        domain = "{}.{}".format(extracted.domain, extracted.suffix)
 
         t0 = time.time()
-        #dns_lookup=dns_lookup(domain, output = dns_output_file)
         dns_lookup_output=dns_lookup(domain)
-        #print("dns_lookup_output " + dns_lookup_output)
         dns_lookup_time = time.time() - t0
-        #print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", file=dns_output_file)
-        #print("IP", file=dns_output_file)
-        IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
+        try:
+            IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
+        except socket.gaierror:
+            IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + domain, 80, type=socket.SOCK_STREAM)))
 
         t0 = time.time()
         for ip in IPs:
@@ -105,13 +97,18 @@ def download_url(rawurl):
             ipwhois = obj.lookup_whois(get_referral=True)
         ipwhois_time = time.time() - t0
 
-        whois_output = whois.whois(domain)
+        if domain in whois_info:
+            whois_output = whois_info[domain]
+        else:
+            whois_output = whois.whois(domain)
+            whois_info[domain] = whois_output
         time.sleep(3)
 
         content = html.text
 
     except Exception as e:
         logger.error(e)
+        logger.error(traceback.format_exc())
         Error=1
     return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
