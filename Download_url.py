@@ -93,13 +93,12 @@ def download_url(rawurl):
         domain = "{}.{}".format(extracted.domain, extracted.suffix)
 
         t0 = time.time()
-        #dns_lookup=dns_lookup(domain, output = dns_output_file)
         dns_lookup_output=dns_lookup(domain)
-        #print("dns_lookup_output " + dns_lookup_output)
         dns_lookup_time = time.time() - t0
-        #print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", file=dns_output_file)
-        #print("IP", file=dns_output_file)
-        IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
+        try:
+            IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
+        except socket.gaierror:
+            IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + domain, 80, type=socket.SOCK_STREAM)))
 
         t0 = time.time()
         for ip in IPs:
