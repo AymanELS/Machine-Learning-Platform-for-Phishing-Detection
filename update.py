@@ -74,7 +74,11 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 	C_selection=config["Feature Selection"]
 	C_selection["Select Best Features"]="True"
 	C_selection["Number of Best Features"]="80"
-
+	C_selection["Feature Ranking Only"]="False"
+	C_selection["Recursive Feature Elimination"]="False"
+	C_selection["Information Gain"]="True"
+	C_selection["Gini"]="False"
+	C_selection["Chi-2"]="False"
 
 	config['Dataset Path']={}
 	C_Dataset=config['Dataset Path']

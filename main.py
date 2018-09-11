@@ -111,24 +111,25 @@ def main():
 
 
 ### Feature ranking only
-    # if config["Ranking"]["Feature Ranking Only"]=='True':
-    #     if not os.path.exists("Data_Dump/Feature_Ranking"):
-    #         os.makedirs("Data_Dump/Feature_Ranking")
-    #     if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
-    #         (feature_list_dict_train, y, corpus)=Features.Extract_Features_Emails_Training()
-    #         X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
-    #     if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-    #         (feature_list_dict_train, y, corpus_train)=Features.Extract_Features_Urls_Training()
-    #         X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
+    if config["Feature Selection"]["Feature Ranking Only"]=='True':
+        if not os.path.exists("Data_Dump/Feature_Ranking"):
+            os.makedirs("Data_Dump/Feature_Ranking")
+        if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
+            (feature_list_dict_train, y, corpus)=Features.Extract_Features_Emails_Training()
+            X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
+        elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+            logger.info("URL extraction ###")
+            (feature_list_dict_train, y, corpus_train)=Features.Extract_Features_Urls_Training()
+            X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
 
-    #     logger.info("Select Best Features ######")
-    #     k = int(config["Feature Selection"]["number of best features"])
-    #     #X, selection = Feature_Selection.Select_Best_Features_Training(X, y, k)
-    #     X, selection = Feature_Selection.Feature_Ranking(X, y,k, feature_list_dict_train)
-    #     joblib.dump(selection,"Data_Dump/Feature_Ranking/selection.pkl")
+        logger.info("Select Best Features ######")
+        k = int(config["Feature Selection"]["number of best features"])
+        #X, selection = Feature_Selection.Select_Best_Features_Training(X, y, k)
+        X, selection = Feature_Selection.Feature_Ranking(X, y,k, feature_list_dict_train)
+        joblib.dump(selection,"Data_Dump/Feature_Ranking/selection.pkl")
 
 ###
-    if config["Extraction"]["Feature Extraction"]=='True':
+    elif config["Extraction"]["Feature Extraction"]=='True':
         Feature_extraction=True
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
             if config["Extraction"]["Training Dataset"] == "True":
@@ -218,7 +219,7 @@ def main():
                 logger.info("Feature Extraction for testing dataset: Done!")
 
 ######## URL feature extraction
-        if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
+        elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
             if config["Extraction"]["Training Dataset"] == "True":
                 # Create directory to store dada
                 if not os.path.exists("Data_Dump/URLs_Training"):
