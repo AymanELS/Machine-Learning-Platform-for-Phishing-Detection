@@ -59,8 +59,8 @@ def download_url(rawurl):
             'Keep-Alive': '300',
             'Pragma': 'no-cache',
             'Cache-Control': 'no-cache',
-            'Accept-Language': '*'
-            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': '*',
+            'Accept-Encoding': 'gzip, deflate'
         }
     )
 
