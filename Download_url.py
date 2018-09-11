@@ -53,31 +53,22 @@ def download_url(rawurl):
 
     headers.update(
         {
-            'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5 (.NET CLR 3.5.30729)',
+            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q = 0.8',
             'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q = 0.7',
             'Keep-Alive': '300',
             'Pragma': 'no-cache',
             'Cache-Control': 'no-cache',
             'Accept-Language': '*'
+            'Accept-Encoding': 'gzip, deflate',
         }
     )
-    #urls_file = open("url_list_URL_CHANGED.txt", 'w')
-    #urls_file = open(file_list_urls, 'w')
-    #counter = 19267   
-    #for rawurl in open("file_folder_list_random_continue_filtered.txt", 'rU'):
-    #for rawurl in open(file_output_urls, 'rU'):
-    #    if counter == 400000:
-    #        break
-    #print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
-    #print(rawurl)
+
     try:
         url = rawurl.strip().rstrip('\n')
         if url == '':
             pass
         
-        #parsed_url = urlparse(url)
-        #domain = '{uri.netloc}'.format(uri=parsed_url)
         t0 = time.time()
         html = requests.get(url=url, headers = headers, timeout = 20)
         if html.status_code != 200:
