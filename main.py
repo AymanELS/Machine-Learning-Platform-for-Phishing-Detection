@@ -94,6 +94,8 @@ def Confirmation():
     print("Legitimate Dataset (Testing): {}".format(config["Dataset Path"]["path_legitimate_testing"]))
     print("Phishing Dataset (Testing): {}".format(config["Dataset Path"]["path_phishing_testing"]))
 
+    print("\nRun Feature Ranking Only: {}".format(config["Feature Selection"]["Feature Ranking Only"]))
+
     print("\nRun the Feature Extraction: {}".format(config["Extraction"]["feature extraction"]))
     print("\nFeature Extraction for Training Data: {}".format(config["Extraction"]["training dataset"]))
     print("\nFeature Extraction for Testing Data: {}".format(config["Extraction"]["testing dataset"]))
@@ -115,20 +117,31 @@ def main():
         if not os.path.exists("Data_Dump/Feature_Ranking"):
             os.makedirs("Data_Dump/Feature_Ranking")
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
+            if not os.path.exists("Data_Dump/Emails_Training"):
+                os.makedirs("Data_Dump/Emails_Training")
             (feature_list_dict_train, y, corpus)=Features.Extract_Features_Emails_Training()
             X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
+            X=Features_Support.Preprocessing(X)
+            joblib.dump(vectorizer,"Data_Dump/Emails_Training/vectorizer.pkl")
         elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-            logger.info("URL extraction ###")
+            if not os.path.exists("Data_Dump/URLs_Training"):
+                os.makedirs("Data_Dump/URLs_Training")
             (feature_list_dict_train, y, corpus_train)=Features.Extract_Features_Urls_Training()
             X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
+            X=Features_Support.Preprocessing(X)
+            joblib.dump(vectorizer,"Data_Dump/URLs_Training/vectorizer.pkl")
 
         logger.info("Select Best Features ######")
         k = int(config["Feature Selection"]["number of best features"])
         #X, selection = Feature_Selection.Select_Best_Features_Training(X, y, k)
         X, selection = Feature_Selection.Feature_Ranking(X, y,k, feature_list_dict_train)
-        joblib.dump(selection,"Data_Dump/Feature_Ranking/selection.pkl")
+        if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
+            joblib.dump(selection,"Data_Dump/Emails_Training/selection.pkl")
+        elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+            joblib.dump(selection,"Data_Dump/URLs_Training/selection.pkl")
 
-###
+
+### Email FEature Extraction
     elif config["Extraction"]["Feature Extraction"]=='True':
         Feature_extraction=True
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
@@ -149,6 +162,10 @@ def main():
                     X_train=hstack([X_train, Tfidf_train])
                     # Save tfidf model
                     joblib.dump(tfidf_vectorizer,"Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
+                
+                # Use Min_Max_scaling for prepocessing the feature matrix
+                X_train=Features_Support.Preprocessing(X_train)
+
                 # feature ranking
                 if config["Feature Selection"]["select best features"]=="True":
                     #k: Number of Best features
@@ -159,8 +176,7 @@ def main():
                     # dump selection model
                     joblib.dump(selection,"Data_Dump/Emails_Training/selection.pkl")
                     logger.info("### Feature Ranking and Selection for Training Done!")
-                # Use Min_Max_scaling for prepocessing the feature matrix
-                X_train=Features_Support.Preprocessing(X_train)
+                
                 
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
@@ -196,6 +212,9 @@ def main():
                     Tfidf_test=Tfidf.tfidf_testing(corpus_test, tfidf_vectorizer)
                     X_test=hstack([X_test, Tfidf_test])
                 
+                # Use Min_Max_scaling for prepocessing the feature matrix
+                X_test=Features_Support.Preprocessing(X_test)
+
                 # feature ranking
                 if config["Feature Selection"]["select best features"]=="True":
                     #k: Number of Best features
@@ -203,9 +222,6 @@ def main():
                     k = int(config["Feature Selection"]["number of best features"])
                     X_test = Feature_Selection.Select_Best_Features_Testing(X_test, selection, k, feature_list_dict_test)
                     logger.info("### Feature Ranking and Selection for Training Done!")
-
-                # Use Min_Max_scaling for prepocessing the feature matrix
-                X_test=Features_Support.Preprocessing(X_test)
                 
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
@@ -240,6 +256,10 @@ def main():
                     #dump tfidf vectorizer
                     joblib.dump(tfidf_vectorizer,"Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
                 
+                # Use Min_Max_scaling for prepocessing the feature matrix
+                X_train=Features_Support.Preprocessing(X_train)
+
+
                 # Feature Selection
                 if config["Feature Selection"]["select best features"]=="True":
                     #k: Number of Best features
@@ -248,8 +268,6 @@ def main():
                     #Dump model
                     joblib.dump(selection,"Data_Dump/URLs_Training/selection.pkl")
 
-                # Use Min_Max_scaling for prepocessing the feature matrix
-                X_train=Features_Support.Preprocessing(X_train)
 
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
@@ -283,6 +301,10 @@ def main():
                     Tfidf_test=Tfidf.tfidf_testing(corpus_test, tfidf_vectorizer)
                     X_test=hstack([X_test, Tfidf_test])
                 
+                # Use Min_Max_scaling for prepocessing the feature matrix
+                X_test=Features_Support.Preprocessing(X_test)
+
+                
                 # Feature Selection
                 if config["Feature Selection"]["select best features"]=="True":
                     if flag_training==False:
@@ -291,8 +313,6 @@ def main():
                     k = int(config["Feature Selection"]["number of best features"])
                     X_test = Feature_Selection.Select_Best_Features_Testing(X_test, selection, k, feature_list_dict_test)
                 
-                # Use Min_Max_scaling for prepocessing the feature matrix
-                X_test=Features_Support.Preprocessing(X_test)
                 
                 # Test on imbalanced datasets
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":

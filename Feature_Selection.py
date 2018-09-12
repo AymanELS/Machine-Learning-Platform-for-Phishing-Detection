@@ -44,21 +44,20 @@ def Feature_Ranking(X,y,k, feature_list_dict_train):
 		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
 	elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 		vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
-	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
+	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
 		model = LogisticRegression()
 		rfe = RFE(model, k)
 		rfe.fit(X,y)
 		X=rfe.transform(X)
-		f=open("Data_Dump/Feature_ranking_rfe.txt",'w')
 		res= dict(zip(vectorizer.get_feature_names(),rfe.ranking_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_ranking_rfe.txt",'w') as f:
+		with open("Data_Dump/Feature_Ranking/Feature_ranking_rfe.txt",'w') as f:
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
 		return X, rfe
 
 	#Chi-2
-	elif config["Feature Ranking"]["Chi-2"] == "True":
+	elif config["Feature Selection"]["Chi-2"] == "True":
 		model= sklearn.feature_selection.SelectKBest(chi2, k)
 		model.fit(X, y)
 		res= dict(zip(vectorizer.get_feature_names(),model.scores_))
@@ -66,20 +65,20 @@ def Feature_Ranking(X,y,k, feature_list_dict_train):
 			if math.isnan(res[key]):
 				res[key]=0
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_ranking_chi2.txt",'w') as f:
+		with open("Data_Dump/Feature_Ranking/Feature_ranking_chi2.txt",'w') as f:
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
 		X=model.transform(X)
 		return X, model
 
 	# Information Gain
-	elif config["Feature Ranking"]["Information Gain"] == "True":
+	elif config["Feature Selection"]["Information Gain"] == "True":
 		model = DecisionTreeClassifier(criterion='entropy')
 		model.fit(X,y)
-		# dump feature Ranking in a file
+		# dump Feature Selection in a file
 		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_ranking_IG.txt",'w') as f:
+		with open("Data_Dump/Feature_Ranking/Feature_ranking_IG.txt",'w') as f:
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
 		# create new model with the best k features
@@ -104,12 +103,12 @@ def Feature_Ranking(X,y,k, feature_list_dict_train):
 		return X_train, vectorizer
 
 	#Gini
-	elif config["Feature Ranking"]["Gini"] == "True":
+	elif config["Feature Selection"]["Gini"] == "True":
 		model = DecisionTreeClassifier(criterion='gini')
 		model.fit(X,y)
 		res= dict(zip(vectorizer.get_feature_names(),model.feature_importances_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_ranking_Gini.txt",'w') as f:
+		with open("Data_Dump/Feature_Ranking/Feature_ranking_Gini.txt",'w') as f:
 			for (key, value) in sorted_d:
 				f.write("{}: {}\n".format(key,value))
 		
@@ -141,17 +140,17 @@ def Select_Best_Features_Training(X, y, k):
 
 #<<<<<<< HEAD
 def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
-	if config["Feature Ranking"]["Recursive Feature Elimination"] == "True":
+	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
 		X = selection.transform(X)
 		logger.info("X_Shape: {}".format(X.shape))
 		return X
-	elif config["Feature Ranking"]["Chi-2"] == "True":
+	elif config["Feature Selection"]["Chi-2"] == "True":
 		X = selection.transform(X)
 		logger.info("X_Shape: {}".format(X.shape))
 		return X
-	elif config["Feature Ranking"]["Information Gain"] == "True":
+	elif config["Feature Selection"]["Information Gain"] == "True":
 		best_features=[]
-		with open("Data_Dump/Feature_ranking_IG.txt", 'r') as f:
+		with open("Data_Dump/Feature_Ranking/Feature_ranking_IG.txt", 'r') as f:
 			for line in f.readlines():
 				best_features.append(line.split(':')[0])
 		new_list_dict_features=[]
@@ -168,9 +167,9 @@ def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
 		X=selection.transform(new_list_dict_features)
 		logger.info("X_Shape: {}".format(X.shape))
 		return X
-	elif config["Feature Ranking"]["Gini"] == "True":
+	elif config["Feature Selection"]["Gini"] == "True":
 		best_features=[]
-		with open("Data_Dump/Feature_ranking_Gini.txt", 'r') as f:
+		with open("Data_Dump/Feature_Ranking/Feature_ranking_Gini.txt", 'r') as f:
 			for line in f.readlines():
 				best_features.append(line.split(':')[0])
 		new_list_dict_features=[]
