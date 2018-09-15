@@ -40,8 +40,6 @@ def tfidf_testing(corpus):
 	tfidf_matrix = tf.transform(corpus)
 	return tfidf_matrix
 
-
-
 def Header_Tokenizer(corpus):
 	# corpus=[]
 	# data=build_corpus()

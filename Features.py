@@ -2098,6 +2098,75 @@ def HTML_outbound_href_count(soup, url, list_features, list_time):
         ex_time=end-start
         list_time["outbound_href_count"]=ex_time
 
+def HTML_Website_content_type(html, list_features, list_time):
+    #global list_features
+    if config["Network_Features"]["Website_content_type"] == "True":
+        start=time.time()
+        #print(html.headers)
+        if html:
+            try:
+                if 'Content-Type' in html.headers:
+                    content_type = html.headers['Content-Type'].split(';')[0]
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                content_type="N/A"
+        else:
+            content_type=''
+        list_features["Website_content_type"]=content_type    
+        end=time.time()
+        ex_time=end-start
+        list_time["content_type"]=ex_time
+
+def HTML_content_length(html, list_features, list_time):
+    #global list_features
+    if config["Network_Features"]["content_length"] == "True":
+        start=time.time()
+        content_length = 0
+        if html:
+            try:
+                if 'Content-Length' in html.headers:
+                    content_length = html.headers['Content-Length']
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                content_length=-1
+        list_features["content_length"]=int(content_length)
+        end=time.time()
+        ex_time=end-start
+        list_time["content_length"]=ex_time
+
+def HTML_x_powered_by(html, list_features, list_time):
+    #global list_features
+    if config["Network_Features"]["x_powered_by"] == "True":
+        start=time.time()
+        x_powered_by = ''
+        if html:
+            try:
+                if 'X-Powered-By' in html.headers:
+                    #x_powered_by = html.headers['X-Powered-By']
+                    x_powered_by = html.headers["X-Powered-By"]
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                x_powered_by = "N/A"
+        list_features["x_powered_by"]=x_powered_by
+        end=time.time()
+        ex_time=end-start
+        list_time["x_powered_by"]=ex_time
+
+def HTML_URL_Is_Redirect(html, url, list_features, list_time):
+    if config["Network_Features"]["URL_Is_Redirect"]=="True":
+        start=time.time()
+        flag=0
+        if html:
+            try:
+                if url != html.url:
+                    flag=1
+            except Exception as e:
+                logger.warning("Exception: {}".format(e))
+                flag=-1
+        list_features["URL_Is_Redirect"]=flag
+        end=time.time()
+        ex_time=end-start
+        list_time["URL_Is_Redirect"]=ex_time
 
 ############################ URL features
 def URL_length(url, list_features, list_time):
@@ -2908,75 +2977,6 @@ def Network_dns_ttl(url, list_features, list_time):
         ex_time=end-start
         list_time["dns_ttl"]=ex_time
 
-def Network_Website_content_type(html, list_features, list_time):
-    #global list_features
-    if config["Network_Features"]["Website_content_type"] == "True":
-        start=time.time()
-        #print(html.headers)
-        if html:
-            try:
-                if 'Content-Type' in html.headers:
-                    content_type = html.headers['Content-Type'].split(';')[0]
-            except Exception as e:
-                logger.warning("exception: " + str(e))
-                content_type="N/A"
-        else:
-            content_type=''
-        list_features["Website_content_type"]=content_type    
-        end=time.time()
-        ex_time=end-start
-        list_time["content_type"]=ex_time
-
-def Network_content_length(html, list_features, list_time):
-    #global list_features
-    if config["Network_Features"]["content_length"] == "True":
-        start=time.time()
-        content_length = 0
-        if html:
-            try:
-                if 'Content-Length' in html.headers:
-                    content_length = html.headers['Content-Length']
-            except Exception as e:
-                logger.warning("exception: " + str(e))
-                content_length=-1
-        list_features["content_length"]=int(content_length)
-        end=time.time()
-        ex_time=end-start
-        list_time["content_length"]=ex_time
-
-def Network_x_powered_by(html, list_features, list_time):
-    #global list_features
-    if config["Network_Features"]["x_powered_by"] == "True":
-        start=time.time()
-        x_powered_by = ''
-        if html:
-            try:
-                if 'X-Powered-By' in html.headers:
-                    #x_powered_by = html.headers['X-Powered-By']
-                    x_powered_by = html.headers["X-Powered-By"]
-            except Exception as e:
-                logger.warning("exception: " + str(e))
-                x_powered_by = "N/A"
-        list_features["x_powered_by"]=x_powered_by
-        end=time.time()
-        ex_time=end-start
-        list_time["x_powered_by"]=ex_time
-
-def Network_URL_Is_Redirect(html, url, list_features, list_time):
-    if config["Network_Features"]["URL_Is_Redirect"]=="True":
-        start=time.time()
-        flag=0
-        if html:
-            try:
-                if url != html.url:
-                    flag=1
-            except Exception as e:
-                logger.warning("Exception: {}".format(e))
-                flag=-1
-        list_features["URL_Is_Redirect"]=flag
-        end=time.time()
-        ex_time=end-start
-        list_time["URL_Is_Redirect"]=ex_time
 
 ############################ Javascript features
 def Javascript_number_of_exec(soup, html, list_features, list_time):
@@ -3221,10 +3221,10 @@ def Email_Header_Tokenizer(list_time):
         list_time["header_tokenizer"]=ex_time
         return header_tokenizer
 
-def HTML_tfidf_websites(list_time, Bad_URLs_List):
+def HTML_tfidf_websites(list_time):
     if config["HTML_Features"]["tfidf_websites"] == "True":
         start=time.time()
-        Tfidf_matrix = Tfidf.tfidf_websites(Bad_URLs_List)
+        Tfidf_matrix = Tfidf.tfidf_websites()
         end=time.time()
         ex_time=end-start
         list_time["tfidf_websites"]=ex_time
@@ -3261,7 +3261,7 @@ def extract_email_features(dataset_path, feature_list_dict, extraction_time_dict
     count_files=len(feature_list_dict)
     return count_files, corpus
 
-def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict, Bad_URLs_List):
+def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict):
     data = list()
     corpus_data = read_corpus(dataset_path)
     data.extend(corpus_data)
@@ -3282,7 +3282,7 @@ def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict, 
         dict_time={}
         logger.info("===================")
         logger.info(filepath)
-        url_features(filepath, dict_features, features_output, feature_list_dict, dict_time, extraction_time_dict, Bad_URLs_List, corpus)
+        url_features(filepath, dict_features, features_output, feature_list_dict, dict_time, extraction_time_dict, corpus)
         summary.write("filepath: {}\n\n".format(filepath))
         summary.write("features extracted for this file:\n")
         for feature in dict_time.keys():
@@ -3355,13 +3355,13 @@ def Extract_Features_Urls_Training():
         dataset_path_phish_train=config["Dataset Path"]["path_phishing_training"]
         feature_list_dict_train=[]
         extraction_time_dict_train=[]
-        Bad_URLs_List=[]
-        labels_legit_train, data_legit_train=extract_url_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
-        labels_all_train, data_phish_train=extract_url_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
+        #Bad_URLs_List=[]
+        labels_legit_train, data_legit_train=extract_url_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train)
+        labels_all_train, data_phish_train=extract_url_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train)
         logger.debug(">>>>> Feature extraction: Training Set >>>>> Done ")
         Cleaning(feature_list_dict_train)
         logger.debug(">>>>> Cleaning >>>>>> Done")
-        logger.info("Number of bad URLs in training dataset: {}".format(len(Bad_URLs_List)))
+        #logger.info("Number of bad URLs in training dataset: {}".format(len(Bad_URLs_List)))
 
         labels_train=[]
         for i in range(labels_legit_train):
@@ -3383,15 +3383,15 @@ def Extract_Features_Urls_Testing():
     dataset_path_phish_test=config["Dataset Path"]["path_phishing_testing"]
     feature_list_dict_test=[]
     extraction_time_dict_test=[]
-    Bad_URLs_List=[]
-    labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
-    labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
+    # Bad_URLs_List=[]
+    labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test)
+    labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test)
     logger.debug(">>>>> Feature extraction: Testing Set >>>>> Done ")
     logger.info(">>>>> Cleaning >>>>")
     logger.debug("feature_list_dict_test{}".format(len(feature_list_dict_test)))
     Cleaning(feature_list_dict_test)
     logger.debug(">>>>> Cleaning >>>>>> Done")
-    logger.info("Number of bad URLs in training dataset: {}".format(len(Bad_URLs_List)))
+    #logger.info("Number of bad URLs in training dataset: {}".format(len(Bad_URLs_List)))
     labels_test=[]
     for i in range(labels_legit_test):
         labels_test.append(0)

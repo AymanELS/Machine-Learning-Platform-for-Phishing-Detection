@@ -64,11 +64,10 @@ def download_url(rawurl):
         }
     )
 
+    url = rawurl.strip().rstrip('\n')
+    if url == '':
+        pass
     try:
-        url = rawurl.strip().rstrip('\n')
-        if url == '':
-            pass
-        
         t0 = time.time()
         html = requests.get(url=url, headers = headers, timeout = 20)
         if html.status_code != 200:
@@ -79,13 +78,23 @@ def download_url(rawurl):
             if language != None and language != 'en':
                 pass
         html_time = time.time() - t0
-        landing_url = html.url            
+        content = html.text
+        landing_url = html.url
+    except Exception as e:
+        print("Exception: HTML Error :{}".format(e))
+        print("html, content=''")
+        html=''
+        content=''
+        html_time=''
+
+    try:           
         extracted = tldextract.extract(landing_url)
         domain = "{}.{}".format(extracted.domain, extracted.suffix)
 
         t0 = time.time()
         dns_lookup_output=dns_lookup(domain)
         dns_lookup_time = time.time() - t0
+
         try:
             IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
         except socket.gaierror:
@@ -97,20 +106,37 @@ def download_url(rawurl):
             ipwhois = obj.lookup_whois(get_referral=True)
         ipwhois_time = time.time() - t0
 
+    except Exception as e:
+        logger.error("Exception: Domain Error: {}".format(e))
+        logger.error("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
+        domain=''
+        dns_lookup_output=''
+        dns_lookup_time=''
+        IPs=''
+        ipwhois=''
+        ipwhois_time=''
+
+        
+    try:
         if domain in whois_info:
             whois_output = whois_info[domain]
         else:
             whois_output = whois.whois(domain)
             whois_info[domain] = whois_output
         time.sleep(3)
-
-        content = html.text
-
     except Exception as e:
-        logger.error(e)
-        logger.error(traceback.format_exc())
-        Error=1
-    return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
+        logger.error("Exception: Domain Error: {}".format(e))
+        logger.error("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
+        whois_output=''
+
+
+        
+
+    # except Exception as e:
+    #     logger.error(e)
+    #     logger.error(traceback.format_exc())
+    #     Error=1
+    return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time
 
 def visible(element):
     if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:

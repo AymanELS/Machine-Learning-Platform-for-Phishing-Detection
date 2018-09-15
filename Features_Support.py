@@ -758,16 +758,16 @@ def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url
     Features.Network_dns_ttl(url, list_features, list_time)
     logger.debug("dns_ttl")
 
-    Features.Network_Website_content_type(html, list_features, list_time)
+    Features.HTML_Website_content_type(html, list_features, list_time)
     logger.debug("content_type")
 
-    Features.Network_content_length(html, list_features, list_time)
+    Features.HTML_content_length(html, list_features, list_time)
     logger.debug("content_length")
 
-    Features.Network_x_powered_by(html, list_features, list_time)
+    Features.HTML_x_powered_by(html, list_features, list_time)
     logger.debug("x_powered_by")
 
-    Features.Network_URL_Is_Redirect(html, url, list_features, list_time)
+    Features.HTML_URL_Is_Redirect(html, url, list_features, list_time)
     logger.debug("URL_Is_Redirect")
 
 
@@ -1215,7 +1215,7 @@ def email_url_features(url_All, sender_domain, list_features, list_time):
 # sys.setdefaultencoding('utf-8')
 
 
-def url_features(filepath, list_features, features_output, list_dict, list_time, time_dict, Bad_URLs_List, corpus):
+def url_features(filepath, list_features, features_output, list_dict, list_time, time_dict, corpus):
     try:
         with open(filepath,'r', encoding = "ISO-8859-1") as f:
             for rawurl in f:
@@ -1227,30 +1227,32 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                 logger.debug("#############################################")
                 logger.debug("rawurl:" + str(rawurl))
                 Features.summary.write("URL: {}".format(rawurl))
-                if rawurl in Bad_URLs_List:
-                    #print("This URL has trouble being extracted:\n")
-                    logger.warning("This URL will not be considered for further processing because It's registred in list of dead URLs:{}".format(rawurl))
-                    Features.summary.write("This URL will not be considered for further processing because It's registred in out list of dead URLs")
-                else:
-                    html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = Download_url.download_url(rawurl)
+                #if rawurl in Bad_URLs_List:
+                #    #print("This URL has trouble being extracted:\n")
+                #    logger.warning("This URL will not be considered for further processing because It's registred in list of dead URLs:{}".format(rawurl))
+                #    Features.summary.write("This URL will not be considered for further processing because It's registred in out list of dead URLs")
+                #else:
+                html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time = Download_url.download_url(rawurl)
 
-                    if Error == 1:
-                        logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
-                        Bad_URLs_List.append(rawurl)
-                    else:
-                        logger.debug("download_url >>>>>>>>> complete")
-                        # include https or http
-                        url = rawurl.strip().rstrip('\n')
-                        soup = BeautifulSoup(content, 'html5lib')   #content=html.text
-                        single_html_features(soup, url, list_features, list_time)
-                        single_url_feature(url, list_features, list_time)
-                        logger.debug("html_featuers & url_features >>>>>> complete")
-                        single_javascript_features(soup,html, list_features, list_time)
-                        logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
-                        single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
-                        dump_features(list_features, features_output, list_dict, list_time, time_dict)
-                        #print(soup)
-                        corpus.append(str(soup))
+                    # if Error == 1:
+                        # logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
+                        # Bad_URLs_List.append(rawurl)
+                    # else:
+                logger.debug("download_url >>>>>>>>> complete")
+                # include https or http
+                url = rawurl.strip().rstrip('\n')
+                if content=='':
+                    soup=''
+                soup = BeautifulSoup(content, 'html5lib')   #content=html.text
+                single_html_features(soup, url, list_features, list_time)
+                single_url_feature(url, list_features, list_time)
+                logger.debug("html_featuers & url_features >>>>>> complete")
+                single_javascript_features(soup,html, list_features, list_time)
+                logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
+                single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
+                dump_features(list_features, features_output, list_dict, list_time, time_dict)
+                    #print(soup)
+                corpus.append(str(soup))
     except Exception as e:
         logger.warning("exception: " + str(e))
 
