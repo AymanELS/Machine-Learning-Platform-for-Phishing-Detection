@@ -123,7 +123,7 @@ def download_url(rawurl):
         else:
             whois_output = whois.whois(domain)
             whois_info[domain] = whois_output
-        time.sleep(3)
+        time.sleep(5)
     except Exception as e:
         logger.error("Exception: Domain Error: {}".format(e))
         logger.error("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
