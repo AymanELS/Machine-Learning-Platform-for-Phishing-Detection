@@ -2619,7 +2619,7 @@ def URL_Token_Count(url, list_features, list_time):
         count=0
         if url:
             try:
-                count=len(url.split('.'))
+                count=len(url.split(config["URL_Features"]["URL_token_delimiter"]))
             except Exception  as e:
                 logger.warning("Exception: " + str(e))
                 count=-1
@@ -2632,11 +2632,12 @@ def URL_Average_Path_Token_Length(url, list_features, list_time):
     if config["URL_Features"]["Average_Path_Token_Length"] == "True":
         start=time.time()
         average_token_length=0
+        delimiters_regex=re.compile("="|","|"/"|"?"|"."|"-")
         if url:
             try:
                 parsed_url=urlparse(url)
                 path='{uri.path}'.format(uri=parsed_url)
-                list_tokens=path.split('.')
+                list_tokens=re.split(delimiters_regex,path)
                 list_len_tokens=[0 for x in range(len(list_tokens))]
                 for token in list_tokens:
                     list_len_tokens[list_tokens.index(token)]=len(token)
@@ -2658,7 +2659,7 @@ def URL_Average_Domain_Token_Length(url, list_features, list_time):
                 parsed_url=urlparse(url)
                 domain='{uri.hostname}'.format(uri=parsed_url)
                 list_len_tokens=[]
-                list_tokens=domain.split('.')
+                list_tokens=domain.split(config["URL_Features"]["URL_token_delimiter"])
                 for token in list_tokens:
                     list_len_tokens.append(len(token))
                 average_token_length= sum(list_len_tokens)/len(list_len_tokens)
@@ -2681,7 +2682,7 @@ def URL_Longest_Domain_Token(url, list_features, list_time):
                 parsed_url=urlparse(url)
                 domain='{uri.hostname}'.format(uri=parsed_url)
                 list_len_tokens=[]
-                list_tokens=domain.split('.')
+                list_tokens=domain.split(config["URL_Features"]["URL_token_delimiter"])
                 for token in list_tokens:
                     list_len_tokens.append(len(token))
                 longest_token_len=max(list_len_tokens)
@@ -3261,7 +3262,7 @@ def extract_email_features(dataset_path, feature_list_dict, extraction_time_dict
     count_files=len(feature_list_dict)
     return count_files, corpus
 
-def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict):
+def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict, Bad_URLs_List):
     data = list()
     corpus_data = read_corpus(dataset_path)
     data.extend(corpus_data)
@@ -3282,7 +3283,7 @@ def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict):
         dict_time={}
         logger.info("===================")
         logger.info(filepath)
-        url_features(filepath, dict_features, features_output, feature_list_dict, dict_time, extraction_time_dict, corpus)
+        url_features(filepath, dict_features, features_output, feature_list_dict, dict_time, extraction_time_dict, corpus, Bad_URLs_List)
         summary.write("filepath: {}\n\n".format(filepath))
         summary.write("features extracted for this file:\n")
         for feature in dict_time.keys():
@@ -3355,9 +3356,9 @@ def Extract_Features_Urls_Training():
         dataset_path_phish_train=config["Dataset Path"]["path_phishing_training"]
         feature_list_dict_train=[]
         extraction_time_dict_train=[]
-        #Bad_URLs_List=[]
-        labels_legit_train, data_legit_train=extract_url_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train)
-        labels_all_train, data_phish_train=extract_url_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train)
+        Bad_URLs_List=[]
+        labels_legit_train, data_legit_train=extract_url_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
+        labels_all_train, data_phish_train=extract_url_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
         logger.debug(">>>>> Feature extraction: Training Set >>>>> Done ")
         Cleaning(feature_list_dict_train)
         logger.debug(">>>>> Cleaning >>>>>> Done")
@@ -3383,9 +3384,9 @@ def Extract_Features_Urls_Testing():
     dataset_path_phish_test=config["Dataset Path"]["path_phishing_testing"]
     feature_list_dict_test=[]
     extraction_time_dict_test=[]
-    # Bad_URLs_List=[]
-    labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test)
-    labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test)
+    Bad_URLs_List=[]
+    labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
+    labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
     logger.debug(">>>>> Feature extraction: Testing Set >>>>> Done ")
     logger.info(">>>>> Cleaning >>>>")
     logger.debug("feature_list_dict_test{}".format(len(feature_list_dict_test)))

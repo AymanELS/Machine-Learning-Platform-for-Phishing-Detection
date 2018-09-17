@@ -48,7 +48,18 @@ def dns_lookup(domain):
     return lists
 
 def download_url(rawurl):
-    html, dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = 0,0,0,0,0,0,0,0,0,0,0
+    html = ''
+    dns_lookup_output = ''
+    IPs = ''
+    ipwhois = '' 
+    whois_output = '' 
+    content = ''
+    domain = ''
+    html_time = 0
+    dns_lookup_time = 0
+    ipwhois_time = 0
+    Error = 0
+    
     headers = requests.utils.default_headers()
 
     headers.update(
@@ -66,55 +77,72 @@ def download_url(rawurl):
 
     url = rawurl.strip().rstrip('\n')
     if url == '':
-        pass
+        Error=1
+        return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
+
     try:
         t0 = time.time()
         html = requests.get(url=url, headers = headers, timeout = 20)
         if html.status_code != 200:
-        	pass
+            Error=1
+            return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
         else:
             parsed = BeautifulSoup(html.text, 'html.parser')
             language = parsed.find("html").get('lang')
             if language != None and language != 'en':
-                pass
+                Error=1
+                return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
+
         html_time = time.time() - t0
         content = html.text
         landing_url = html.url
+
     except Exception as e:
-        print("Exception: HTML Error :{}".format(e))
-        print("html, content=''")
+        logger.warning("Exception: HTML Error :{}".format(e))
+        logger.warning("html, content=''")
         html=''
         content=''
-        html_time=''
+        html_time=-1
 
     try:           
         extracted = tldextract.extract(landing_url)
         domain = "{}.{}".format(extracted.domain, extracted.suffix)
 
-        t0 = time.time()
-        dns_lookup_output=dns_lookup(domain)
-        dns_lookup_time = time.time() - t0
+    except Exception as e:
+        logger.warning("Exception: Domain Error: {}".format(e))
+        logger.warning("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
+        domain=''
 
+    if domain:
+        t0 = time.time()
+        try:
+            dns_lookup_output=dns_lookup(domain)
+            dns_lookup_time = time.time() - t0
+        except Exception as e:
+            dns_lookup_output=''
+            dns_lookup_time=-1 
         try:
             IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
         except socket.gaierror:
             IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + domain, 80, type=socket.SOCK_STREAM)))
 
         t0 = time.time()
-        for ip in IPs:
-            obj = IPWhois(ip)
-            ipwhois = obj.lookup_whois(get_referral=True)
-        ipwhois_time = time.time() - t0
+        try:
+            for ip in IPs:
+                obj = IPWhois(ip)
+                ipwhois = obj.lookup_whois(get_referral=True)
+            ipwhois_time = time.time() - t0
+        except Exception as e:
+            IPs=''
+            ipwhois=''
+            ipwhois_time=-1
 
-    except Exception as e:
-        logger.error("Exception: Domain Error: {}".format(e))
-        logger.error("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
-        domain=''
+    else:
         dns_lookup_output=''
         dns_lookup_time=''
         IPs=''
         ipwhois=''
-        ipwhois_time=''
+        ipwhois_time=-1
 
         
     try:
@@ -123,10 +151,10 @@ def download_url(rawurl):
         else:
             whois_output = whois.whois(domain)
             whois_info[domain] = whois_output
-        time.sleep(3)
+        time.sleep(5)
     except Exception as e:
-        logger.error("Exception: Domain Error: {}".format(e))
-        logger.error("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
+        logger.warning("Exception: Domain Error: {}".format(e))
+        logger.warning("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
         whois_output=''
 
 
@@ -136,7 +164,7 @@ def download_url(rawurl):
     #     logger.error(e)
     #     logger.error(traceback.format_exc())
     #     Error=1
-    return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time
+    return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
 def visible(element):
     if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
