@@ -40,6 +40,8 @@ def Feature_Selection(X,y):
 
 def Feature_Ranking(X,y,k, feature_list_dict_train):
 	#RFE
+	if not os.path.exists("Data_Dump/Feature_Ranking"):
+		os.makedirs("Data_Dump/Feature_Ranking")
 	if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
 		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
 	elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
