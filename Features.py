@@ -2632,7 +2632,11 @@ def URL_Average_Path_Token_Length(url, list_features, list_time):
     if config["URL_Features"]["Average_Path_Token_Length"] == "True":
         start=time.time()
         average_token_length=0
+<<<<<<< HEAD
         delimiters_regex=re.compile("="|","|"/"|"?"|"."|"-"|"'")
+=======
+        delimiters_regex=re.compile('[=|,|/|?|.|-]')
+>>>>>>> d8f0586d6bb619383342b8028b4a466fd09a9133
         if url:
             try:
                 parsed_url=urlparse(url)
