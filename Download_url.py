@@ -78,6 +78,7 @@ def download_url(rawurl):
     url = rawurl.strip().rstrip('\n')
     if url == '':
         Error=1
+        logger.warning("Empty URL")
         return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
     try:
@@ -85,12 +86,14 @@ def download_url(rawurl):
         html = requests.get(url=url, headers = headers, timeout = 20)
         if html.status_code != 200:
             Error=1
+            logger.warning("HTTP response code is not OK: {}".format(html.status_code))
             return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
         else:
             parsed = BeautifulSoup(html.text, 'html.parser')
             language = parsed.find("html").get('lang')
-            if language != None and language != 'en':
+            if language != None and not language.startswith('en'):
                 Error=1
+                logger.warning("Website's language is not English")
                 return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
         html_time = time.time() - t0
@@ -103,6 +106,7 @@ def download_url(rawurl):
         html=''
         content=''
         html_time=-1
+        landing_url=url
 
     try:           
         extracted = tldextract.extract(landing_url)
