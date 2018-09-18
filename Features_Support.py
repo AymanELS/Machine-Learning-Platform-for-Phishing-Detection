@@ -38,6 +38,7 @@ import configparser
 import Features
 from sklearn.feature_extraction import DictVectorizer
 import logging
+import traceback
 
 logger = logging.getLogger('root')
 

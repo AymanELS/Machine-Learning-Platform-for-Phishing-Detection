@@ -101,7 +101,7 @@ def download_url(rawurl):
         landing_url = html.url
 
     except Exception as e:
-        logger.warning("Exception: HTML Error :{}".format(e))
+        logger.warning("Exception HTML: HTML: {}. Error :{}".format(url, e))
         logger.warning("html, content=''")
         html=''
         content=''
@@ -157,7 +157,7 @@ def download_url(rawurl):
             whois_info[domain] = whois_output
         time.sleep(5)
     except Exception as e:
-        logger.warning("Exception: Domain Error: {}".format(e))
+        logger.warning("Exception whois: Domain {}. Error: {}".format(domain, e))
         logger.warning("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
         whois_output=''
 
