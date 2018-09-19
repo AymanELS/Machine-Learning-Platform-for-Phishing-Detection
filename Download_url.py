@@ -101,7 +101,7 @@ def download_url(rawurl):
         landing_url = html.url
 
     except Exception as e:
-        logger.warning("Exception HTML: HTML: {}. Error :{}".format(url, e))
+        logger.warning("Exception HTML: {}. Error :{}".format(url, e))
         logger.warning("html, content=''")
         html=''
         content=''
@@ -126,17 +126,18 @@ def download_url(rawurl):
             dns_lookup_output=''
             dns_lookup_time=-1 
         try:
-            IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
-        except socket.gaierror:
-            IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + domain, 80, type=socket.SOCK_STREAM)))
+            try:
+                IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
+            except socket.gaierror:
+                IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + domain, 80, type=socket.SOCK_STREAM)))
 
-        t0 = time.time()
-        try:
+            t0 = time.time()
             for ip in IPs:
                 obj = IPWhois(ip)
                 ipwhois = obj.lookup_whois(get_referral=True)
             ipwhois_time = time.time() - t0
         except Exception as e:
+            logger.warning("Exception: ipwhois Error: {}".format(e))
             IPs=''
             ipwhois=''
             ipwhois_time=-1
