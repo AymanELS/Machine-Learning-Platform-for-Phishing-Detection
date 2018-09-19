@@ -18,9 +18,17 @@ import re
 import logging
 import traceback
 import tldextract
+from urllib.parse import urlparse
 
 logger = logging.getLogger('root')
 whois_info = {}
+
+def is_IP_address(domain):
+    if re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", domain) == None:
+        return False
+    else:
+        return True
+
 def dns_lookup(domain):
     ids = ['NONE',
         'A',
@@ -110,26 +118,28 @@ def download_url(rawurl):
 
     try:           
         extracted = tldextract.extract(landing_url)
+        parsed_url = urlparse(landing_url)
+        complete_domain = '{uri.hostname}'.format(uri=parsed_url)
         domain = "{}.{}".format(extracted.domain, extracted.suffix)
 
     except Exception as e:
         logger.warning("Exception: Domain Error: {}".format(e))
-        logger.warning("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
         domain=''
+        complete_domain=''
 
-    if domain:
+    if complete_domain:
         t0 = time.time()
         try:
-            dns_lookup_output=dns_lookup(domain)
+            dns_lookup_output=dns_lookup(complete_domain)
             dns_lookup_time = time.time() - t0
         except Exception as e:
             dns_lookup_output=''
             dns_lookup_time=-1 
         try:
             try:
-                IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(domain, 80, type=socket.SOCK_STREAM)))
+                IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(complete_domain, 80, type=socket.SOCK_STREAM)))
             except socket.gaierror:
-                IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + domain, 80, type=socket.SOCK_STREAM)))
+                IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + complete_domain, 80, type=socket.SOCK_STREAM)))
 
             t0 = time.time()
             for ip in IPs:
@@ -142,33 +152,27 @@ def download_url(rawurl):
             ipwhois=''
             ipwhois_time=-1
 
+        if not is_IP_address(complete_domain) and domain:
+            try:
+                if domain in whois_info:
+                    whois_output = whois_info[domain]
+                else:
+                    whois_output = whois.whois(domain)
+                    whois_info[domain] = whois_output
+                time.sleep(5)
+            except Exception as e:
+                logger.warning("Exception whois: Domain {}. Error: {}".format(domain, e))
+                whois_output=''
+        else:
+            whois_output=''
     else:
         dns_lookup_output=''
         dns_lookup_time=''
         IPs=''
         ipwhois=''
         ipwhois_time=-1
-
-        
-    try:
-        if domain in whois_info:
-            whois_output = whois_info[domain]
-        else:
-            whois_output = whois.whois(domain)
-            whois_info[domain] = whois_output
-        time.sleep(5)
-    except Exception as e:
-        logger.warning("Exception whois: Domain {}. Error: {}".format(domain, e))
-        logger.warning("domain, dns_lookup_output, dns_lookup_time, IPs, ipwhois, ipwhois_time =''")
         whois_output=''
 
-
-        
-
-    # except Exception as e:
-    #     logger.error(e)
-    #     logger.error(traceback.format_exc())
-    #     Error=1
     return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
 def visible(element):
