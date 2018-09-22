@@ -206,37 +206,37 @@ def Email_Num_Content_type(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_type"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_type"]=len(content_type_list)
+            list_features["Num_Content_type"]=len(content_type_list)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_type"]=-1
+            list_features["Num_Content_type"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_type"]=ex_time
+        list_time["Num_Content_type"]=ex_time
 
 def Email_Num_Charset(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Charset"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Charset"] = len(charset_list)
+            list_features["Num_Charset"] = len(charset_list)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Charset"] = -1
+            list_features["Num_Charset"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Charset"]=ex_time
+        list_time["Num_Charset"]=ex_time
 
 def Email_Num_Unique_Charset(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Unique_Charset"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Unique_Charset"] = len(set(charset_list))
+            list_features["Num_Unique_Charset"] = len(set(charset_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Charset"] = -1
+            list_features["Num_Unique_Charset"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Unique_Charset"]=ex_time
+        list_time["Num_Unique_Charset"]=ex_time
 
 
 def Email_MIME_Version(MIME_version, list_features, list_time):
@@ -246,294 +246,294 @@ def Email_MIME_Version(MIME_version, list_features, list_time):
             #list_features["Email_MIME_Version"]=MIME_version
             #print("Mime_version: {}".format(MIME_version))
             if MIME_version != None:
-                list_features["Email_MIME_Version"]=MIME_version
+                list_features["MIME_Version"]=MIME_version
             else:
-                list_features["Email_MIME_Version"]=0
+                list_features["MIME_Version"]=0
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_MIME_Version"]="N/A"
+            list_features["MIME_Version"]="N/A"
         end=time.time()
         ex_time=end-start
-        list_time["Email_MIME_Version"]=ex_time
+        list_time["MIME_Version"]=ex_time
 
 def Email_Num_Unique_Content_type(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Unique_Content_type"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Unique_Content_type"]=len(set(content_type_list))
+            list_features["Num_Unique_Content_type"]=len(set(content_type_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Content_type"]=-1
+            list_features["Num_Unique_Content_type"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Unique_Content_type"]=ex_time
+        list_time["Num_Unique_Content_type"]=ex_time
 
 def Email_Num_Unique_Content_Disposition(content_disposition_list, list_features, list_time):
     if config["Email_Features"]["Num_Unique_Content_Disposition"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Unique_Content_Disposition"]=len(set(content_disposition_list))
+            list_features["Num_Unique_Content_Disposition"]=len(set(content_disposition_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Content_Disposition"]=-1
+            list_features["Num_Unique_Content_Disposition"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Unique_Content_Disposition"]=ex_time
+        list_time["Num_Unique_Content_Disposition"]=ex_time
 
 def Email_Num_Content_Disposition(content_disposition_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Disposition"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Disposition"]=len(content_disposition_list)
+            list_features["Num_Content_Disposition"]=len(content_disposition_list)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Disposition"]=-1
+            list_features["Num_Content_Disposition"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Disposition"]=ex_time
+        list_time["Num_Content_Disposition"]=ex_time
 
 def Email_Num_Content_Type_text_plain(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_text_plain"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_text_plain"]=content_type_list.count("text/plain")
+            list_features["Num_Content_Type_text_plain"]=content_type_list.count("text/plain")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_text_plain"]=-1
+            list_features["Num_Content_Type_text_plain"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_text_plain"]=ex_time
+        list_time["Num_Content_Type_text_plain"]=ex_time
 
 
 def Email_Num_Content_Type_text_html(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_text_html"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_text_html"]=content_type_list.count("text/html")
+            list_features["Num_Content_Type_text_html"]=content_type_list.count("text/html")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_text_html"]=-1
+            list_features["Num_Content_Type_text_html"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_text_html"]=ex_time
+        list_time["Num_Content_Type_text_html"]=ex_time
 
 def Email_Num_Content_Type_Multipart_Encrypted(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_Encrypted"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_Encrypted"]=content_type_list.count("multipart/encrypted")
+            list_features["Num_Content_Type_Multipart_Encrypted"]=content_type_list.count("multipart/encrypted")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Encrypted"]=-1
+            list_features["Num_Content_Type_Multipart_Encrypted"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_Encrypted"]=ex_time
+        list_time["Num_Content_Type_Multipart_Encrypted"]=ex_time
 
 def Email_Num_Content_Type_Multipart_Mixed(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_Mixed"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_Mixed"]=content_type_list.count("multipart/mixed")
+            list_features["Num_Content_Type_Multipart_Mixed"]=content_type_list.count("multipart/mixed")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Mixed"] = -1
+            list_features["Num_Content_Type_Multipart_Mixed"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_Mixed"]=ex_time
+        list_time["Num_Content_Type_Multipart_Mixed"]=ex_time
 
 def Email_Num_Content_Type_Multipart_form_data(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_form_data"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_form_data"] = content_type_list.count("multipart/form-data")
+            list_features["Num_Content_Type_Multipart_form_data"] = content_type_list.count("multipart/form-data")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_form_data"] = -1
+            list_features["Num_Content_Type_Multipart_form_data"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_form_data"]=ex_time
+        list_time["Num_Content_Type_Multipart_form_data"]=ex_time
 
 def Email_Num_Content_Type_Multipart_byterange(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_byterange"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_byterange"] = content_type_list.count("multipart/byterange")
+            list_features["Num_Content_Type_Multipart_byterange"] = content_type_list.count("multipart/byterange")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_byterange"] = -1
+            list_features["Num_Content_Type_Multipart_byterange"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_byterange"]=ex_time
+        list_time["Num_Content_Type_Multipart_byterange"]=ex_time
 
 def Email_Num_Content_Type_Multipart_Parallel(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_Parallel"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_Parallel"] = content_type_list.count("multipart/parallel")
+            list_features["Num_Content_Type_Multipart_Parallel"] = content_type_list.count("multipart/parallel")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Parallel"] = -1
+            list_features["Num_Content_Type_Multipart_Parallel"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_Parallel"]=ex_time
+        list_time["Num_Content_Type_Multipart_Parallel"]=ex_time
 
 def Email_Num_Content_Type_Multipart_Report(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_Report"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_Report"] = content_type_list.count("multipart/report")
+            list_features["Num_Content_Type_Multipart_Report"] = content_type_list.count("multipart/report")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Report"] = -1
+            list_features["Num_Content_Type_Multipart_Report"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_Report"]=ex_time
+        list_time["Num_Content_Type_Multipart_Report"]=ex_time
 
 def Email_Num_Content_Type_Multipart_Alternative(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_Alternative"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_Alternative"] = content_type_list.count("multipart/alternative")
+            list_features["Num_Content_Type_Multipart_Alternative"] = content_type_list.count("multipart/alternative")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Alternative"] = -1
+            list_features["Num_Content_Type_Multipart_Alternative"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_Alternative"]=ex_time
+        list_time["Num_Content_Type_Multipart_Alternative"]=ex_time
 
 def Email_Num_Content_Type_Multipart_Digest_Num(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_Digest_Num"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_Digest_Num"] = content_type_list.count("multipart/digest")
+            list_features["Num_Content_Type_Multipart_Digest_Num"] = content_type_list.count("multipart/digest")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Digest_Num"] = -1
+            list_features["Num_Content_Type_Multipart_Digest_Num"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_Digest_Num"]=ex_time
+        list_time["Num_Content_Type_Multipart_Digest_Num"]=ex_time
 
 def Email_Num_Content_Type_Multipart_Signed_Num(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_Signed_Num"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_Signed_Num"] = content_type_list.count("multipart/signed")
+            list_features["Num_Content_Type_Multipart_Signed_Num"] = content_type_list.count("multipart/signed")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_Signed_Num"] = -1
+            list_features["Num_Content_Type_Multipart_Signed_Num"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_Signed_Num"]=ex_time
+        list_time["Num_Content_Type_Multipart_Signed_Num"]=ex_time
 
 def Email_Num_Content_Type_Multipart_X_Mixed_Replaced(content_type_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Multipart_X_Mixed_Replaced"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Multipart_X_Mixed_Replaced"] = content_type_list.count("multipart/x-mixed-replaced")
+            list_features["Num_Content_Type_Multipart_X_Mixed_Replaced"] = content_type_list.count("multipart/x-mixed-replaced")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Multipart_X_Mixed_Replaced"] = -1
+            list_features["Num_Content_Type_Multipart_X_Mixed_Replaced"] = -1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Multipart_X_Mixed_Replaced"]=ex_time
+        list_time["Num_Content_Type_Multipart_X_Mixed_Replaced"]=ex_time
 
 def Email_Num_Content_Type_Charset_us_ascii(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Charset_us_ascii"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Charset_us_ascii"]=charset_list.count("us_ascii")
+            list_features["Num_Content_Type_Charset_us_ascii"]=charset_list.count("us_ascii")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_us_ascii"]=-1
+            list_features["Num_Content_Type_Charset_us_ascii"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Charset_us_ascii"]=ex_time
+        list_time["Num_Content_Type_Charset_us_ascii"]=ex_time
 
 def Email_Num_Content_Type_Charset_utf_8(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Charset_utf_8"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Charset_utf_8"]=charset_list.count("utf_8")
+            list_features["Num_Content_Type_Charset_utf_8"]=charset_list.count("utf_8")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_utf_8"]=-1
+            list_features["Num_Content_Type_Charset_utf_8"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Charset_utf_8"]=ex_time
+        list_time["Num_Content_Type_Charset_utf_8"]=ex_time
 
 def Email_Num_Content_Type_Charset_utf_7(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Charset_utf_7"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Charset_utf_7"]=charset_list.count("utf_7")
+            list_features["Num_Content_Type_Charset_utf_7"]=charset_list.count("utf_7")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_utf_7"]=-1
+            list_features["Num_Content_Type_Charset_utf_7"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Charset_utf_7"]=ex_time
+        list_time["Num_Content_Type_Charset_utf_7"]=ex_time
 
 def Email_Num_Content_Type_Charset_gb2312(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Charset_gb2312"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Charset_gb2312"]=charset_list.count("gb2312")
+            list_features["Num_Content_Type_Charset_gb2312"]=charset_list.count("gb2312")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_gb2312"]=-1
+            list_features["Num_Content_Type_Charset_gb2312"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Charset_gb2312"]=ex_time
+        list_time["Num_Content_Type_Charset_gb2312"]=ex_time
 
 def Email_Num_Content_Type_Charset_shift_jis(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Charset_shift_jis"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Charset_shift_jis"]=charset_list.count("shit_jis")
+            list_features["Num_Content_Type_Charset_shift_jis"]=charset_list.count("shit_jis")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_shift_jis"]=-1
+            list_features["Num_Content_Type_Charset_shift_jis"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Charset_shift_jis"]=ex_time
+        list_time["Num_Content_Type_Charset_shift_jis"]=ex_time
 
 def Email_Num_Content_Type_Charset_koi(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Charset_koi"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Charset_koi"]=charset_list.count("koi")
+            list_features["Num_Content_Type_Charset_koi"]=charset_list.count("koi")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_koi"]=-1
+            list_features["Num_Content_Type_Charset_koi"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Charset_koi"]=ex_time
+        list_time["Num_Content_Type_Charset_koi"]=ex_time
 
 
 def Email_Num_Content_Type_Charset_iso2022_jp(charset_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Type_Charset_iso2022_jp"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Type_Charset_iso2022-jp"]=charset_list.count("iso2022-jp")
+            list_features["Num_Content_Type_Charset_iso2022_jp"]=charset_list.count("iso2022-jp")
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Type_Charset_iso2022-jp"]=-1
+            list_features["Num_Content_Type_Charset_iso2022_jp"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Type_Charset_iso2022-jp"]=ex_time
+        list_time["Num_Content_Type_Charset_iso2022_jp"]=ex_time
 
 
 def Email_Num_Attachment(num_attachment, list_features, list_time):
     if config["Email_Features"]["Num_Attachment"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Attachment"]=num_attachment
+            list_features["Num_Attachment"]=num_attachment
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Attachment"]=-1
+            list_features["Num_Attachment"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Attachment"]=ex_time
+        list_time["Num_Attachment"]=ex_time
 
 
 #def Email_Num_Attachment(file_extension_list, list_features, list_time):
@@ -552,112 +552,112 @@ def Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_t
     if config["Email_Features"]["Num_Unique_Attachment_types"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Unique_Attachment_types"]=len(set(file_extension_list))
+            list_features["Num_Unique_Attachment_types"]=len(set(file_extension_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Attachment_types"]=-1
+            list_features["Num_Unique_Attachment_types"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Unique_Attachment_types"]=ex_time
+        list_time["Num_Unique_Attachment_types"]=ex_time
 
 
 def Email_Num_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Transfer_Encoding"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Transfer_Encoding"]=len(Content_Transfer_Encoding_list)
+            list_features["Num_Content_Transfer_Encoding"]=len(Content_Transfer_Encoding_list)
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding"]=-1
+            list_features["Num_Content_Transfer_Encoding"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Transfer_Encoding"]=ex_time
+        list_time["Num_Content_Transfer_Encoding"]=ex_time
 
 
 def Email_Num_Unique_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_features, list_time):
     if config["Email_Features"]["Num_Unique_Content_Transfer_Encoding"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Unique_Content_Transfer_Encoding"]=len(set(Content_Transfer_Encoding_list))
+            list_features["Num_Unique_Content_Transfer_Encoding"]=len(set(Content_Transfer_Encoding_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Content_Transfer_Encoding"]=-1
+            list_features["Num_Unique_Content_Transfer_Encoding"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Unique_Content_Transfer_Encoding"]=ex_time
+        list_time["Num_Unique_Content_Transfer_Encoding"]=ex_time
 
 
 def Email_Num_Content_Transfer_Encoding_7bit(Content_Transfer_Encoding_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Transfer_Encoding_7bit"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Transfer_Encoding_7bit"]=Content_Transfer_Encoding_list.count('7bit')
+            list_features["Num_Content_Transfer_Encoding_7bit"]=Content_Transfer_Encoding_list.count('7bit')
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding_7bit"]=-1
+            list_features["Num_Content_Transfer_Encoding_7bit"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Transfer_Encoding_7bit"]=ex_time
+        list_time["Num_Content_Transfer_Encoding_7bit"]=ex_time
 
 def Email_Num_Content_Transfer_Encoding_8bit(Content_Transfer_Encoding_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Transfer_Encoding_8bit"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Transfer_Encoding_8bit"]=Content_Transfer_Encoding_list.count('8bit')
+            list_features["Num_Content_Transfer_Encoding_8bit"]=Content_Transfer_Encoding_list.count('8bit')
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding_8bit"]=-1
+            list_features["Num_Content_Transfer_Encoding_8bit"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Transfer_Encoding_8bit"]=ex_time
+        list_time["Num_Content_Transfer_Encoding_8bit"]=ex_time
 
 def Email_Num_Content_Transfer_Encoding_binary(Content_Transfer_Encoding_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Transfer_Encoding_binary"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Transfer_Encoding_binary"]=Content_Transfer_Encoding_list.count('binary')
+            list_features["Num_Content_Transfer_Encoding_binary"]=Content_Transfer_Encoding_list.count('binary')
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding_binary"]=-1
+            list_features["Num_Content_Transfer_Encoding_binary"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Transfer_Encoding_binary"]=ex_time
+        list_time["Num_Content_Transfer_Encoding_binary"]=ex_time
 
 def Email_Num_Content_Transfer_Encoding_quoted_printable(Content_Transfer_Encoding_list, list_features, list_time):
     if config["Email_Features"]["Num_Content_Transfer_Encoding_quoted_printable"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Content_Transfer_Encoding_quoted_printable"]=Content_Transfer_Encoding_list.count('quoted-printable')
+            list_features["Num_Content_Transfer_Encoding_quoted_printable"]=Content_Transfer_Encoding_list.count('quoted-printable')
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Content_Transfer_Encoding_quoted_printable"]=-1
+            list_features["Num_Content_Transfer_Encoding_quoted_printable"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Content_Transfer_Encoding_quoted_printable"]=ex_time
+        list_time["Num_Content_Transfer_Encoding_quoted_printable"]=ex_time
 
 def Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_time):
     if config["Email_Features"]["Num_Unique_Attachment_types"] == "True":
         start=time.time()
         try:
-            list_features["Email_Num_Unique_Attachment_types"]=len(set(file_extension_list))
+            list_features["Num_Unique_Attachment_types"]=len(set(file_extension_list))
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_Num_Unique_Attachment_types"]=-1
+            list_features["Num_Unique_Attachment_types"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_Num_Unique_Attachment_types"]=ex_time
+        list_time["Num_Unique_Attachment_types"]=ex_time
 
 def Email_size_in_Bytes(size_in_bytes ,list_features, list_time):
     if config["Email_Features"]["size_in_Bytes"] == "True":
         start=time.time()
         try:
-            list_features["Email_size_in_Bytes"]=size_in_bytes
+            list_features["size_in_Bytes"]=size_in_bytes
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["Email_size_in_Bytes"]=-1
+            list_features["size_in_Bytes"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["Email_size_in_Bytes"]=ex_time
+        list_time["size_in_Bytes"]=ex_time
 
 def Email_return_path(return_addr, list_features, list_time):
     if config["Email_Features"]["return_path"] == "True":
@@ -675,62 +675,62 @@ def Email_X_mailer(x_mailer,list_features, list_time):
     if config["Email_Features"]["X_mailer"] == "True":
         start=time.time()
         try:
-            list_features["X-mailer"]=x_mailer
+            list_features["X_mailer"]=x_mailer
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-mailer"]=-1
+            list_features["X_mailer"]=-1
         #print("x_mailer >> {}".format(x_mailer))
         end=time.time()
         ex_time=end-start
-        list_time["X-mailer"]=ex_time
+        list_time["X_mailer"]=ex_time
 
 def Email_X_originating_hostname(x_originating_hostname, list_features, list_time):
     if config["Email_Features"]["X_originating_hostname"] == "True":
         start=time.time()
         try:
-            list_features["X-originating-hostname"]=x_originating_hostname
+            list_features["X_originating_hostname"]=x_originating_hostname
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-originating-hostname"]=-1
+            list_features["X_originating_hostname"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["X-originating-hostname"]=ex_time
+        list_time["X_originating_hostname"]=ex_time
 
 def Email_X_originating_ip(x_originating_ip, list_features, list_time):
     if config["Email_Features"]["X_originating_ip"] == "True":
         start=time.time()
         try:
-            list_features["X-originating-ip"]=x_originating_ip
+            list_features["X_originating_ip"]=x_originating_ip
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-originating-ip"]=-1
+            list_features["X_originating_ip"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["X-originating-ip"]=ex_time
+        list_time["X_originating_ip"]=ex_time
 
 def Email_X_spam_flag(x_spam_flag, list_features, list_time):
     if config["Email_Features"]["X_spam_flag"] == "True":
         start=time.time()
         try:
-            list_features["X-Spam-flag"]=x_spam_flag
+            list_features["X_Spam_flag"]=x_spam_flag
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-Spam-flag"]=-1
+            list_features["X_Spam_flag"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["X-Spam-flag"]=ex_time
+        list_time["X_Spam_flag"]=ex_time
 
 def Email_X_virus_scanned(x_virus_scanned, list_features, list_time):
     if config["Email_Features"]["X_virus_scanned"] == "True":
         start=time.time()
         try:
-            list_features["X-virus-scanned"]=x_virus_scanned
+            list_features["X_virus_scanned"]=x_virus_scanned
         except Exception as e:
             logger.warning("exception: " + str(e))
-            list_features["X-virus-scanned"]=-1
+            list_features["X_virus_scanned"]=-1
         end=time.time()
         ex_time=end-start
-        list_time["X-virus-scanned"]=ex_time
+        list_time["X_virus_scanned"]=ex_time
 
 def Email_Received_count(received, list_features, list_time):
     if config["Email_Features"]["Received_count"] == "True":
@@ -1332,15 +1332,15 @@ def Email_Number_Of_Scripts(body, list_features, list_time):
         if body:
             soup = BeautifulSoup(body, "html.parser")
             try:
-                 list_features["Email_Number_Of_Scripts"]=len(soup.find_all('script'))
+                 list_features["Number_Of_Scripts"]=len(soup.find_all('script'))
             except Exception as e:
                  logger.warning("exception :{}".format(e))
-                 list_features["Email_Number_Of_Scripts"]=-1
+                 list_features["Number_Of_Scripts"]=-1
         else:
-            list_features["Email_Number_Of_Scripts"]=0
+            list_features["Number_Of_Scripts"]=0
         end=time.time()
         ex_time=end-start
-        list_time["Email_Number_Of_Scripts"]=ex_time
+        list_time["Number_Of_Scripts"]=ex_time
 
 def Email_Number_Of_Img_Links(body, list_features, list_time):
     if config["Email_Features"]["Number_Of_Img_Links"] == "True":
@@ -1349,15 +1349,15 @@ def Email_Number_Of_Img_Links(body, list_features, list_time):
         soup = BeautifulSoup(body, "html.parser")
         if body:
             try:
-                 list_features["Email_Number_Of_Img_Links"]=len(soup.find_all('img'))
+                 list_features["Number_Of_Img_Links"]=len(soup.find_all('img'))
             except Exception as e:
                  logger.warning("exception :{}".format(e))
-                 list_features["Email_Number_Of_Img_Links"]=-1
+                 list_features["Number_Of_Img_Links"]=-1
         else:
-            list_features["Email_Number_Of_Img_Links"]=0
+            list_features["Number_Of_Img_Links"]=0
         end=time.time()
         ex_time=end-start
-        list_time["Email_Number_Of_Img_Links"]=ex_time
+        list_time["Number_Of_Img_Links"]=ex_time
 
 def Email_Function_Words_Count(body, list_features, list_time):
     if config["Email_Features"]["Function_Words_Count"] == "True":
@@ -2169,9 +2169,9 @@ def HTML_URL_Is_Redirect(html, url, list_features, list_time):
         list_time["URL_Is_Redirect"]=ex_time
 
 ############################ URL features
-def URL_length(url, list_features, list_time):
+def URL_url_length(url, list_features, list_time):
     ##global list_features
-    if config["URL_Features"]["length"] == "True":
+    if config["URL_Features"]["url_length"] == "True":
         start=time.time()
         url_length=0
         if url:
@@ -2418,7 +2418,7 @@ def URL_number_of_dots(url, list_features, list_time):
         list_features["number_of_dots"]=number_of_dots
         end=time.time()
         ex_time=end-start
-        list_time["outbound_href_count"]=ex_time
+        list_time["number_of_dots"]=ex_time
 
 def URL_number_of_slashes(url, list_features, list_time):
     #global list_features
@@ -2552,17 +2552,17 @@ def URL_Has_More_than_3_dots(url, list_features, list_time):
                 url=url.replace('www.','')
                 count_dots=url.count('.')
                 if count_dots >= 3:
-                    list_features["URL_Has_More_than_3_dots"]=1
+                    list_features["Has_More_than_3_dots"]=1
                 else:
-                    list_features["URL_Has_More_than_3_dots"]=0
+                    list_features["Has_More_than_3_dots"]=0
             except Exception as e:
                 logger.warning("exception: " + str(e))
-                list_features["URL_Has_More_than_3_dots"]=-1
+                list_features["Has_More_than_3_dots"]=-1
         else:
-            list_features["URL_Has_More_than_3_dots"]=0
+            list_features["Has_More_than_3_dots"]=0
         end=time.time()
         ex_time=end-start
-        list_time["URL_Has_More_than_3_dots"]=ex_time
+        list_time["Has_More_than_3_dots"]=ex_time
 
 def URL_Has_at_symbole(url, list_features, list_time):
     if config["URL_Features"]["Has_at_symbole"] == "True":
@@ -2575,10 +2575,10 @@ def URL_Has_at_symbole(url, list_features, list_time):
             except Exception  as e:
                 logger.warning("Exception: " + str(e))
                 flag=-1
-        list_features["URL_Has_at_symbole"]=flag
+        list_features["Has_at_symbole"]=flag
         end=time.time()
         ex_time=end-start
-        list_time["URL_Has_at_symbole"]=ex_time
+        list_time["Has_at_symbole"]=ex_time
 
 
 def URL_Has_anchor_tag(url, list_features, list_time):
@@ -2592,10 +2592,10 @@ def URL_Has_anchor_tag(url, list_features, list_time):
             except Exception  as e:
                 logger.warning("Exception: " + str(e))
                 flag=-1
-        list_features["URL_Has_anchor_tag"]=flag
+        list_features["Has_anchor_tag"]=flag
         end=time.time()
         ex_time=end-start
-        list_time["URL_Has_anchor_tag"]=ex_time
+        list_time["Has_anchor_tag"]=ex_time
 
 def URL_Null_in_Domain(url, list_features, list_time):
     if config["URL_Features"]["Null_in_Domain"] == "True":
@@ -2608,10 +2608,10 @@ def URL_Null_in_Domain(url, list_features, list_time):
             except Exception  as e:
                 logger.warning("Exception: " + str(e))
                 flag=-1
-        list_features["URL_Null_in_Domain"]=flag
+        list_features["Null_in_Domain"]=flag
         end=time.time()
         ex_time=end-start
-        list_time["URL_Null_in_Domain"]=ex_time
+        list_time["Null_in_Domain"]=ex_time
 
 def URL_Token_Count(url, list_features, list_time):
     if config["URL_Features"]["Token_Count"]:
@@ -2623,10 +2623,10 @@ def URL_Token_Count(url, list_features, list_time):
             except Exception  as e:
                 logger.warning("Exception: " + str(e))
                 count=-1
-        list_features["URL_Token_Count"]=count
+        list_features["Token_Count"]=count
         end=time.time()
         ex_time=end-start
-        list_time["URL_Token_Count"]=ex_time
+        list_time["Token_Count"]=ex_time
 
 def URL_Average_Path_Token_Length(url, list_features, list_time):
     if config["URL_Features"]["Average_Path_Token_Length"] == "True":
@@ -2645,10 +2645,10 @@ def URL_Average_Path_Token_Length(url, list_features, list_time):
             except Exception  as e:
                 logger.warning("Exception: " + str(e))
                 average_token_length=-1
-        list_features["URL_Average_Path_Token_Length"]=average_token_length
+        list_features["Average_Path_Token_Length"]=average_token_length
         end=time.time()
         ex_time=end-start
-        list_time["URL_Average_Path_Token_Length"]=ex_time
+        list_time["Average_Path_Token_Length"]=ex_time
 
 def URL_Average_Domain_Token_Length(url, list_features, list_time):
     if config["URL_Features"]["Average_Domain_Token_Length"] == "True":
@@ -2666,10 +2666,10 @@ def URL_Average_Domain_Token_Length(url, list_features, list_time):
             except Exception  as e:
                 logger.warning("Exception: " + str(e))
                 average_token_length=-1
-        list_features["URL_Average_Domain_Token_Length"]=average_token_length
+        list_features["Average_Domain_Token_Length"]=average_token_length
         end=time.time()
         ex_time=end-start
-        list_time["URL_Average_Domain_Token_Length"]=ex_time
+        list_time["Average_Domain_Token_Length"]=ex_time
 
 def URL_Longest_Domain_Token(url, list_features, list_time):
     if config["URL_Features"]["Longest_Domain_Token"] == "True":
@@ -2690,10 +2690,10 @@ def URL_Longest_Domain_Token(url, list_features, list_time):
         except Exception  as e:
             logger.warning("Exception: " + str(e))
             longest_token_len=-1
-        list_features["URL_Longest_Domain_Token"]=longest_token_len
+        list_features["Longest_Domain_Token"]=longest_token_len
         end=time.time()
         ex_time=end-start
-        list_time["URL_Longest_Domain_Token"]=ex_time
+        list_time["Longest_Domain_Token"]=ex_time
 
 def URL_Protocol_Port_Match(url, list_features, list_time):
     if config["URL_Features"]["Protocol_Port_Match"]=="True":
@@ -2707,16 +2707,16 @@ def URL_Protocol_Port_Match(url, list_features, list_time):
                 protocol_port_list=[('http',8080), ('http',80), ('https',443), ('ftp',20), ('tcp',20), ('scp',20),('ftp',21), ('ssh',22), ('telnet',23), ('smtp',25), ('dns',53), ("pop3", 110), ("sftp", 115), ("imap", 143), ("smtp",465), ("rlogin", 513), ("imap", 993), ("pop3", 995)]
                 if port != 'None' and ((scheme, int(port)) not in protocol_port_list):
                     match = 0
-                list_features["URL_Protocol_Port_Match"] = match
+                list_features["Protocol_Port_Match"] = match
             except Exception as e:
                 logger.warning("Exception: {}".format(e))
                 match=-1
         else:
             match=0
-        list_features["URL_Protocol_Port_Match"]=match
+        list_features["Protocol_Port_Match"]=match
         end=time.time()
         ex_time=end-start
-        list_time["URL_Protocol_Port_Match"]=ex_time
+        list_time["Protocol_Port_Match"]=ex_time
 
 
 def URL_DNS_Info_Exists(url, list_features, list_time):
@@ -2736,13 +2736,13 @@ def URL_DNS_Info_Exists(url, list_features, list_time):
             except Exception as e:
                 logger.warning("Exception: {}".format(e))
                 flag=-1
-                logger.debug(list_features["URL_DNS_Info_Exists"])
+                logger.debug(list_features["DNS_Info_Exists"])
         else:
             flag=0
-        list_features["URL_DNS_Info_Exists"]=flag
+        list_features["DNS_Info_Exists"]=flag
         end=time.time()
         ex_time=end-start
-        list_time["URL_DNS_Info_Exists"]=ex_time
+        list_time["DNS_Info_Exists"]=ex_time
 
 def URL_Has_WWW_in_Middle(url, list_features, list_time):
     if config["URL_Features"]["Has_WWW_in_Middle"] == "True":
@@ -2776,10 +2776,10 @@ def URL_Has_Hex_Characters(url, list_features, list_time):
             except Exception as e:
                 logger.warning("Exception: {}".format(e))
                 flag=-1
-        list_features["URL_Has_Hex_Characters"]=flag
+        list_features["Has_Hex_Characters"]=flag
         end=time.time()
         ex_time=end-start
-        list_time["Has_WWW_in_Middle"]=ex_time
+        list_time["Has_Hex_Characters"]=ex_time
 
 def URL_Double_Slashes_Not_Beginning_Count(url, list_features, list_time):
     if config['URL_Features']['Double_Slashes_Not_Beginning_Count']=="True":
@@ -2791,14 +2791,14 @@ def URL_Double_Slashes_Not_Beginning_Count(url, list_features, list_time):
                 parsed_url = urlparse(url)
                 path = '{uri.path}'.format(uri=parsed_url)
                 flag=int((bool(re.findall(regex_2slashes,path))))
-                list_features["URL_Double_Slashes_Not_Beginning_Count"]=flag
+                list_features["Double_Slashes_Not_Beginning_Count"]=flag
             except Exception as e:
                 logger.warning("Exception: {}".format(e))
                 flag=-1
-        list_features["URL_Double_Slashes_Not_Beginning_Count"]=flag
+        list_features["Double_Slashes_Not_Beginning_Count"]=flag
         end=time.time()
         ex_time=end-start
-        list_time["URL_Double_Slashes_Not_Beginning_Count"]=ex_time
+        list_time["Double_Slashes_Not_Beginning_Count"]=ex_time
 
 
 #def URL_ foundURLProtocolAndPortDoNotMatch

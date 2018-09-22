@@ -807,7 +807,7 @@ def single_javascript_features(soup, html, list_features, list_time):
     logger.debug("number_of_total_suspicious_features")
 
 def single_url_feature(url, list_features,list_time):
-    Features.URL_length(url, list_features, list_time)
+    Features.URL_url_length(url, list_features, list_time)
     logger.debug("url_length")
 
     Features.URL_domain_length(url, list_features, list_time)

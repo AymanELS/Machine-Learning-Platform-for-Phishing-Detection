@@ -332,11 +332,62 @@ def main():
                 y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
                 X_test=joblib.load("Data_Dump/URLs_Testing/X_test.pkl")
                 y_test=joblib.load("Data_Dump/URLs_Testing/y_test.pkl")
+                vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
+                features_extracted=vectorizer.get_feature_names()
+                logger.info(len(features_extracted))
+                mask=[]
+                for feature_name in features_extracted:
+                    if "=" in feature_name:
+                        feature_name=feature_name.split("=")[0]
+                    if "url_char_distance_" in feature_name:
+                        if config["URL_Features"]["char_distance"]=="True":
+                            mask.append(1)
+                        else:
+                            mask.append(0)
+                    for section in ["URL_Features", "HTML_Features", "Javascript_Features", "Network_Features"]:
+                        try:
+                            if config[section][feature_name]=="True":
+                                mask.append(1)
+                            else:
+                                mask.append(0)
+                        except KeyError as e:
+                            logger.info(str(e))
+                            pass
+                logger.info(mask)
+                vectorizer=vectorizer.restrict(mask)
+                logger.info(len(vectorizer.get_feature_names()))
+
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
                 X_train=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
                 y_train=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
                 X_test=joblib.load("Data_Dump/Emails_Testing/X_test.pkl")
                 y_test=joblib.load("Data_Dump/Emails_Testing/y_test.pkl")
+                vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
+                features_extracted = vectorizer.get_feature_names()
+                logger.info(len(features_extracted))
+                mask= []
+                for feature_name in features_extracted:
+                    if "=" in feature_name:
+                        feature_name=feature_name.split("=")[0]
+                    if "count_in_body" in feature_name:
+                        if config["Email_Features"]["blacklisted_words_body"] == "True":
+                            mask.append(1)
+                        else:
+                            mask.append(0)
+                    elif "count_in_subject" in feature_name:
+                        if config["Email_Features"]["blacklisted_words_subject"] == "True":
+                            mask.append(1)
+                        else:
+                            mask.append(0)
+                    else:
+                        if config["Email_Features"][feature_name]=="True":
+                            mask.append(1)
+                        else:
+                            mask.append(0)
+                logger.info(mask)
+                vectorizer=vectorizer.restrict(mask)
+                logger.info(len(vectorizer.get_feature_names()))
+                #X_train=vectorizer.transform(X_train)
 
         logger.info("Running the Classifiers....")
         classifiers(X_train, y_train, X_test, y_test)
