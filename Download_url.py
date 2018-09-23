@@ -19,9 +19,17 @@ import logging
 import traceback
 import tldextract
 from urllib.parse import urlparse
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import DesiredCapabilities
 
 logger = logging.getLogger('root')
 whois_info = {}
+class HTTPResponse:
+    def __init__(self):
+        self.headers = {}
+        self.html = ""
+        self.url = ""
 
 def is_IP_address(domain):
     if re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", domain) == None:
@@ -61,12 +69,12 @@ def download_url(rawurl):
     IPs = ''
     ipwhois = '' 
     whois_output = '' 
-    content = ''
     domain = ''
     html_time = 0
     dns_lookup_time = 0
     ipwhois_time = 0
     Error = 0
+    http_response = HTTPResponse()
     
     headers = requests.utils.default_headers()
 
@@ -82,43 +90,61 @@ def download_url(rawurl):
             'Accept-Encoding': 'gzip, deflate'
         }
     )
+    chrome_options = Options()
+    chrome_options.set_headless() 
+    desired_capabilities = DesiredCapabilities.CHROME.copy()
+    desired_capabilities['loggingPrefs'] = { 'browser':'ALL' }
+
 
     url = rawurl.strip().rstrip('\n')
     if url == '':
         Error=1
         logger.warning("Empty URL")
-        return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
+        return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
     try:
         t0 = time.time()
-        html = requests.get(url=url, headers = headers, timeout = 20)
-        if html.status_code != 200:
-            Error=1
-            logger.warning("HTTP response code is not OK: {}".format(html.status_code))
-            return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
+        browser = webdriver.Chrome(executable_path=os.path.abspath('chromedriver'), chrome_options=chrome_options, desired_capabilities=desired_capabilities)
+        browser.get(url)
+        log = browser.get_log('browser')
+        http_response.html = browser.page_source
+        http_response.url = browser.current_url
+        browser.close()
+        http_response.headers = requests.head(url).headers
+        #html = requests.get(url=url, headers = headers, timeout = 20)
+        if log:
+            p = re.compile('.* status of ([0-9]+) .*')
+            match = p.match(log[0]['message'])
+            if match:
+        #if html.status_code != 200:
+                Error=1
+                logger.warning("HTTP response code is not OK: {}".format(match.groups()[0]))
+                #logger.warning("HTTP response code is not OK: {}".format(html.status_code))
+                return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, Error
         else:
-            parsed = BeautifulSoup(html.text, 'html.parser')
+            #parsed = BeautifulSoup(html.text, 'html.parser')
+            parsed = BeautifulSoup(http_response.html, 'html.parser')
             language = parsed.find("html").get('lang')
             if language != None and not language.startswith('en'):
                 Error=1
                 logger.warning("Website's language is not English")
-                return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
+                return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
         html_time = time.time() - t0
-        content = html.text
-        landing_url = html.url
+        #content = html.text
+        #landing_url = html.url
 
     except Exception as e:
         logger.warning("Exception HTML: {}. Error :{}".format(url, e))
         logger.warning("html, content=''")
-        html=''
-        content=''
+        logger.debug(traceback.format_exc())
+        http_response.html = ''
+        http_response.url = url
         html_time=-1
-        landing_url=url
 
     try:           
-        extracted = tldextract.extract(landing_url)
-        parsed_url = urlparse(landing_url)
+        extracted = tldextract.extract(http_response.url)
+        parsed_url = urlparse(http_response.url)
         complete_domain = '{uri.hostname}'.format(uri=parsed_url)
         domain = "{}.{}".format(extracted.domain, extracted.suffix)
 
@@ -173,7 +199,7 @@ def download_url(rawurl):
         ipwhois_time=-1
         whois_output=''
 
-    return html,dns_lookup_output, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error
+    return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, Error
 
 def visible(element):
     if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:

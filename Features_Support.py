@@ -773,31 +773,31 @@ def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url
 
 
 def single_javascript_features(soup, html, list_features, list_time):
-    Features.Javascript_number_of_exec(soup, html, list_features, list_time)
+    Features.Javascript_number_of_exec(soup, list_features, list_time)
     logger.debug("number_of_exec")
 
-    Features.Javascript_number_of_escape(soup, html, list_features, list_time)
+    Features.Javascript_number_of_escape(soup, list_features, list_time)
     logger.debug("number_of_escape")
 
-    Features.Javascript_number_of_eval(soup, html, list_features, list_time)
+    Features.Javascript_number_of_eval(soup, list_features, list_time)
     logger.debug("number_of_eval")
 
-    Features.Javascript_number_of_link(soup, html, list_features, list_time)
+    Features.Javascript_number_of_link(soup, list_features, list_time)
     logger.debug("number_of_link")
 
-    Features.Javascript_number_of_unescape(soup, html, list_features, list_time)
+    Features.Javascript_number_of_unescape(soup, list_features, list_time)
     logger.debug("number_of_unescape")
 
-    Features.Javascript_number_of_search(soup, html, list_features, list_time)
+    Features.Javascript_number_of_search(soup, list_features, list_time)
     logger.debug("number_of_search")
 
-    Features.Javascript_number_of_setTimeout(soup, html, list_features, list_time)
+    Features.Javascript_number_of_setTimeout(soup, list_features, list_time)
     logger.debug("number_of_setTimeout")
 
-    Features.Javascript_number_of_iframes_in_script(soup, html, list_features, list_time)
+    Features.Javascript_number_of_iframes_in_script(soup, list_features, list_time)
     logger.debug("number_of_iframes_in_script")
 
-    Features.Javascript_number_of_event_attachment(soup, html, list_features, list_time)
+    Features.Javascript_number_of_event_attachment(soup, list_features, list_time)
     logger.debug("number_of_event_attachment")
 
     Features.Javascript_rightclick_disabled(html, list_features, list_time)
@@ -1220,42 +1220,38 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
     try:
         with open(filepath,'r', encoding = "ISO-8859-1") as f:
             for rawurl in f:
-                #rawurl=f.readline()
-                #####################
-                if rawurl == '':
-                    pass
-                #####################
-                logger.debug("#############################################")
-                logger.debug("rawurl:" + str(rawurl))
-                Features.summary.write("URL: {}".format(rawurl))
-                #if rawurl in Bad_URLs_List:
-                #    #print("This URL has trouble being extracted:\n")
-                #    logger.warning("This URL will not be considered for further processing because It's registred in list of dead URLs:{}".format(rawurl))
-                #    Features.summary.write("This URL will not be considered for further processing because It's registred in out list of dead URLs")
-                #else:
-                html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = Download_url.download_url(rawurl)
+                try:
+                    if rawurl == '':
+                        pass
+                    logger.debug("rawurl:" + str(rawurl))
+                    Features.summary.write("URL: {}".format(rawurl))
+                    html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = Download_url.download_url(rawurl)
 
-                if Error == 1:
+                    if Error == 1:
+                        logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
+                        Bad_URLs_List.append(rawurl)
+                    else:
+                        logger.debug("download_url >>>>>>>>> complete")
+                        # include https or http
+                        url = rawurl.strip().rstrip('\n')
+                        if content=='':
+                            soup=''
+                        soup = BeautifulSoup(content, 'html5lib')   #content=html.text
+                        single_html_features(soup, url, list_features, list_time)
+                        single_url_feature(url, list_features, list_time)
+                        logger.debug("html_featuers & url_features >>>>>> complete")
+                        single_javascript_features(soup,html, list_features, list_time)
+                        logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
+                        single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
+                        dump_features(list_features, features_output, list_dict, list_time, time_dict)
+                        corpus.append(str(soup))
+                except Exception as e:
                     logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
+                    logger.debug(traceback.format_exc())
                     Bad_URLs_List.append(rawurl)
-                else:
-                    logger.debug("download_url >>>>>>>>> complete")
-                    # include https or http
-                    url = rawurl.strip().rstrip('\n')
-                    if content=='':
-                        soup=''
-                    soup = BeautifulSoup(content, 'html5lib')   #content=html.text
-                    single_html_features(soup, url, list_features, list_time)
-                    single_url_feature(url, list_features, list_time)
-                    logger.debug("html_featuers & url_features >>>>>> complete")
-                    single_javascript_features(soup,html, list_features, list_time)
-                    logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
-                    single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
-                    dump_features(list_features, features_output, list_dict, list_time, time_dict)
-                        #print(soup)
-                    corpus.append(str(soup))
     except Exception as e:
         logger.warning("exception: " + str(e))
+        logger.debug(traceback.format_exc())
 
 def email_features(filepath, list_features, features_output, list_dict, list_time, time_dict, corpus):
     try:

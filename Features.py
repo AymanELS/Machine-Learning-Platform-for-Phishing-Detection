@@ -2107,6 +2107,8 @@ def HTML_Website_content_type(html, list_features, list_time):
             try:
                 if 'Content-Type' in html.headers:
                     content_type = html.headers['Content-Type'].split(';')[0]
+                else:
+                    content_type = 'text/html'
             except Exception as e:
                 logger.warning("exception: " + str(e))
                 content_type="N/A"
@@ -2980,7 +2982,7 @@ def Network_dns_ttl(url, list_features, list_time):
 
 
 ############################ Javascript features
-def Javascript_number_of_exec(soup, html, list_features, list_time):
+def Javascript_number_of_exec(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_exec"] == "True":
         start=time.time()
@@ -3001,7 +3003,7 @@ def Javascript_number_of_exec(soup, html, list_features, list_time):
         ex_time=end-start
         list_time["number_of_exec"]=ex_time
 
-def Javascript_number_of_escape(soup, html, list_features, list_time):
+def Javascript_number_of_escape(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_escape"] == "True":
         start=time.time()
@@ -3022,7 +3024,7 @@ def Javascript_number_of_escape(soup, html, list_features, list_time):
         ex_time=end-start
         list_time["number_of_escape"]=ex_time
 
-def Javascript_number_of_eval(soup, html, list_features, list_time):
+def Javascript_number_of_eval(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_eval"] == "True":
         start=time.time()
@@ -3044,7 +3046,7 @@ def Javascript_number_of_eval(soup, html, list_features, list_time):
         list_time["number_of_eval"]=ex_time
 
     
-def Javascript_number_of_link(soup, html, list_features, list_time):
+def Javascript_number_of_link(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_link"] == "True":
         start=time.time()
@@ -3065,7 +3067,7 @@ def Javascript_number_of_link(soup, html, list_features, list_time):
         ex_time=end-start
         list_time["number_of_link"]=ex_time
 
-def Javascript_number_of_unescape(soup, html, list_features, list_time):
+def Javascript_number_of_unescape(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_unescape"] == "True":
         start=time.time()
@@ -3086,7 +3088,7 @@ def Javascript_number_of_unescape(soup, html, list_features, list_time):
         ex_time=end-start
         list_time["number_of_unescape"]=ex_time
 
-def Javascript_number_of_search(soup, html, list_features, list_time):
+def Javascript_number_of_search(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_search"] == "True":
         start=time.time()
@@ -3107,7 +3109,7 @@ def Javascript_number_of_search(soup, html, list_features, list_time):
         ex_time=end-start
         list_time["number_of_search"]=ex_time
 
-def Javascript_number_of_setTimeout(soup, html, list_features, list_time):
+def Javascript_number_of_setTimeout(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_setTimeout"] == "True":
         start=time.time()
@@ -3128,7 +3130,7 @@ def Javascript_number_of_setTimeout(soup, html, list_features, list_time):
         ex_time=end-start
         list_time["number_of_setTimeout"]=ex_time
 
-def Javascript_number_of_iframes_in_script(soup, html, list_features, list_time):
+def Javascript_number_of_iframes_in_script(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_iframes_in_script"] == "True":
         start=time.time()
@@ -3148,7 +3150,7 @@ def Javascript_number_of_iframes_in_script(soup, html, list_features, list_time)
         ex_time=end-start
         list_time["number_of_iframes_in_script"]=ex_time
 
-def Javascript_number_of_event_attachment(soup, html, list_features, list_time):
+def Javascript_number_of_event_attachment(soup, list_features, list_time):
     #global list_features
     if config["Javascript_Features"]["number_of_event_attachment"] == "True":
         start=time.time()
@@ -3179,7 +3181,7 @@ def Javascript_rightclick_disabled(html, list_features, list_time):
             try:
                 rightclick_disabled = 0
                 #print(html.text.lower())
-                if 'addEventListener(\'contextmenu\'' in html.text.lower():
+                if 'addEventListener(\'contextmenu\'' in html.html.lower():
                     rightclick_disabled = 1
             except Exception as e:
                 logger.warning("exception: " + str(e))
