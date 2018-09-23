@@ -351,9 +351,7 @@ def main():
                             else:
                                 mask.append(0)
                         except KeyError as e:
-                            logger.info(str(e))
                             pass
-                logger.info(mask)
                 vectorizer=vectorizer.restrict(mask)
                 logger.info(len(vectorizer.get_feature_names()))
 
