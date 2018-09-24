@@ -110,7 +110,9 @@ def download_url(rawurl):
         http_response.html = browser.page_source
         http_response.url = browser.current_url
         browser.close()
-        http_response.headers = requests.head(url).headers
+        response = requests.head(url, headers = headers, timeout = 20)
+        http_response.headers = response.headers
+        response.close()
         #html = requests.get(url=url, headers = headers, timeout = 20)
         if log:
             p = re.compile('.* status of ([0-9]+) .*')
