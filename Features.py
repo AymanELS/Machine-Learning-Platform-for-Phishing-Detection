@@ -2732,7 +2732,7 @@ def URL_DNS_Info_Exists(url, list_features, list_time):
                 try:
                     dns_info = dns.resolver.query(domain, 'A')
                     flag=1
-                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout):
+                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout) as e:
                     logger.warning("Exception: {}".format(e))
                     flag=0
             except Exception as e:
@@ -2967,7 +2967,7 @@ def Network_dns_ttl(url, list_features, list_time):
                             break
                         retry_count = retry_count + 1
                         continue
-                    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers):
+                    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers) as e:
                         logger.warning("Exception: {}".format(e))
                         dns_ttl=0
                         break
