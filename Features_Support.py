@@ -1253,12 +1253,14 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                         if not os.path.exists("Data_Dump/URLs_Backup"):
                             os.makedirs("Data_Dump/URLs_Backup")
                         with open("Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))+"_feature_vector.pkl",'ab') as feature_tracking:
+                            pickle.dump("URL: "+rawurl, feature_tracking)
                             pickle.dump(list_features,feature_tracking)
                         # with open("Data_Dump/URLs_Training/"+path_leaf(filepath)+"_feature_vector.pkl",'rb') as feature_tracking:
                         #     for i in range(len(list_dict)+1):
                         #         logger.debug(pickle.load(feature_tracking))
                         dump_features(list_features, features_output, list_dict, list_time, time_dict)
                         with open("Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))+"_html_content.pkl",'ab') as feature_tracking:
+                            pickle.dump("URL: "+rawurl, feature_tracking)
                             pickle.dump(str(soup),feature_tracking)
                         corpus.append(str(soup))
                 except Exception as e:
