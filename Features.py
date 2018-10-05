@@ -3289,9 +3289,8 @@ def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict, 
         dict_time={}
         logger.info("===================")
         logger.info(filepath)
+        #with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'ab') as feature_tracking:
         url_features(filepath, dict_features, features_output, feature_list_dict, dict_time, extraction_time_dict, corpus, Bad_URLs_List)
-        with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'ab') as feature_tracking:
-            pickle.dump(dict_features, feature_tracking)
         logger.debug("IM HEERRRE")
         with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'rb') as feature_tracking:
             for i in range(labels_legit_train):
