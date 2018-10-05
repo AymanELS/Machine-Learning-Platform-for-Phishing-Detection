@@ -3273,28 +3273,25 @@ def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict, 
     corpus_data = read_corpus(dataset_path)
     data.extend(corpus_data)
     ## for debugging purposes, not used in the pipeline
-    features_regex=re.compile(dataset_path+r"_features_?\d?.txt")
-    try:
-        list_files=os.listdir('.')
-        count_feature_files=len(re.findall(features_regex,''.join(list_files)))
-        logger.debug(count_feature_files)
-        features_output=dataset_path+"_feature_vector_"+str(count_feature_files+ 1)+".txt"
-    except Exception as e:
-        features_output=dataset_path+"_feature_vector_error.txt"
-        logger.warning("exception: " + str(e))
     ###
     corpus=[]
     for filepath in data:
+        # path="Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))
+        # features_regex=re.compile(path+r"_features_?\d?.txt")
+        # try:
+        #     list_files=os.listdir('.')
+        #     count_feature_files=len(re.findall(features_regex,''.join(list_files)))
+        #     logger.debug(count_feature_files)
+        #     features_output=path+"_feature_vector_"+str(count_feature_files+ 1)+".txt"
+        # except Exception as e:
+        #     features_output=path+"_feature_vector_error.txt"
+        #     logger.warning("exception: " + str(e))
         dict_features={}
         dict_time={}
         logger.info("===================")
         logger.info(filepath)
         #with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'ab') as feature_tracking:
-        url_features(filepath, dict_features, features_output, feature_list_dict, dict_time, extraction_time_dict, corpus, Bad_URLs_List)
-        logger.debug("IM HEERRRE")
-        with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'rb') as feature_tracking:
-            for i in range(labels_legit_train):
-                logger.debug(pickle.load(feature_tracking))
+        url_features(filepath, dict_features, feature_list_dict, dict_time, extraction_time_dict, corpus, Bad_URLs_List)
         summary.write("filepath: {}\n\n".format(filepath))
         summary.write("features extracted for this file:\n")
         for feature in dict_time.keys():
@@ -3400,10 +3397,8 @@ def Extract_Features_Urls_Testing():
     feature_list_dict_test=[]
     extraction_time_dict_test=[]
     Bad_URLs_List=[]
-    with open("Data_Dump/URLs_Testing/features_url_testing_legit.pkl",'ab') as feature_tracking:
-        labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List, feature_tracking)
-    with open("Data_Dump/URLs_Testing/features_url_testing_phish.pkl",'ab') as feature_tracking:
-        labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List, feature_tracking)
+    labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
+    labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
     logger.debug(">>>>> Feature extraction: Testing Set >>>>> Done ")
     logger.info(">>>>> Cleaning >>>>")
     logger.debug("feature_list_dict_test{}".format(len(feature_list_dict_test)))

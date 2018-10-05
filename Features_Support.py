@@ -726,15 +726,21 @@ def Vectorization_Testing(list_dict_features_test, vec):
     return sparse_matrix_features_test
 
 
-def dump_features(list_features, output_file, list_dict,list_time, time_dict):
+def dump_features(header, content, list_features, features_output, list_dict,list_time, time_dict):
     logger.debug("list_features: " + str(len(list_features)))
     list_dict.append(list_features)
     #print(list_dict)
     time_dict.append(list_time)
-    with open(output_file,'a+') as f:
-        f.write(str(list_features).replace('{','').replace('}','').replace(': ',':').replace(',','') + '\n')
-    with open("time_stats.txt",'a+') as f:
-        f.write(str(list_time).replace('{','').replace('}','').replace(': ',':').replace(',','') + '\n')
+    with open(features_output+"_feature_vector.pkl",'ab') as feature_tracking:
+        pickle.dump("URL: "+header, feature_tracking)
+        pickle.dump(list_features,feature_tracking)
+    with open(features_output+"_html_content.pkl",'ab') as feature_tracking:
+        pickle.dump("URL: "+header, feature_tracking)
+        pickle.dump(content,feature_tracking)
+    with open(features_output+"_feature_vector.txt",'a+') as f:
+        f.write("URL: "+str(header) + str(list_features).replace('{','').replace('}','').replace(': ',':').replace(',','') + '\n\n')
+    with open(features_output+"_time_stats.txt",'a+') as f:
+        f.write("URL: "+str(header) + str(list_time).replace('{','').replace('}','').replace(': ',':').replace(',','') + '\n\n')
 
 
 def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url, list_features, list_time):
@@ -1223,7 +1229,7 @@ def path_leaf(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
 
-def url_features(filepath, list_features, features_output, list_dict, list_time, time_dict, corpus, Bad_URLs_List):
+def url_features(filepath, list_features, list_dict, list_time, time_dict, corpus, Bad_URLs_List):
     try:
         with open(filepath,'r', encoding = "ISO-8859-1") as f:
             for rawurl in f:
@@ -1250,18 +1256,19 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                         single_javascript_features(soup,html, list_features, list_time)
                         logger.debug("html_features & url_features & Javascript feautures >>>>>> complete")
                         single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
+                        features_output= "Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))
                         if not os.path.exists("Data_Dump/URLs_Backup"):
                             os.makedirs("Data_Dump/URLs_Backup")
-                        with open("Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))+"_feature_vector.pkl",'ab') as feature_tracking:
-                            pickle.dump("URL: "+rawurl, feature_tracking)
-                            pickle.dump(list_features,feature_tracking)
+                        #with open(features_output+"_feature_vector.pkl",'ab') as feature_tracking:
+                        #    pickle.dump("URL: "+rawurl, feature_tracking)
+                        #    pickle.dump(list_features,feature_tracking)
                         # with open("Data_Dump/URLs_Training/"+path_leaf(filepath)+"_feature_vector.pkl",'rb') as feature_tracking:
                         #     for i in range(len(list_dict)+1):
                         #         logger.debug(pickle.load(feature_tracking))
-                        dump_features(list_features, features_output, list_dict, list_time, time_dict)
-                        with open("Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))+"_html_content.pkl",'ab') as feature_tracking:
-                            pickle.dump("URL: "+rawurl, feature_tracking)
-                            pickle.dump(str(soup),feature_tracking)
+                        dump_features(rawurl, str(soup), list_features, features_output, list_dict, list_time, time_dict)
+                        #with open(features_output+"_html_content.pkl",'ab') as feature_tracking:
+                        #    pickle.dump("URL: "+rawurl, feature_tracking)
+                        #    pickle.dump(str(soup),feature_tracking)
                         corpus.append(str(soup))
                 except Exception as e:
                     logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
