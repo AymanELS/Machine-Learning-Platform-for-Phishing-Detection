@@ -53,6 +53,7 @@ import time
 from sklearn.externals import joblib
 #from collections import deque
 import logging
+import pickle
 
 logger = logging.getLogger('root')
 
@@ -1026,12 +1027,15 @@ def Email_number_of_words_body(body, list_features, list_time):
 def Email_number_of_unique_words_body(body, list_features, list_time):
     if config["Email_Features"]["number_of_unique_words_body"] == "True":
         start=time.time()
-        try:
-            number_of_words_body = len(set(re.findall(r'\w+', body)))
-        except Exception as e:
-            logger.warning("exception: " + str(e))
-            number_of_words_body = -1
-        list_features["number_of_unique_words_body"]=number_of_words_body
+        if body:
+            try:
+                number_of_words_body = len(set(re.findall(r'\w+', body)))
+            except Exception as e:
+                logger.warning("exception: " + str(e))
+                number_of_words_body = -1
+            list_features["number_of_unique_words_body"]=number_of_words_body
+        else:
+            list_features["number_of_unique_words_body"]=-1
         end=time.time()
         ex_time=end-start
         list_time["number_of_unique_words_body"]=ex_time
@@ -1094,21 +1098,21 @@ def Email_number_of_html_tags_body(body, list_features, list_time):
         ex_time=end-start
         list_time["number_of_html_tags_body"]=ex_time
 
-def Email_number_unique_words_body(body, list_features, list_time):
-    if config["Email_Features"]["number_unique_words_body"] == "True":
+def Email_number_unique_chars_body(body, list_features, list_time):
+    if config["Email_Features"]["number_unique_chars_body"] == "True":
         start=time.time()
         try:
             if body:
-                number_unique_words_body=len(set(body))
+                number_unique_chars_body=len(set(body))-1
             else:
-                number_unique_words_body=0
+                number_unique_chars_body=0
         except Exception as e:
             logger.warning("exception: " + str(e))
             number_unique_words_body = -1
-        list_features["number_unique_words_body"]=number_unique_words_body
+        list_features["number_unique_chars_body"]=number_unique_words_body
         end=time.time()
         ex_time=end-start
-        list_time["number_unique_words_body"]=ex_time
+        list_time["number_unique_chars_body"]=ex_time
         #list_features[""]=
 
 def Email_greetings_body(body, list_features, list_time):
@@ -3286,6 +3290,12 @@ def extract_url_features(dataset_path, feature_list_dict, extraction_time_dict, 
         logger.info("===================")
         logger.info(filepath)
         url_features(filepath, dict_features, features_output, feature_list_dict, dict_time, extraction_time_dict, corpus, Bad_URLs_List)
+        with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'ab') as feature_tracking:
+            pickle.dump(dict_features, feature_tracking)
+        logger.debug("IM HEERRRE")
+        with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'rb') as feature_tracking:
+            for i in range(labels_legit_train):
+                logger.debug(pickle.load(feature_tracking))
         summary.write("filepath: {}\n\n".format(filepath))
         summary.write("features extracted for this file:\n")
         for feature in dict_time.keys():
@@ -3357,9 +3367,12 @@ def Extract_Features_Urls_Training():
         dataset_path_legit_train=config["Dataset Path"]["path_legitimate_training"]
         dataset_path_phish_train=config["Dataset Path"]["path_phishing_training"]
         feature_list_dict_train=[]
+        feature_list_dict_train2=[]
         extraction_time_dict_train=[]
         Bad_URLs_List=[]
+        #with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'ab') as feature_tracking:
         labels_legit_train, data_legit_train=extract_url_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
+        #with open ("Data_Dump/URLs_Training/features_url_training_phish.pkl",'ab') as feature_tracking:
         labels_all_train, data_phish_train=extract_url_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
         logger.debug(">>>>> Feature extraction: Training Set >>>>> Done ")
         Cleaning(feature_list_dict_train)
@@ -3372,10 +3385,11 @@ def Extract_Features_Urls_Training():
         for i in range(labels_all_train-labels_legit_train):
             labels_train.append(1)
 
+        logger.info("\nfeature_list_dict_train2: {}\n".format(feature_list_dict_train2))
         corpus_train = data_legit_train + data_phish_train
 
         logger.info("--- %s final count seconds ---" % (time.time() - start_time))
-        return feature_list_dict_train, labels_train, corpus_train
+        return feature_list_dict_train, labels_train, corpus_train,
 
         #print("--- %s final count seconds ---" % (time.time() - start_time))
    
@@ -3387,8 +3401,10 @@ def Extract_Features_Urls_Testing():
     feature_list_dict_test=[]
     extraction_time_dict_test=[]
     Bad_URLs_List=[]
-    labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
-    labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List)
+    with open("Data_Dump/URLs_Testing/features_url_testing_legit.pkl",'ab') as feature_tracking:
+        labels_legit_test, data_legit_test=extract_url_features(dataset_path_legit_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List, feature_tracking)
+    with open("Data_Dump/URLs_Testing/features_url_testing_phish.pkl",'ab') as feature_tracking:
+        labels_all_test, data_phish_test=extract_url_features(dataset_path_phish_test, feature_list_dict_test, extraction_time_dict_test, Bad_URLs_List, feature_tracking)
     logger.debug(">>>>> Feature extraction: Testing Set >>>>> Done ")
     logger.info(">>>>> Cleaning >>>>")
     logger.debug("feature_list_dict_test{}".format(len(feature_list_dict_test)))

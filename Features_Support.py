@@ -39,7 +39,7 @@ import Features
 from sklearn.feature_extraction import DictVectorizer
 import logging
 import traceback
-
+import ntpath
 logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
@@ -1051,8 +1051,11 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
     Features.Email_number_of_html_tags_body(body_html, list_features, list_time)
     logger.debug("number_of_html_tags_body")
 
-    Features.Email_number_unique_words_body(body_text, list_features, list_time)
+    Features.Email_number_of_unique_words_body(body_text, list_features, list_time)
     logger.debug("number_unique_words_body")
+
+    Features.Email_number_unique_chars_body(body_text, list_features, list_time)
+    logger.debug("number_unique_chars_body")
 
     Features.Email_end_tag_count(body_html, list_features, list_time)
     logger.debug("end_tag_count")
@@ -1215,6 +1218,10 @@ def email_url_features(url_All, sender_domain, list_features, list_time):
 
 # sys.setdefaultencoding('utf-8')
 
+# get filename from path
+def path_leaf(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
 
 def url_features(filepath, list_features, features_output, list_dict, list_time, time_dict, corpus, Bad_URLs_List):
     try:
@@ -1241,9 +1248,18 @@ def url_features(filepath, list_features, features_output, list_dict, list_time,
                         single_url_feature(url, list_features, list_time)
                         logger.debug("html_featuers & url_features >>>>>> complete")
                         single_javascript_features(soup,html, list_features, list_time)
-                        logger.debug("html_featuers & url_features & Javascript feautures >>>>>> complete")
+                        logger.debug("html_features & url_features & Javascript feautures >>>>>> complete")
                         single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
+                        if not os.path.exists("Data_Dump/URLs_Backup"):
+                            os.makedirs("Data_Dump/URLs_Backup")
+                        with open("Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))+"_feature_vector.pkl",'ab') as feature_tracking:
+                            pickle.dump(list_features,feature_tracking)
+                        # with open("Data_Dump/URLs_Training/"+path_leaf(filepath)+"_feature_vector.pkl",'rb') as feature_tracking:
+                        #     for i in range(len(list_dict)+1):
+                        #         logger.debug(pickle.load(feature_tracking))
                         dump_features(list_features, features_output, list_dict, list_time, time_dict)
+                        with open("Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))+"_html_content.pkl",'ab') as feature_tracking:
+                            pickle.dump(str(soup),feature_tracking)
                         corpus.append(str(soup))
                 except Exception as e:
                     logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
