@@ -1230,6 +1230,7 @@ def path_leaf(path):
     return tail or ntpath.basename(head)
 
 def url_features(filepath, list_features, list_dict, list_time, time_dict, corpus, Bad_URLs_List):
+    times = []
     try:
         with open(filepath,'r', encoding = "ISO-8859-1") as f:
             for rawurl in f:
@@ -1238,8 +1239,13 @@ def url_features(filepath, list_features, list_dict, list_time, time_dict, corpu
                         pass
                     logger.debug("rawurl:" + str(rawurl))
                     Features.summary.write("URL: {}".format(rawurl))
-                    html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, Error = Download_url.download_url(rawurl)
-
+                    t0 = time.time()
+                    html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, whois_time, Error = Download_url.download_url(rawurl)
+                    times.append(time.time() - t0)
+                    list_time['html_time'] = html_time
+                    list_time['dns_lookup_time'] = dns_lookup_time
+                    list_time['ipwhois_time'] = ipwhois_time
+                    list_time['whois_time'] = whois_time
                     if Error == 1:
                         logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                         Bad_URLs_List.append(rawurl)
@@ -1277,6 +1283,7 @@ def url_features(filepath, list_features, list_dict, list_time, time_dict, corpu
     except Exception as e:
         logger.warning("exception: " + str(e))
         logger.debug(traceback.format_exc())
+    logger.info("Download time is: {}".format(sum(times)/len(times)))
 
 def email_features(filepath, list_features, features_output, list_dict, list_time, time_dict, corpus):
     try:

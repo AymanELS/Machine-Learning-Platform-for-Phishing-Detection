@@ -73,6 +73,7 @@ def download_url(rawurl):
     html_time = 0
     dns_lookup_time = 0
     ipwhois_time = 0
+    whois_time = -1
     Error = 0
     http_response = HTTPResponse()
     
@@ -100,11 +101,12 @@ def download_url(rawurl):
     if url == '':
         Error=1
         logger.warning("Empty URL")
-        return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, Error
+        return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, whois_time,  Error
 
     try:
         t0 = time.time()
         browser = webdriver.Chrome(executable_path=os.path.abspath('chromedriver'), chrome_options=chrome_options, desired_capabilities=desired_capabilities)
+        browser.set_page_load_timeout(10)
         browser.get(url)
         log = browser.get_log('browser')
         http_response.html = browser.page_source
@@ -113,28 +115,22 @@ def download_url(rawurl):
         response = requests.head(url, headers = headers, timeout = 20)
         http_response.headers = response.headers
         response.close()
-        #html = requests.get(url=url, headers = headers, timeout = 20)
         if log:
             p = re.compile('.* status of ([0-9]+) .*')
             match = p.match(log[0]['message'])
             if match:
-        #if html.status_code != 200:
                 Error=1
                 logger.warning("HTTP response code is not OK: {}".format(match.groups()[0]))
-                #logger.warning("HTTP response code is not OK: {}".format(html.status_code))
-                return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, Error
+                return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, whois_time, Error
         else:
-            #parsed = BeautifulSoup(html.text, 'html.parser')
             parsed = BeautifulSoup(http_response.html, 'html.parser')
             language = parsed.find("html").get('lang')
             if language != None and not language.startswith('en'):
                 Error=1
                 logger.warning("Website's language is not English")
-                return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, Error
+                return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, whois_time,  Error
 
         html_time = time.time() - t0
-        #content = html.text
-        #landing_url = html.url
 
     except Exception as e:
         logger.warning("Exception HTML: {}. Error :{}".format(url, e))
@@ -142,7 +138,7 @@ def download_url(rawurl):
         logger.debug(traceback.format_exc())
         http_response.html = ''
         http_response.url = url
-        html_time=-1
+        html_time= time.time() - t0
 
     try:           
         extracted = tldextract.extract(http_response.url)
@@ -181,6 +177,7 @@ def download_url(rawurl):
             ipwhois_time=-1
 
         if not is_IP_address(complete_domain) and domain:
+            t0 = time.time()
             try:
                 if domain in whois_info:
                     whois_output = whois_info[domain]
@@ -191,8 +188,10 @@ def download_url(rawurl):
             except Exception as e:
                 logger.warning("Exception whois: Domain {}. Error: {}".format(domain, e))
                 whois_output=''
+            whois_time = time.time() - t0
         else:
             whois_output=''
+            whois_time = -1
     else:
         dns_lookup_output=''
         dns_lookup_time=''
@@ -200,8 +199,9 @@ def download_url(rawurl):
         ipwhois=''
         ipwhois_time=-1
         whois_output=''
+        whois_time = -1
 
-    return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, Error
+    return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, whois_time, Error
 
 def visible(element):
     if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
