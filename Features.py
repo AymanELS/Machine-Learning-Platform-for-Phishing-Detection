@@ -1669,7 +1669,6 @@ def Email_vocab_richness_subject(subject, list_features, list_time):
 
 ############################ HTML features
 def HTML_number_of_tags(soup, list_features, list_time):
-    #global list_features
     if config["HTML_Features"]["number_of_tags"] == "True":
         start=time.time()
         number_of_tags=0
@@ -2103,8 +2102,7 @@ def HTML_outbound_href_count(soup, url, list_features, list_time):
         list_time["outbound_href_count"]=ex_time
 
 def HTML_Website_content_type(html, list_features, list_time):
-    #global list_features
-    if config["Network_Features"]["Website_content_type"] == "True":
+    if config["HTML_Features"]["website_content_type"] == "True":
         start=time.time()
         #print(html.headers)
         if html:
@@ -2124,8 +2122,7 @@ def HTML_Website_content_type(html, list_features, list_time):
         list_time["content_type"]=ex_time
 
 def HTML_content_length(html, list_features, list_time):
-    #global list_features
-    if config["Network_Features"]["content_length"] == "True":
+    if config["HTML_Features"]["content_length"] == "True":
         start=time.time()
         content_length = 0
         if html:
@@ -2141,8 +2138,7 @@ def HTML_content_length(html, list_features, list_time):
         list_time["content_length"]=ex_time
 
 def HTML_x_powered_by(html, list_features, list_time):
-    #global list_features
-    if config["Network_Features"]["x_powered_by"] == "True":
+    if config["HTML_Features"]["x_powered_by"] == "True":
         start=time.time()
         x_powered_by = ''
         if html:
@@ -2159,7 +2155,7 @@ def HTML_x_powered_by(html, list_features, list_time):
         list_time["x_powered_by"]=ex_time
 
 def HTML_URL_Is_Redirect(html, url, list_features, list_time):
-    if config["Network_Features"]["URL_Is_Redirect"]=="True":
+    if config["HTML_Features"]["URL_Is_Redirect"]=="True":
         start=time.time()
         flag=0
         if html:
@@ -2241,7 +2237,6 @@ def URL_letter_occurence(url, list_features, list_time):
 
 ##################################################################################
 def URL_char_distance(url, list_features, list_time):
-    #global list_features
     if config["URL_Features"]["char_distance"] == "True":
         start=time.time()
         if url:
@@ -2290,7 +2285,6 @@ def URL_kolmogorov_shmirnov(list_features, list_time):
         list_time["kolmogorov_shmirnov"]=ex_time
 
 def URL_Kullback_Leibler_Divergence(list_features, list_time):
-    #global list_features
     if config["URL_Features"]["Kullback_Leibler_Divergence"] == "True":
         start=time.time()
         char_dist = [.08167, .01492, .02782, .04253, .12702, .02228, .02015, .06094, .06966, .00153, .00772, .04025, .02406,
@@ -2733,8 +2727,11 @@ def URL_DNS_Info_Exists(url, list_features, list_time):
             try:
                 parsed_url = urlparse(url)
                 domain='{uri.hostname}'.format(uri=parsed_url)
+                resolver = dns.resolver.Resolver()
+                resolver.timeout = 3
+                resolver.lifetime = 3
                 try:
-                    dns_info = dns.resolver.query(domain, 'A')
+                    dns_info = resolver.query(domain, 'A')
                     flag=1
                 except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout) as e:
                     logger.warning("Exception: {}".format(e))
@@ -2881,7 +2878,6 @@ def Network_expiration_date(whois_info, list_features, list_time):
         list_time["expiration_date"]=ex_time
 
 def Network_updated_date(whois_info, list_features, list_time):
-    #global list_features
     if config["Network_Features"]["updated_date"] == "True":
         start=time.time()
         updated_date = 0.0
@@ -2889,7 +2885,6 @@ def Network_updated_date(whois_info, list_features, list_time):
             try:
                 if "updated_date" in whois_info:
                     dateTime = whois_info.get("updated_date")
-                    logger.debug(dateTime)
                     if dateTime is not None:
                         if type(dateTime) is list:
                             updated_date = dateTime[0].timestamp()
@@ -2907,13 +2902,9 @@ def Network_updated_date(whois_info, list_features, list_time):
         list_time["updated_date"]=ex_time
 
 def Network_as_number(IP_whois_list, list_features, list_time):
-    #global list_features
     if config["Network_Features"]["as_number"] == "True":
         start=time.time()
         as_number = 0
-        #print(IP_whois_list)
-        #if 'status' in IP_whois_list:
-        #    print(IP_whois_list['status'])
         if IP_whois_list:    
             try: 
                 if 'asn' in IP_whois_list:
@@ -2927,19 +2918,14 @@ def Network_as_number(IP_whois_list, list_features, list_time):
         list_time["as_number"]=ex_time
 
 def Network_number_name_server(dns_info, list_features, list_time):
-    #global list_features
     if config["Network_Features"]["number_name_server"] == "True":
         start=time.time()
         number_name_server = 0
-        #print(dns_info)
         if dns_info:    
             try:
-                for val in dns_info:  # dns_info is a list
+                for val in dns_info: 
                     if 'NS' in val:
                         number_name_server += 1 
-                    #else:
-                    #    number_name_server = len(dns_info['NS'])
-                #print("number_name_server: " + str(number_name_server))
             except Exception as e:
                 logger.warning("exception: " + str(e))
                 number_name_server=-1
@@ -2949,7 +2935,6 @@ def Network_number_name_server(dns_info, list_features, list_time):
         list_time["number_name_server"]=ex_time
 
 def Network_dns_ttl(url, list_features, list_time):
-    #global list_features
     if config["Network_Features"]["dns_ttl"] == "True":
         start=time.time()
         dns_ttl = 0

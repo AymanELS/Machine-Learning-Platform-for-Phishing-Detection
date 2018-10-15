@@ -729,7 +729,6 @@ def Vectorization_Testing(list_dict_features_test, vec):
 def dump_features(header, content, list_features, features_output, list_dict,list_time, time_dict):
     logger.debug("list_features: " + str(len(list_features)))
     list_dict.append(list_features)
-    #print(list_dict)
     time_dict.append(list_time)
     with open(features_output+"_feature_vector.pkl",'ab') as feature_tracking:
         pickle.dump("URL: "+header, feature_tracking)
@@ -738,238 +737,237 @@ def dump_features(header, content, list_features, features_output, list_dict,lis
         pickle.dump("URL: "+header, feature_tracking)
         pickle.dump(content,feature_tracking)
     with open(features_output+"_feature_vector.txt",'a+') as f:
-        f.write("URL: "+str(header) + str(list_features).replace('{','').replace('}','').replace(': ',':').replace(',','') + '\n\n')
+        f.write("URL: "+str(header) + '\n' + str(list_features).replace('{','').replace('}','').replace(': ',':').replace(',','') + '\n\n')
     with open(features_output+"_time_stats.txt",'a+') as f:
-        f.write("URL: "+str(header) + str(list_time).replace('{','').replace('}','').replace(': ',':').replace(',','') + '\n\n')
+        f.write("URL: "+str(header) + '\n' + str(list_time).replace('{','').replace('}','').replace(': ',':').replace(',','') + '\n\n')
 
 
-def single_network_features(html, soup, dns_info, IPS, IP_whois, whois_info, url, list_features, list_time):
-    #Features.country(whois_info, list_features, list_time)
-    #print("country")
+def single_network_features(dns_info, IPS, IP_whois, whois_info, url, list_features, list_time):
+    if config["Network_Features"]["network_features"] == "True":
+        Features.Network_creation_date(whois_info, list_features, list_time)
+        logger.debug("creation_date")
 
-    Features.Network_creation_date(whois_info, list_features, list_time)
-    logger.debug("creation_date")
+        Features.Network_expiration_date(whois_info, list_features, list_time)
+        logger.debug("expiration_date")
 
-    Features.Network_expiration_date(whois_info, list_features, list_time)
-    logger.debug("expiration_date")
+        Features.Network_updated_date(whois_info, list_features, list_time)
+        logger.debug("updated_date")
 
-    Features.Network_updated_date(whois_info, list_features, list_time)
-    logger.debug("updated_date")
+        Features.Network_as_number(IP_whois, list_features, list_time)
+        logger.debug("as_number")
 
-    Features.Network_as_number(IP_whois, list_features, list_time)
-    logger.debug("as_number")
+        Features.Network_number_name_server(dns_info, list_features, list_time)
+        logger.debug("number_name_server")
 
-    Features.Network_number_name_server(dns_info, list_features, list_time)
-    logger.debug("number_name_server")
-
-    Features.Network_dns_ttl(url, list_features, list_time)
-    logger.debug("dns_ttl")
-
-    Features.HTML_Website_content_type(html, list_features, list_time)
-    logger.debug("content_type")
-
-    Features.HTML_content_length(html, list_features, list_time)
-    logger.debug("content_length")
-
-    Features.HTML_x_powered_by(html, list_features, list_time)
-    logger.debug("x_powered_by")
-
-    Features.HTML_URL_Is_Redirect(html, url, list_features, list_time)
-    logger.debug("URL_Is_Redirect")
-
+        Features.Network_dns_ttl(url, list_features, list_time)
+        logger.debug("dns_ttl")
 
 def single_javascript_features(soup, html, list_features, list_time):
-    Features.Javascript_number_of_exec(soup, list_features, list_time)
-    logger.debug("number_of_exec")
+    if config["HTML_Features"]["HTML_features"] == "True" and config["Javascript_Features"]["javascript_features"] == "True":
+        Features.Javascript_number_of_exec(soup, list_features, list_time)
+        logger.debug("number_of_exec")
 
-    Features.Javascript_number_of_escape(soup, list_features, list_time)
-    logger.debug("number_of_escape")
+        Features.Javascript_number_of_escape(soup, list_features, list_time)
+        logger.debug("number_of_escape")
 
-    Features.Javascript_number_of_eval(soup, list_features, list_time)
-    logger.debug("number_of_eval")
+        Features.Javascript_number_of_eval(soup, list_features, list_time)
+        logger.debug("number_of_eval")
 
-    Features.Javascript_number_of_link(soup, list_features, list_time)
-    logger.debug("number_of_link")
+        Features.Javascript_number_of_link(soup, list_features, list_time)
+        logger.debug("number_of_link")
 
-    Features.Javascript_number_of_unescape(soup, list_features, list_time)
-    logger.debug("number_of_unescape")
+        Features.Javascript_number_of_unescape(soup, list_features, list_time)
+        logger.debug("number_of_unescape")
 
-    Features.Javascript_number_of_search(soup, list_features, list_time)
-    logger.debug("number_of_search")
+        Features.Javascript_number_of_search(soup, list_features, list_time)
+        logger.debug("number_of_search")
 
-    Features.Javascript_number_of_setTimeout(soup, list_features, list_time)
-    logger.debug("number_of_setTimeout")
+        Features.Javascript_number_of_setTimeout(soup, list_features, list_time)
+        logger.debug("number_of_setTimeout")
 
-    Features.Javascript_number_of_iframes_in_script(soup, list_features, list_time)
-    logger.debug("number_of_iframes_in_script")
+        Features.Javascript_number_of_iframes_in_script(soup, list_features, list_time)
+        logger.debug("number_of_iframes_in_script")
 
-    Features.Javascript_number_of_event_attachment(soup, list_features, list_time)
-    logger.debug("number_of_event_attachment")
+        Features.Javascript_number_of_event_attachment(soup, list_features, list_time)
+        logger.debug("number_of_event_attachment")
 
-    Features.Javascript_rightclick_disabled(html, list_features, list_time)
-    logger.debug("rightclick_disabled")
+        Features.Javascript_rightclick_disabled(html, list_features, list_time)
+        logger.debug("rightclick_disabled")
 
-    Features.Javascript_number_of_total_suspicious_features(list_features,list_time)
-    logger.debug("number_of_total_suspicious_features")
+        Features.Javascript_number_of_total_suspicious_features(list_features,list_time)
+        logger.debug("number_of_total_suspicious_features")
 
 def single_url_feature(url, list_features,list_time):
-    Features.URL_url_length(url, list_features, list_time)
-    logger.debug("url_length")
+    if config["URL_Features"]["url_features"] == "True":
+        Features.URL_url_length(url, list_features, list_time)
+        logger.debug("url_length")
 
-    Features.URL_domain_length(url, list_features, list_time)
-    logger.debug("domain_length")
+        Features.URL_domain_length(url, list_features, list_time)
+        logger.debug("domain_length")
 
-    Features.URL_char_distance(url, list_features, list_time)
-    logger.debug("url_char_distance")
+        Features.URL_char_distance(url, list_features, list_time)
+        logger.debug("url_char_distance")
 
-    Features.URL_kolmogorov_shmirnov(list_features, list_time)
-    logger.debug("kolmogorov_shmirnov")
+        Features.URL_kolmogorov_shmirnov(list_features, list_time)
+        logger.debug("kolmogorov_shmirnov")
 
-    Features.URL_Kullback_Leibler_Divergence(list_features, list_time)
-    logger.debug("Kullback_Leibler_Divergence")
+        Features.URL_Kullback_Leibler_Divergence(list_features, list_time)
+        logger.debug("Kullback_Leibler_Divergence")
 
-    Features.URL_edit_distance(list_features, list_time)
-    logger.debug("edit_distance")
+        Features.URL_edit_distance(list_features, list_time)
+        logger.debug("edit_distance")
 
-    Features.URL_num_punctuation(url, list_features, list_time)
-    logger.debug("num_punctuation")
+        Features.URL_num_punctuation(url, list_features, list_time)
+        logger.debug("num_punctuation")
 
-    Features.URL_has_port(url, list_features, list_time)
-    logger.debug("has_port")
+        Features.URL_has_port(url, list_features, list_time)
+        logger.debug("has_port")
 
-    Features.URL_has_https(url, list_features, list_time)
-    logger.debug("has_https")
+        Features.URL_has_https(url, list_features, list_time)
+        logger.debug("has_https")
 
-    Features.URL_number_of_digits(url, list_features, list_time)
-    logger.debug("number_of_digits")
+        Features.URL_number_of_digits(url, list_features, list_time)
+        logger.debug("number_of_digits")
 
-    Features.URL_number_of_dots(url, list_features, list_time)
-    logger.debug("number_of_dots")
+        Features.URL_number_of_dots(url, list_features, list_time)
+        logger.debug("number_of_dots")
 
-    Features.URL_number_of_slashes(url, list_features, list_time)
-    logger.debug("number_of_slashes")
+        Features.URL_number_of_slashes(url, list_features, list_time)
+        logger.debug("number_of_slashes")
 
-    Features.URL_digit_letter_ratio(url, list_features, list_time)
-    logger.debug("digit_letter_ratio")
+        Features.URL_digit_letter_ratio(url, list_features, list_time)
+        logger.debug("digit_letter_ratio")
 
-    Features.URL_special_char_count(url, list_features, list_time)
-    logger.debug("special_char_count")
+        Features.URL_special_char_count(url, list_features, list_time)
+        logger.debug("special_char_count")
 
-    Features.URL_Top_level_domain(url, list_features, list_time)
-    logger.debug("Top_level_domain")
+        Features.URL_Top_level_domain(url, list_features, list_time)
+        logger.debug("Top_level_domain")
 
-    Features.URL_number_of_dashes(url, list_features, list_time)
-    logger.debug('URL_number_of_dashes')
+        Features.URL_number_of_dashes(url, list_features, list_time)
+        logger.debug('URL_number_of_dashes')
 
-    Features.URL_Http_middle_of_URL(url, list_features, list_time)
-    logger.debug('URL_Http_middle_of_URL')
+        Features.URL_Http_middle_of_URL(url, list_features, list_time)
+        logger.debug('URL_Http_middle_of_URL')
 
-    Features.URL_Has_More_than_3_dots(url, list_features, list_time)
-    logger.debug('URL_Has_More_than_3_dots')
+        Features.URL_Has_More_than_3_dots(url, list_features, list_time)
+        logger.debug('URL_Has_More_than_3_dots')
 
-    Features.URL_Has_at_symbole(url, list_features, list_time)
-    logger.debug("URL_Has_at_symbole")
+        Features.URL_Has_at_symbole(url, list_features, list_time)
+        logger.debug("URL_Has_at_symbole")
 
-    Features.URL_Has_anchor_tag(url, list_features, list_time)
-    logger.debug("URL_Has_anchor_tag")
+        Features.URL_Has_anchor_tag(url, list_features, list_time)
+        logger.debug("URL_Has_anchor_tag")
 
-    Features.URL_Null_in_Domain(url, list_features, list_time)
-    logger.debug("URL_Null_in_Domain")
+        Features.URL_Null_in_Domain(url, list_features, list_time)
+        logger.debug("URL_Null_in_Domain")
 
-    Features.URL_Token_Count(url, list_features, list_time)
-    logger.debug("URL_Token_Count")
+        Features.URL_Token_Count(url, list_features, list_time)
+        logger.debug("URL_Token_Count")
 
-    Features.URL_Average_Path_Token_Length(url, list_features, list_time)
-    logger.debug("URL_Average_Path_Token_Length")
+        Features.URL_Average_Path_Token_Length(url, list_features, list_time)
+        logger.debug("URL_Average_Path_Token_Length")
 
-    Features.URL_Average_Domain_Token_Length(url, list_features, list_time)
-    logger.debug("URL_Average_Domain_Token_Length")
+        Features.URL_Average_Domain_Token_Length(url, list_features, list_time)
+        logger.debug("URL_Average_Domain_Token_Length")
 
-    Features.URL_Longest_Domain_Token(url, list_features, list_time)
-    logger.debug('URL_Longest_Domain_Token')
+        Features.URL_Longest_Domain_Token(url, list_features, list_time)
+        logger.debug('URL_Longest_Domain_Token')
 
-    Features.URL_Protocol_Port_Match(url, list_features, list_time)
-    logger.debug('URL_Protocol_Port_Match')
+        Features.URL_Protocol_Port_Match(url, list_features, list_time)
+        logger.debug('URL_Protocol_Port_Match')
 
-    Features.URL_DNS_Info_Exists(url, list_features, list_time)
-    logger.debug('URL_DNS_Info_Exists')
+        Features.URL_DNS_Info_Exists(url, list_features, list_time)
+        logger.debug('URL_DNS_Info_Exists')
 
-    Features.URL_Has_WWW_in_Middle(url, list_features, list_time)
-    logger.debug('URL_Has_WWW_in_Middle')
+        Features.URL_Has_WWW_in_Middle(url, list_features, list_time)
+        logger.debug('URL_Has_WWW_in_Middle')
 
-    Features.URL_Has_Hex_Characters(url, list_features, list_time)
-    logger.debug('URL_Has_Hex_Characters')
+        Features.URL_Has_Hex_Characters(url, list_features, list_time)
+        logger.debug('URL_Has_Hex_Characters')
 
-    Features.URL_Double_Slashes_Not_Beginning_Count(url, list_features, list_time)
-    logger.debug("URL_Double_Slashes_Not_Beginning_Count")
+        Features.URL_Double_Slashes_Not_Beginning_Count(url, list_features, list_time)
+        logger.debug("URL_Double_Slashes_Not_Beginning_Count")
 
-def single_html_features(soup, url, list_features, list_time):
-    logger.debug("we got soup")
-    Features.HTML_number_of_tags(soup, list_features, list_time)
-    logger.debug("number_of_tags")
+def single_html_features(soup, html, url, list_features, list_time):
+    if config["HTML_Features"]["html_features"] == "True":
+        Features.HTML_number_of_tags(soup, list_features, list_time)
+        logger.debug("number_of_tags")
 
-    Features.HTML_number_of_head(soup, list_features, list_time)
-    logger.debug("number_of_head")
+        Features.HTML_number_of_head(soup, list_features, list_time)
+        logger.debug("number_of_head")
 
-    Features.HTML_number_of_html(soup, list_features, list_time)
-    logger.debug("number_of_html")
+        Features.HTML_number_of_html(soup, list_features, list_time)
+        logger.debug("number_of_html")
 
-    Features.HTML_number_of_body(soup, list_features, list_time)
-    logger.debug("number_of_body")
+        Features.HTML_number_of_body(soup, list_features, list_time)
+        logger.debug("number_of_body")
 
-    Features.HTML_number_of_titles(soup, list_features, list_time)
-    logger.debug("number_of_titles")
+        Features.HTML_number_of_titles(soup, list_features, list_time)
+        logger.debug("number_of_titles")
 
-    Features.HTML_number_suspicious_content(soup, list_features, list_time)
-    logger.debug("number_suspicious_content")
+        Features.HTML_number_suspicious_content(soup, list_features, list_time)
+        logger.debug("number_suspicious_content")
 
-    Features.HTML_number_of_iframes(soup, list_features, list_time)
-    logger.debug("number_of_iframes")
+        Features.HTML_number_of_iframes(soup, list_features, list_time)
+        logger.debug("number_of_iframes")
 
-    Features.HTML_number_of_input(soup, list_features, list_time)
-    logger.debug("number_of_input")
+        Features.HTML_number_of_input(soup, list_features, list_time)
+        logger.debug("number_of_input")
 
-    Features.HTML_number_of_img(soup, list_features, list_time)
-    logger.debug("number_of_img")
+        Features.HTML_number_of_img(soup, list_features, list_time)
+        logger.debug("number_of_img")
 
-    Features.HTML_number_of_tags(soup, list_features, list_time)
-    logger.debug("number_of_tags")
+        Features.HTML_number_of_tags(soup, list_features, list_time)
+        logger.debug("number_of_tags")
 
-    Features.HTML_number_of_scripts(soup, list_features, list_time)
-    logger.debug("number_of_scripts")
+        Features.HTML_number_of_scripts(soup, list_features, list_time)
+        logger.debug("number_of_scripts")
 
-    Features.HTML_number_of_anchor(soup, list_features, list_time)
-    logger.debug("number_of_anchor")
+        Features.HTML_number_of_anchor(soup, list_features, list_time)
+        logger.debug("number_of_anchor")
 
-    Features.HTML_number_of_video(soup, list_features, list_time)
-    logger.debug("number_of_video")
+        Features.HTML_number_of_video(soup, list_features, list_time)
+        logger.debug("number_of_video")
 
-    Features.HTML_number_of_audio(soup, list_features, list_time)
-    logger.debug("number_of_audio")
+        Features.HTML_number_of_audio(soup, list_features, list_time)
+        logger.debug("number_of_audio")
 
-    Features.HTML_number_of_hidden_iframe(soup, list_features, list_time)
-    logger.debug("number_of_hidden_iframe")
+        Features.HTML_number_of_hidden_iframe(soup, list_features, list_time)
+        logger.debug("number_of_hidden_iframe")
 
-    Features.HTML_number_of_hidden_div(soup, list_features, list_time)
-    logger.debug("number_of_hidden_div")
+        Features.HTML_number_of_hidden_div(soup, list_features, list_time)
+        logger.debug("number_of_hidden_div")
 
-    Features.HTML_number_of_hidden_object(soup, list_features, list_time)
-    logger.debug("number_of_hidden_object")
+        Features.HTML_number_of_hidden_object(soup, list_features, list_time)
+        logger.debug("number_of_hidden_object")
 
-    Features.HTML_number_of_hidden_iframe(soup, list_features, list_time)
-    logger.debug("number_of_hidden_iframe")
+        Features.HTML_number_of_hidden_iframe(soup, list_features, list_time)
+        logger.debug("number_of_hidden_iframe")
 
-    Features.HTML_inbound_count(soup, url, list_features, list_time)
-    logger.debug("inbound_count")
+        Features.HTML_inbound_count(soup, url, list_features, list_time)
+        logger.debug("inbound_count")
 
-    Features.HTML_outbound_count(soup, url, list_features, list_time)
-    logger.debug("outbound_count")
+        Features.HTML_outbound_count(soup, url, list_features, list_time)
+        logger.debug("outbound_count")
 
-    Features.HTML_inbound_href_count(soup, url, list_features, list_time)
-    logger.debug("inbound_href_count")
+        Features.HTML_inbound_href_count(soup, url, list_features, list_time)
+        logger.debug("inbound_href_count")
 
-    Features.HTML_outbound_href_count(soup, url, list_features, list_time)
-    logger.debug("outbound_href_count")
+        Features.HTML_outbound_href_count(soup, url, list_features, list_time)
+        logger.debug("outbound_href_count")
+
+        Features.HTML_Website_content_type(html, list_features, list_time)
+        logger.debug("content_type")
+
+        Features.HTML_content_length(html, list_features, list_time)
+        logger.debug("content_length")
+
+        Features.HTML_x_powered_by(html, list_features, list_time)
+        logger.debug("x_powered_by")
+
+        Features.HTML_URL_Is_Redirect(html, url, list_features, list_time)
+        logger.debug("URL_Is_Redirect")
 
 
 def single_email_features(body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
@@ -1234,18 +1232,17 @@ def url_features(filepath, list_features, list_dict, list_time, time_dict, corpu
     try:
         with open(filepath,'r', encoding = "ISO-8859-1") as f:
             for rawurl in f:
+                rawurl = rawurl.strip().rstrip()
                 try:
-                    if rawurl == '':
-                        pass
+                    if not rawurl:
+                        continue
                     logger.debug("rawurl:" + str(rawurl))
                     Features.summary.write("URL: {}".format(rawurl))
                     t0 = time.time()
-                    html, dns_lookup, IPs, ipwhois, whois_output, content, domain, html_time, dns_lookup_time, ipwhois_time, whois_time, Error = Download_url.download_url(rawurl)
+                    html, content, Error = Download_url.download_url(rawurl, list_time)
+                    IPs, ipwhois, whois_output, domain = Download_url.extract_whois(html.url, list_time)
+                    dns_lookup = Download_url.extract_dns_info(html.url, list_time)
                     times.append(time.time() - t0)
-                    list_time['html_time'] = html_time
-                    list_time['dns_lookup_time'] = dns_lookup_time
-                    list_time['ipwhois_time'] = ipwhois_time
-                    list_time['whois_time'] = whois_time
                     if Error == 1:
                         logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                         Bad_URLs_List.append(rawurl)
@@ -1256,13 +1253,13 @@ def url_features(filepath, list_features, list_dict, list_time, time_dict, corpu
                         if content=='':
                             soup=''
                         soup = BeautifulSoup(content, 'html5lib')   #content=html.text
-                        single_html_features(soup, url, list_features, list_time)
+                        single_html_features(soup, html, url, list_features, list_time)
                         single_url_feature(url, list_features, list_time)
                         logger.debug("html_featuers & url_features >>>>>> complete")
                         single_javascript_features(soup,html, list_features, list_time)
                         logger.debug("html_features & url_features & Javascript feautures >>>>>> complete")
-                        single_network_features(html, soup, dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
-                        features_output= "Data_Dump/URLs_Backup/"+str(ntpath.normpath(filepath).split('\\'))
+                        single_network_features(dns_lookup, IPs, ipwhois, whois_output, url, list_features, list_time)
+                        features_output= "Data_Dump/URLs_Backup/"+'_'.join(ntpath.normpath(filepath).split('\\'))
                         if not os.path.exists("Data_Dump/URLs_Backup"):
                             os.makedirs("Data_Dump/URLs_Backup")
                         #with open(features_output+"_feature_vector.pkl",'ab') as feature_tracking:
@@ -1277,8 +1274,8 @@ def url_features(filepath, list_features, list_dict, list_time, time_dict, corpu
                         #    pickle.dump(str(soup),feature_tracking)
                         corpus.append(str(soup))
                 except Exception as e:
-                    logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                     logger.debug(traceback.format_exc())
+                    logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                     Bad_URLs_List.append(rawurl)
     except Exception as e:
         logger.warning("exception: " + str(e))

@@ -22,9 +22,14 @@ from urllib.parse import urlparse
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import DesiredCapabilities
+import configparser
 
 logger = logging.getLogger('root')
 whois_info = {}
+
+config=configparser.ConfigParser()
+config.read('Config_file.ini')
+
 class HTTPResponse:
     def __init__(self):
         self.headers = {}
@@ -52,9 +57,12 @@ def dns_lookup(domain):
         'URI'
     ]
     lists=[]
+    resolver = dns.resolver.Resolver()
+    resolver.timeout = 3
+    resolver.lifetime = 3
     for a in ids:
         try:
-            answers = dns.resolver.query(domain, a)
+            answers = resolver.query(domain, a)
             for rdata in answers:
                 val=a + ' : '+ rdata.to_text()
                 lists.append(val)
@@ -63,145 +71,153 @@ def dns_lookup(domain):
             pass
     return lists
 
-def download_url(rawurl):
-    html = ''
+def extract_dns_info(url, list_time):
     dns_lookup_output = ''
-    IPs = ''
-    ipwhois = '' 
-    whois_output = '' 
-    domain = ''
-    html_time = 0
-    dns_lookup_time = 0
-    ipwhois_time = 0
-    whois_time = -1
-    Error = 0
-    http_response = HTTPResponse()
-    
-    headers = requests.utils.default_headers()
+    if config["Network_Features"]["network_features"] == "True":
+        try:
+            extracted = tldextract.extract(url)
+            parsed_url = urlparse(url)
+            complete_domain = '{uri.hostname}'.format(uri=parsed_url)
+        except Exception as e:
+            logger.warning("Exception: Domain Error: {}".format(e))
+            domain=''
+            complete_domain=''
 
-    headers.update(
-        {
-            'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q = 0.8',
-            'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q = 0.7',
-            'Keep-Alive': '300',
-            'Pragma': 'no-cache',
-            'Cache-Control': 'no-cache',
-            'Accept-Language': '*',
-            'Accept-Encoding': 'gzip, deflate'
-        }
-    )
-    chrome_options = Options()
-    chrome_options.set_headless() 
-    desired_capabilities = DesiredCapabilities.CHROME.copy()
-    desired_capabilities['loggingPrefs'] = { 'browser':'ALL' }
-
-
-    url = rawurl.strip().rstrip('\n')
-    if url == '':
-        Error=1
-        logger.warning("Empty URL")
-        return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, whois_time,  Error
-
-    try:
-        t0 = time.time()
-        browser = webdriver.Chrome(executable_path=os.path.abspath('chromedriver'), chrome_options=chrome_options, desired_capabilities=desired_capabilities)
-        browser.set_page_load_timeout(10)
-        browser.get(url)
-        log = browser.get_log('browser')
-        http_response.html = browser.page_source
-        http_response.url = browser.current_url
-        browser.close()
-        response = requests.head(url, headers = headers, timeout = 20)
-        http_response.headers = response.headers
-        response.close()
-        if log:
-            p = re.compile('.* status of ([0-9]+) .*')
-            match = p.match(log[0]['message'])
-            if match:
-                Error=1
-                logger.warning("HTTP response code is not OK: {}".format(match.groups()[0]))
-                return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, whois_time, Error
+        if complete_domain:
+            t0 = time.time()
+            try:
+                dns_lookup_output=dns_lookup(complete_domain)
+                list_time['dns_lookup_time'] = time.time() - t0
+            except Exception as e:
+                dns_lookup_output=''
         else:
-            parsed = BeautifulSoup(http_response.html, 'html.parser')
-            language = parsed.find("html").get('lang')
-            if language != None and not language.startswith('en'):
-                Error=1
-                logger.warning("Website's language is not English")
-                return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, whois_time,  Error
+            dns_lookup_output=''
 
-        html_time = time.time() - t0
+    return dns_lookup_output
 
-    except Exception as e:
-        logger.warning("Exception HTML: {}. Error :{}".format(url, e))
-        logger.warning("html, content=''")
-        logger.debug(traceback.format_exc())
-        http_response.html = ''
-        http_response.url = url
-        html_time= time.time() - t0
-
-    try:           
-        extracted = tldextract.extract(http_response.url)
-        parsed_url = urlparse(http_response.url)
+def extract_whois(url, list_time): 
+    IPs = ''
+    ipwhois = None 
+    whois_output = None
+    domain = ''
+    try:
+        extracted = tldextract.extract(url)
+        parsed_url = urlparse(url)
         complete_domain = '{uri.hostname}'.format(uri=parsed_url)
         domain = "{}.{}".format(extracted.domain, extracted.suffix)
-
     except Exception as e:
         logger.warning("Exception: Domain Error: {}".format(e))
         domain=''
         complete_domain=''
 
-    if complete_domain:
-        t0 = time.time()
-        try:
-            dns_lookup_output=dns_lookup(complete_domain)
-            dns_lookup_time = time.time() - t0
-        except Exception as e:
-            dns_lookup_output=''
-            dns_lookup_time=-1 
-        try:
+    if config["Network_Features"]["network_features"] == "True" and (config["Network_Features"]["creation_date"] == "True" or config["Network_Features"]["expiration_date"] == "True" or config["Network_Features"]["updated_date"] == "True"):
+        if complete_domain:
             try:
-                IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(complete_domain, 80, type=socket.SOCK_STREAM)))
-            except socket.gaierror:
-                IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + complete_domain, 80, type=socket.SOCK_STREAM)))
+                try:
+                    IPs = list(map(lambda x: x[4][0], socket.getaddrinfo(complete_domain, 80, type=socket.SOCK_STREAM)))
+                except socket.gaierror:
+                    IPs = list(map(lambda x: x[4][0], socket.getaddrinfo("www." + complete_domain, 80, type=socket.SOCK_STREAM)))
 
-            t0 = time.time()
-            for ip in IPs:
-                obj = IPWhois(ip)
-                ipwhois = obj.lookup_whois(get_referral=True)
-            ipwhois_time = time.time() - t0
-        except Exception as e:
-            logger.warning("Exception: ipwhois Error: {}".format(e))
+                t0 = time.time()
+                for ip in IPs:
+                    obj = IPWhois(ip)
+                    ipwhois = obj.lookup_whois(get_referral=True)
+                list_time['ipwhois_time'] = time.time() - t0
+            except Exception as e:
+                logger.warning("Exception: ipwhois Error: {}".format(e))
+                IPs=''
+                ipwhois=''
+
+            if not is_IP_address(complete_domain) and domain:
+                t0 = time.time()
+                try:
+                    if domain in whois_info:
+                        whois_output = whois_info[domain]
+                    else:
+                        whois_output = whois.whois(domain)
+                        whois_info[domain] = whois_output
+                    time.sleep(5)
+                except Exception as e:
+                    logger.warning("Exception whois: Domain {}. Error: {}".format(domain, e))
+                    whois_output=''
+                list_time['whois_time'] = time.time() - t0
+            else:
+                whois_output=''
+        else:
             IPs=''
             ipwhois=''
-            ipwhois_time=-1
-
-        if not is_IP_address(complete_domain) and domain:
-            t0 = time.time()
-            try:
-                if domain in whois_info:
-                    whois_output = whois_info[domain]
-                else:
-                    whois_output = whois.whois(domain)
-                    whois_info[domain] = whois_output
-                time.sleep(5)
-            except Exception as e:
-                logger.warning("Exception whois: Domain {}. Error: {}".format(domain, e))
-                whois_output=''
-            whois_time = time.time() - t0
-        else:
             whois_output=''
-            whois_time = -1
-    else:
-        dns_lookup_output=''
-        dns_lookup_time=''
-        IPs=''
-        ipwhois=''
-        ipwhois_time=-1
-        whois_output=''
-        whois_time = -1
 
-    return http_response, dns_lookup_output, IPs, ipwhois, whois_output, http_response.html, domain, html_time, dns_lookup_time, ipwhois_time, whois_time, Error
+    return IPs, ipwhois, whois_output, domain
+
+def download_url(rawurl, list_time):
+    html = ''
+    Error = 0
+    http_response = HTTPResponse()
+    if config["HTML_Features"]["HTML_features"] == "True": 
+        headers = requests.utils.default_headers()
+
+        headers.update(
+            {
+                'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q = 0.8',
+                'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q = 0.7',
+                'Keep-Alive': '300',
+                'Pragma': 'no-cache',
+                'Cache-Control': 'no-cache',
+                'Accept-Language': '*',
+                'Accept-Encoding': 'gzip, deflate'
+            }
+        )
+        chrome_options = Options()
+        chrome_options.set_headless() 
+        desired_capabilities = DesiredCapabilities.CHROME.copy()
+        desired_capabilities['loggingPrefs'] = { 'browser':'ALL' }
+
+        url = rawurl.strip().rstrip('\n')
+        if url == '':
+            Error=1
+            logger.warning("Empty URL")
+            return http_response, http_response.html, Error
+        try:
+            t0 = time.time()
+            browser = webdriver.Chrome(executable_path=os.path.abspath('chromedriver'), chrome_options=chrome_options, desired_capabilities=desired_capabilities)
+            browser.set_page_load_timeout(10)
+            browser.get(url)
+            log = browser.get_log('browser')
+            http_response.html = browser.page_source
+            http_response.url = browser.current_url
+            browser.close()
+            response = requests.head(url, headers = headers, timeout = 20)
+            http_response.headers = response.headers
+            response.close()
+            if log:
+                p = re.compile('.* status of ([0-9]+) .*')
+                match = p.match(log[0]['message'])
+                if match:
+                    Error=1
+                    logger.warning("HTTP response code is not OK: {}".format(match.groups()[0]))
+                    return http_response, http_response.html, Error
+            else:
+                parsed = BeautifulSoup(http_response.html, 'html.parser')
+                language = parsed.find("html").get('lang')
+                if language != None and not language.startswith('en'):
+                    Error=1
+                    logger.warning("Website's language is not English")
+                    return http_response, http_response.html, Error
+        except Exception as e:
+            logger.warning("Exception HTML: {}. Error :{}".format(url, e))
+            logger.warning("html, content=''")
+            logger.debug(traceback.format_exc())
+            http_response.html = ''
+            http_response.url = url
+
+        list_time['html_time'] = time.time() - t0
+    else:
+        http_response.html = ''
+        http_response.url = rawurl
+
+    return http_response, http_response.html, Error
 
 def visible(element):
     if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
