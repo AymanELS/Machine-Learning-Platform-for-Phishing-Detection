@@ -95,12 +95,14 @@ def Confirmation():
     print("Phishing Dataset (Testing): {}".format(config["Dataset Path"]["path_phishing_testing"]))
 
     print("\nRun Feature Ranking Only: {}".format(config["Feature Selection"]["Feature Ranking Only"]))
-
-    print("\nRun the Feature Extraction: {}".format(config["Extraction"]["feature extraction"]))
-    print("\nFeature Extraction for Training Data: {}".format(config["Extraction"]["training dataset"]))
-    print("\nFeature Extraction for Testing Data: {}".format(config["Extraction"]["testing dataset"]))
+    if config["Extraction"]["feature extraction"]=="True":
+        print("\nRun the Feature Extraction: {}".format(config["Extraction"]["feature extraction"]))
+        print("\nFeature Extraction for Training Data: {}".format(config["Extraction"]["training dataset"]))
+        print("\nFeature Extraction for Testing Data: {}".format(config["Extraction"]["testing dataset"]))
+    else:
+        print("\nRun the Feature Extraction: {}".format(config["Extraction"]["feature extraction"]))
     print("\nRun the classifiers: {}".format(config["Classification"]["Running the classifiers"]))
-
+    print("\n")
     answer = query_yes_no("Do you wish to continue?")
     return answer
 
@@ -257,10 +259,10 @@ def main():
                     #dump tfidf vectorizer
                     joblib.dump(tfidf_vectorizer,"Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
                 
-                joblib.dump(X_train,"Data_Dump/URLs_Training/X_test_unprocessed_with_tfidf.pkl")
+                joblib.dump(X_train,"Data_Dump/URLs_Training/X_train_unprocessed_with_tfidf.pkl")
                 # Use Min_Max_scaling for prepocessing the feature matrix
                 X_train=Features_Support.Preprocessing(X_train)
-
+                joblib.dump(X_train,"Data_Dump/URLs_Training/X_train_processed.pkl")
 
                 # Feature Selection
                 if config["Feature Selection"]["select best features"]=="True":
@@ -269,7 +271,7 @@ def main():
                     X_train, selection = Feature_Selection.Feature_Ranking(X_train, y_train,k, feature_list_dict_train)
                     #Dump model
                     joblib.dump(selection,"Data_Dump/URLs_Training/selection.pkl")
-
+                    joblib.dump(X_train,"Data_Dump/URLs_Training/X_train_processed_best_features.pkl")
 
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
@@ -286,7 +288,7 @@ def main():
             if config["Extraction"]["Testing Dataset"] == "True":
                 # if training was done in another instance of the plaform then load the necessary files
                 if flag_training==False:
-                    X_train=joblib.load("Data_Dump/URLs_Training/X_train_unprocessed.pkl")
+                    X_train=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
                     y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
                     vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
                     
@@ -306,7 +308,7 @@ def main():
                 joblib.dump(X_test,"Data_Dump/URLs_Testing/X_test_unprocessed_with_tfidf.pkl")
                 # Use Min_Max_scaling for prepocessing the feature matrix
                 X_test=Features_Support.Preprocessing(X_test)
-
+                joblib.dump(X_train,"Data_Dump/URLs_Training/X_test_processed.pkl")
                 
                 # Feature Selection
                 if config["Feature Selection"]["select best features"]=="True":
@@ -315,6 +317,7 @@ def main():
                     #k: Number of Best features
                     k = int(config["Feature Selection"]["number of best features"])
                     X_test = Feature_Selection.Select_Best_Features_Testing(X_test, selection, k, feature_list_dict_test)
+                    joblib.dump(X_train,"Data_Dump/URLs_Training/X_test_processed_best_features.pkl")
                 
                 
                 # Test on imbalanced datasets
@@ -331,9 +334,9 @@ def main():
     if config["Classification"]["Running the classifiers"]=="True":
         if Feature_extraction==False:
             if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
-                X_train=joblib.load("Data_Dump/URLs_Training/X_train_unprocessed.pkl")
+                X_train=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
                 y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
-                X_test=joblib.load("Data_Dump/URLs_Testing/X_test_unprocessed.pkl")
+                X_test=joblib.load("Data_Dump/URLs_Testing/X_test.pkl")
                 y_test=joblib.load("Data_Dump/URLs_Testing/y_test.pkl")
                 vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
                 features_extracted=vectorizer.get_feature_names()
