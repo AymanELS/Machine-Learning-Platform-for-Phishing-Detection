@@ -17,6 +17,7 @@ from scipy.sparse import hstack
 import logging
 import argparse
 from sklearn.datasets import dump_svmlight_file
+import time
 
 
 parser = argparse.ArgumentParser(
@@ -116,6 +117,7 @@ def main():
 
 ### Feature ranking only
     if config["Feature Selection"]["Feature Ranking Only"]=='True':
+        start=time.time()
         if not os.path.exists("Data_Dump/Feature_Ranking"):
             os.makedirs("Data_Dump/Feature_Ranking")
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
@@ -125,7 +127,7 @@ def main():
             X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
             X=Features_Support.Preprocessing(X)
             joblib.dump(vectorizer,"Data_Dump/Emails_Training/vectorizer.pkl")
-        elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+        elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
             if not os.path.exists("Data_Dump/URLs_Training"):
                 os.makedirs("Data_Dump/URLs_Training")
             (feature_list_dict_train, y, corpus_train)=Features.Extract_Features_Urls_Training()
@@ -141,6 +143,21 @@ def main():
             joblib.dump(selection,"Data_Dump/Emails_Training/selection.pkl")
         elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
             joblib.dump(selection,"Data_Dump/URLs_Training/selection.pkl")
+        
+        end=time.time()
+        ex_time=end-start
+        
+        if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":  
+            if not os.path.exists("Data_Dump/Email_Training"):
+                os.makedirs("Data_Dump/Email_Training")
+            with open("Data_Dump/Email_Training/Feature_Ranking_Extraction_time.txt",'w') as f:
+                f.write("Feature Ranking only - Time extraction: {}".format(ex_time))
+        if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":  
+            if not os.path.exists("Data_Dump/URLs_Training"):
+                os.makedirs("Data_Dump/Email_Training")
+            with open("Data_Dump/Email_Training/Feature_Ranking_Extraction_time.txt",'w') as f:
+                f.write("Feature Ranking only - Time extraction: {}".format(ex_time))
+
 
 
 ### Email FEature Extraction
@@ -148,6 +165,7 @@ def main():
         Feature_extraction=True
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
             if config["Extraction"]["Training Dataset"] == "True":
+                start_training=time.time()
                 # Create Data Dump directory if doesn't exist
                 if not os.path.exists("Data_Dump/Emails_Training"):
                     os.makedirs("Data_Dump/Emails_Training")
@@ -190,18 +208,29 @@ def main():
                 #dump_svmlight_file(X_train,y_train,"Data_Dump/Emails_Training/Feature_Matrix.txt")
                 joblib.dump(X_train,"Data_Dump/Emails_Training/X_train.pkl")
                 joblib.dump(y_train,"Data_Dump/Emails_Training/y_train.pkl")
+                end_training=time.time()
+                training_time=end_training-start_training
 
                 # flag to mark if training was done
                 flag_training=True
                 logger.info("Feature Extraction for training dataset: Done!")
+                logger.info("Feature Extraction time for training dataset: {}".format(training_time))
+
+                
+
+                if not os.path.exists("Data_Dump/Email_Training"):
+                    os.makedirs("Data_Dump/Email_Training")
+                with open("Data_Dump/Email_Training/Feature_Extraction_time.txt",'w') as f:
+                    f.write("Feature Extraction Time for Training dataset: {}".format(training_time))
 
             if config["Extraction"]["Testing Dataset"] == "True":
+                start_testing=time.time()
                 # if training was done in another instance of the plaform then load the necessary files
                 if flag_training==False:
                     X_train=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
                     y_train=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
                     vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
-                    
+                
                 # Extract features in a dictionnary for each email. return a list of dictionaries
                 (feature_list_dict_test, y_test, corpus_test)=Features.Extract_Features_Emails_Testing()
                 # Tranform the list of dictionaries into a sparse matrix
@@ -228,17 +257,26 @@ def main():
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_test, y_test=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_test, y_test)
-
+                end_testing=time.time()
+                testing_time=end_testing-start_testing
                 #Dump Testing feature matrix with labels
                 if not os.path.exists("Data_Dump/Emails_Testing"):
                     os.makedirs("Data_Dump/Emails_Testing")
                 joblib.dump(X_test,"Data_Dump/Emails_Testing/X_test.pkl")
                 joblib.dump(y_test,"Data_Dump/Emails_Testing/y_test.pkl")
                 logger.info("Feature Extraction for testing dataset: Done!")
+                logger.info("Feature Extraction time for testing dataset: {}".format(testing_time))
+                
+
+                if not os.path.exists("Data_Dump/Email_Testing"):
+                    os.makedirs("Data_Dump/Email_Testing")
+                with open("Data_Dump/Email_Testing/Feature_Extraction_time.txt",'w') as f:
+                    f.write("Feature Extraction Time for Testing dataset: {}".format(testing_time))
 
 ######## URL feature extraction
         elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
             if config["Extraction"]["Training Dataset"] == "True":
+                start_training=time.time()
                 # Create directory to store dada
                 if not os.path.exists("Data_Dump/URLs_Training"):
                     os.makedirs("Data_Dump/URLs_Training")
@@ -284,8 +322,16 @@ def main():
                 # flag to mark if training was done
                 flag_training=True
                 logger.info("Feature Extraction for training dataset: Done!")
+                end_training=time.time()
+                training_time=end_training-start_training
+                logger.info("Feature Extraction and processing time for training dataset: {}".format(training_time))
+
+                with open("Data_Dump/URLs_Training/Feature_Extraction_time.txt",'w') as f:
+                    f.write("Feature Extraction and processing Time for Training dataset: {}".format(training_time))
 
             if config["Extraction"]["Testing Dataset"] == "True":
+                start_testing=time.time()
+                
                 # if training was done in another instance of the plaform then load the necessary files
                 if flag_training==False:
                     X_train=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
@@ -323,16 +369,23 @@ def main():
                 # Test on imbalanced datasets
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_test, y_test=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_test, y_test)
+                end_testing=time.time()
+                testing_time=end_testing-start_testing
                 #Dump Testing feature matrix with labels
                 if not os.path.exists("Data_Dump/URLs_Testing"):
                     os.makedirs("Data_Dump/URLs_Testing")
                 joblib.dump(X_test,"Data_Dump/URLs_Testing/X_test.pkl")
                 joblib.dump(y_test,"Data_Dump/URLs_Testing/y_test.pkl")
-                logger.info("Feature Extraction for testing dataset: Done!")
 
+                with open("Data_Dump/URLs_Testing/Feature_Extraction_time.txt",'w') as f:
+                    f.write("Feature Extraction Time for Testing dataset: {}".format(testing_time))
+
+                logger.info("Feature Extraction for testing dataset: Done!")
+                logger.info("Feature Extraction and processing time for testing dataset: {}".format(testing_time))
 
     if config["Classification"]["Running the classifiers"]=="True":
         if Feature_extraction==False:
+            start_classification=time.time()
             if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
                 X_train=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
                 y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
@@ -368,13 +421,19 @@ def main():
                 logger.info((vectorizer.get_feature_names()))
                 X_train=vectorizer.transform(Features_training)
                 X_test=vectorizer.transform(Features_testing)
+                end_classification=time.time()
+                classification_time=end_classification-start_classification
                 if not os.path.exists("Data_Dump/URLs_Classification"):
                     os.makedirs("Data_Dump/URLs_Classification")
                 joblib.dump(vectorizer, "Data_Dump/URLs_Classification/vectorizer_restricted.pkl")
                 joblib.dump(X_train,"Data_Dump/URLs_Classification/X_train_restricted.pkl")
                 joblib.dump(X_test,"Data_Dump/URLs_Classification/X_test_restricted.pkl")
-                #logger.info(len(vectorizer.get_feature_names()))
+                logger.info("Running the Classifiers....")
+                classifiers(X_train, y_train, X_test, y_test)
+                with open("Data_Dump/URLs_Classification/Classification_time.txt",'w') as f:
+                    f.write("Classification time: {}".format(classification_time))
 
+                #logger.info(len(vectorizer.get_feature_names()))
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
                 X_train=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
                 y_train=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
@@ -405,10 +464,15 @@ def main():
                 logger.info(mask)
                 vectorizer=vectorizer.restrict(mask)
                 logger.info(len(vectorizer.get_feature_names()))
-                #X_train=vectorizer.transform(X_train)
 
-        logger.info("Running the Classifiers....")
-        #classifiers(X_train, y_train, X_test, y_test)
+                #with open("Data_Dump/URLs_Classification/Classification_time.txt",'w') as f:
+                #    f.write("Classification time: {}".format(classification_time))
+                #X_train=vectorizer.transform(X_train)
+                logger.info("Running the Classifiers....")
+                classifiers(X_train, y_train, X_test, y_test)
+                with open("Data_Dump/Emails_Classification/Classification_time.txt",'w') as f:
+                    f.write("Classification time: {}".format(classification_time))
+                
         logger.info("Done running the Classifiers!!")
 
 if __name__ == "__main__":
