@@ -148,5 +148,6 @@ pip install ipwhois
 pip install python-whois
 pip install keras
 pip install tensorflow
-pip intall selenium
+pip install selenium
+pip install html5lib 
 ```
