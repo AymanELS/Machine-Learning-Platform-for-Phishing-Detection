@@ -116,23 +116,36 @@ def main():
 
 ### Feature ranking only
     if config["Feature Selection"]["Feature Ranking Only"]=='True':
-        if not os.path.exists("Data_Dump/Feature_Ranking"):
-            os.makedirs("Data_Dump/Feature_Ranking")
-        if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
-            if not os.path.exists("Data_Dump/Emails_Training"):
-                os.makedirs("Data_Dump/Emails_Training")
-            (feature_list_dict_train, y, corpus)=Features.Extract_Features_Emails_Training()
-            X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
-            X=Features_Support.Preprocessing(X)
-            joblib.dump(vectorizer,"Data_Dump/Emails_Training/vectorizer.pkl")
-        elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-            if not os.path.exists("Data_Dump/URLs_Training"):
-                os.makedirs("Data_Dump/URLs_Training")
-            (feature_list_dict_train, y, corpus_train)=Features.Extract_Features_Urls_Training()
-            X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
-            X=Features_Support.Preprocessing(X)
-            joblib.dump(vectorizer,"Data_Dump/URLs_Training/vectorizer.pkl")
+        if config["Extraction"]["feature extraction"] == "True":
+            if not os.path.exists("Data_Dump/Feature_Ranking"):
+                os.makedirs("Data_Dump/Feature_Ranking")
+            if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
+                if not os.path.exists("Data_Dump/Emails_Training"):
+                    os.makedirs("Data_Dump/Emails_Training")
+                (feature_list_dict_train, y, corpus)=Features.Extract_Features_Emails_Training()
+                X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
+                X=Features_Support.Preprocessing(X)
+                joblib.dump(vectorizer,"Data_Dump/Emails_Training/vectorizer.pkl")
 
+            elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
+                if not os.path.exists("Data_Dump/URLs_Training"):
+                    os.makedirs("Data_Dump/URLs_Training")
+                (feature_list_dict_train, y, corpus_train)=Features.Extract_Features_Urls_Training()
+                X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
+                X=Features_Support.Preprocessing(X)
+                joblib.dump(vectorizer,"Data_Dump/URLs_Training/vectorizer.pkl")
+        
+        else: 
+            if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
+                vectorizer= joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
+                X=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
+                y=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
+            elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
+                vectorizer= joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
+                X=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
+                y=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
+            #feature_list_dict_train=None
+            feature_list_dict_train=vectorizer.inverse_transform(X)
         logger.info("Select Best Features ######")
         k = int(config["Feature Selection"]["number of best features"])
         #X, selection = Feature_Selection.Select_Best_Features_Training(X, y, k)
@@ -340,41 +353,41 @@ def main():
                 y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
                 X_test=joblib.load("Data_Dump/URLs_Testing/X_test.pkl")
                 y_test=joblib.load("Data_Dump/URLs_Testing/y_test.pkl")
-                vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
-                features_extracted=vectorizer.get_feature_names()
-                logger.info(features_extracted)
-                Features_training=vectorizer.inverse_transform(X_train)
-                Features_testing=vectorizer.inverse_transform(X_test)
-                mask=[]
-                #mask.append(0)
-                list_restricted_features=[]
-                        #logger.info("Section: {} ".format(section))
-                for feature in features_extracted:
-                    feature_name=feature
-                    if "=" in feature:
-                        feature_name=feature.split("=")[0]
-                    if "url_char_distance_" in feature:
-                        feature_name="char_distance"
-                    for section in ["HTML_Features", "URL_Features", "Network_Features", "Javascript_Features"]:
-                        try:
-                            if config[section][feature_name]=="True":
-                                if config[section][section.lower()]=="True":
-                                    logger.info("Feature: {}".format(feature))
-                                    list_restricted_features.append(feature)
-                                    mask.append(1)
-                                else:
-                                    mask.append(0)
-                        except KeyError as e:
-                            pass
-                vectorizer.restrict(mask)
-                logger.info((vectorizer.get_feature_names()))
-                X_train=vectorizer.transform(Features_training)
-                X_test=vectorizer.transform(Features_testing)
-                if not os.path.exists("Data_Dump/URLs_Classification"):
-                    os.makedirs("Data_Dump/URLs_Classification")
-                joblib.dump(vectorizer, "Data_Dump/URLs_Classification/vectorizer_restricted.pkl")
-                joblib.dump(X_train,"Data_Dump/URLs_Classification/X_train_restricted.pkl")
-                joblib.dump(X_test,"Data_Dump/URLs_Classification/X_test_restricted.pkl")
+                #vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
+                #features_extracted=vectorizer.get_feature_names()
+                #logger.info(features_extracted)
+                # Features_training=vectorizer.inverse_transform(X_train)
+                # Features_testing=vectorizer.inverse_transform(X_test)
+                # mask=[]
+                # #mask.append(0)
+                # list_restricted_features=[]
+                #         #logger.info("Section: {} ".format(section))
+                # for feature in features_extracted:
+                #     feature_name=feature
+                #     if "=" in feature:
+                #         feature_name=feature.split("=")[0]
+                #     if "url_char_distance_" in feature:
+                #         feature_name="char_distance"
+                #     for section in ["HTML_Features", "URL_Features", "Network_Features", "Javascript_Features"]:
+                #         try:
+                #             if config[section][feature_name]=="True":
+                #                 if config[section][section.lower()]=="True":
+                #                     logger.info("Feature: {}".format(feature))
+                #                     list_restricted_features.append(feature)
+                #                     mask.append(1)
+                #                 else:
+                #                     mask.append(0)
+                #         except KeyError as e:
+                #             pass
+                # vectorizer.restrict(mask)
+                # logger.info((vectorizer.get_feature_names()))
+                # X_train=vectorizer.transform(Features_training)
+                # X_test=vectorizer.transform(Features_testing)
+                # if not os.path.exists("Data_Dump/URLs_Classification"):
+                #     os.makedirs("Data_Dump/URLs_Classification")
+                # joblib.dump(vectorizer, "Data_Dump/URLs_Classification/vectorizer_restricted.pkl")
+                # joblib.dump(X_train,"Data_Dump/URLs_Classification/X_train_restricted.pkl")
+                # joblib.dump(X_test,"Data_Dump/URLs_Classification/X_test_restricted.pkl")
                 #logger.info(len(vectorizer.get_feature_names()))
 
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
@@ -410,7 +423,7 @@ def main():
                 #X_train=vectorizer.transform(X_train)
 
         logger.info("Running the Classifiers....")
-        #classifiers(X_train, y_train, X_test, y_test)
+        classifiers(X_train, y_train, X_test, y_test)
         logger.info("Done running the Classifiers!!")
 
 if __name__ == "__main__":

@@ -22,9 +22,16 @@ def main():
         os.makedirs("Data_Dump/Feature_Combine")
     
 
-    path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
-    path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump/URLs_Training/y_train.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
-    path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump/URLs_Training/vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
+        
+
+    path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_features.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
+    path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_labels.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
+    path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
+
+
+    # path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
+    # path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/y_train.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
+    # path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
 
     path2_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 2: ")
     path2_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/y_train.pkl' #input("\nEnter path to labels (y_train) of dataset 2: ")
@@ -222,6 +229,7 @@ def main():
 
     joblib.dump(X_train, "Data_Dump/Feature_Combine/X_combined_unprocessed.pkl")
     joblib.dump(y_train, "Data_Dump/Feature_Combine/y_combined_unprocessed.pkl")
+    joblib.dump(vectorizer, "Data_Dump/Feature_Combine/vectorizer_combined.pkl")
 
     
 
