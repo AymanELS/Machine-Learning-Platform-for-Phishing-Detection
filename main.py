@@ -255,6 +255,7 @@ def main():
                 if config["HTML_Features"]["tfidf_websites"] == "True":
                     logger.info("Extracting TFIDF features for training websites ###### ######")
                     Tfidf_train, tfidf_vectorizer=Tfidf.tfidf_training(corpus_train)
+                    joblib.dump(Tfidf_train, "Data_Dump/URLs_Training/tfidf_features.pkl")
                     X_train=hstack([X_train, Tfidf_train])
                     #dump tfidf vectorizer
                     joblib.dump(tfidf_vectorizer,"Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
@@ -303,6 +304,7 @@ def main():
                         tfidf_vectorizer=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
                     logger.info("Extracting TFIDF features for testing websites ######")
                     Tfidf_test=Tfidf.tfidf_testing(corpus_test, tfidf_vectorizer)
+                    joblib.dump(Tfidf_test, "Data_Dump/URLs_Testing/tfidf_features.pkl")
                     X_test=hstack([X_test, Tfidf_test])
                 
                 joblib.dump(X_test,"Data_Dump/URLs_Testing/X_test_unprocessed_with_tfidf.pkl")
