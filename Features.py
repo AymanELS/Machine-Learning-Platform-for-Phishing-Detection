@@ -3367,7 +3367,7 @@ def Extract_Features_Urls_Training():
         for i in range(labels_all_train-labels_legit_train):
             labels_train.append(1)
 
-        logger.info("\nfeature_list_dict_train2: {}\n".format(feature_list_dict_train2))
+        #logger.info("\nfeature_list_dict_train2: {}\n".format(feature_list_dict_train2))
         corpus_train = data_legit_train + data_phish_train
 
         logger.info("--- %s final count seconds ---" % (time.time() - start_time))

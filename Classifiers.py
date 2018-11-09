@@ -97,11 +97,18 @@ def SVM(X,y, X_test, y_test):
    		decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
    		max_iter=-1, probability=False, random_state=None, shrinking=True,
    		tol=0.001, verbose=False)
-	clf.fit(X, y)
-	y_predict=clf.predict(X_test)
-	logger.info("SVM >>>>>>>")
-	eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-	return (eval_metrics_SVM)
+	if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		logger.info(np.shape(X))
+		logger.info(np.sum(y))
+		score=Evaluation_Metrics.Cross_validation(clf, X, y)
+		logger.info(score)
+		return score
+	else:
+		clf.fit(X, y)
+		y_predict=clf.predict(X_test)
+		logger.info("SVM >>>>>>>")
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return (eval_metrics_SVM)
 
 ######## Random Forest
 def RandomForest(X,y, X_test, y_test):
@@ -109,11 +116,18 @@ def RandomForest(X,y, X_test, y_test):
 		 min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='auto', max_leaf_nodes=None,
 		  min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=1,
 		   random_state=None, verbose=0, warm_start=False, class_weight=None)
-		clf.fit(X,y)
-		y_predict=clf.predict(X_test)
-		logger.info("RF >>>>>>>")
-		eval_metrics_RF = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		return eval_metrics_RF
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			logger.info(np.shape(X))
+			logger.info(np.sum(y))
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			clf.fit(X,y)
+			y_predict=clf.predict(X_test)
+			logger.info("RF >>>>>>>")
+			eval_metrics_RF = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+			return eval_metrics_RF
 
 ###### Decition Tree
 def DecisionTree(X,y, X_test, y_test):

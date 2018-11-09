@@ -18,13 +18,24 @@ config.read('Config_file.ini')
 
 def main():
 
-    path1_matrix=input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
-    path1_labels=input("\nEnter path to labels (y_train) of dataset 1: ")
-    path1_vectorizer=input("\nEnter path to vectorizer.pkl of dataset1: ")
+    if not os.path.exists("Data_Dump/Feature_Combine"):
+        os.makedirs("Data_Dump/Feature_Combine")
+    
 
-    path2_matrix=input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 2: ")
-    path2_labels=input("\nEnter path to labels (y_train) of dataset 2: ")
-    path2_vectorizer=input("\nEnter path to vectorizer.pkl of dataset2: ")
+        
+
+    path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_features.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
+    path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_labels.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
+    path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
+
+
+    # path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
+    # path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/y_train.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
+    # path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
+
+    path2_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 2: ")
+    path2_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/y_train.pkl' #input("\nEnter path to labels (y_train) of dataset 2: ")
+    path2_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset2: ")
 
     X_train1=joblib.load(path1_matrix)
     y_train1=joblib.load(path1_labels)
@@ -200,9 +211,7 @@ def main():
     print("phish count 1: {}".format(number_phish1))
     print("phish count 2: {}".format(number_phish2))
     
-    print("new legitimate count: {}".format(y_train.count(0)))
-    print("new phish count: {}".format(y_train.count(1)))
-
+    
     X_train=vectorizer.transform(new_feature_vector)
     print("X_1 Shape: {}".format(X_train1.shape))
     print("X_2 Shape: {}".format(X_train2.shape))
@@ -214,11 +223,13 @@ def main():
     #X_train_legit= vstack([np.split(X_train1,number_legitimate1)[0], np.split(X_train2, number_legitimate2)[0]])
     #X_train_phish= vstack([np.split(X_train1,number_legitimate1)[0], np.split(X_train2, number_legitimate2)[0]])
     #X_train=vstack([X_train_legit,X_train_phish])
+    print("new legitimate count: {}".format(y_train.count(0)))
+    print("new phish count: {}".format(y_train.count(1)))
 
-    if not os.path.exists("Data_Dump/Feature_Combine"):
-        os.makedirs("Data_Dump/Feature_Combine")
+
     joblib.dump(X_train, "Data_Dump/Feature_Combine/X_combined_unprocessed.pkl")
     joblib.dump(y_train, "Data_Dump/Feature_Combine/y_combined_unprocessed.pkl")
+    joblib.dump(vectorizer, "Data_Dump/Feature_Combine/vectorizer_combined.pkl")
 
     
 

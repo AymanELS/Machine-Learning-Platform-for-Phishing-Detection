@@ -484,7 +484,8 @@ def extract_body(email):
 ############################
 
 def read_corpus(path):
-  # assumes a flat directory structure
+
+  # assumes a flat directory structure 
     files = filter(lambda x: x.endswith('.txt'), os.listdir(path))
     paths = map(lambda x: os.path.join(path,x), files)
     return list(paths)

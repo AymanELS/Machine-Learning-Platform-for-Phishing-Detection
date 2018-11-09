@@ -79,7 +79,7 @@ def F1_score(y_test, y_predict):
 		#return F1_score
 
 def Cross_validation(clf, X, y):
-		score = cross_val_score(clf, X, y, cv=10)
+		score = cross_val_score(clf, X, y, cv=10, verbose=1)
 		logger.info("10 fold Cross_Validation: {}".format(score.mean()))
 
 def Homogenity(y_test,y_predict):
