@@ -762,6 +762,9 @@ def single_network_features(dns_info, IPS, IP_whois, whois_info, url, list_featu
         Features.Network_dns_ttl(url, list_features, list_time)
         logger.debug("dns_ttl")
 
+        Features.Network_DNS_Info_Exists(url, list_features, list_time)
+        logger.debug('DNS_Info_Exists')
+
 def single_javascript_features(soup, html, list_features, list_time):
     if config["HTML_Features"]["HTML_features"] == "True" and config["Javascript_Features"]["javascript_features"] == "True":
         Features.Javascript_number_of_exec(soup, list_features, list_time)
@@ -876,9 +879,6 @@ def single_url_feature(url, list_features,list_time):
 
         Features.URL_Protocol_Port_Match(url, list_features, list_time)
         logger.debug('URL_Protocol_Port_Match')
-
-        Features.URL_DNS_Info_Exists(url, list_features, list_time)
-        logger.debug('URL_DNS_Info_Exists')
 
         Features.URL_Has_WWW_in_Middle(url, list_features, list_time)
         logger.debug('URL_Has_WWW_in_Middle')

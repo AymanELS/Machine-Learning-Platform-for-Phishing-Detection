@@ -2718,35 +2718,6 @@ def URL_Protocol_Port_Match(url, list_features, list_time):
         ex_time=end-start
         list_time["Protocol_Port_Match"]=ex_time
 
-
-def URL_DNS_Info_Exists(url, list_features, list_time):
-    if config["URL_Features"]["DNS_Info_Exists"]=="True":
-        start=time.time()
-        flag=1
-        if url:    
-            try:
-                parsed_url = urlparse(url)
-                domain='{uri.hostname}'.format(uri=parsed_url)
-                resolver = dns.resolver.Resolver()
-                resolver.timeout = 3
-                resolver.lifetime = 3
-                try:
-                    dns_info = resolver.query(domain, 'A')
-                    flag=1
-                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout) as e:
-                    logger.warning("Exception: {}".format(e))
-                    flag=0
-            except Exception as e:
-                logger.warning("Exception: {}".format(e))
-                flag=-1
-                logger.debug(list_features["DNS_Info_Exists"])
-        else:
-            flag=0
-        list_features["DNS_Info_Exists"]=flag
-        end=time.time()
-        ex_time=end-start
-        list_time["DNS_Info_Exists"]=ex_time
-
 def URL_Has_WWW_in_Middle(url, list_features, list_time):
     if config["URL_Features"]["Has_WWW_in_Middle"] == "True":
         start=time.time()
@@ -2933,6 +2904,34 @@ def Network_number_name_server(dns_info, list_features, list_time):
         end=time.time()
         ex_time=end-start
         list_time["number_name_server"]=ex_time
+
+def Network_DNS_Info_Exists(url, list_features, list_time):
+    if config["Network_Features"]["DNS_Info_Exists"]=="True":
+        start=time.time()
+        flag=1
+        if url:
+            try:
+                parsed_url = urlparse(url)
+                domain='{uri.hostname}'.format(uri=parsed_url)
+                resolver = dns.resolver.Resolver()
+                resolver.timeout = 3
+                resolver.lifetime = 3
+                try:
+                    dns_info = resolver.query(domain, 'A')
+                    flag=1
+                except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.NoNameservers, dns.resolver.Timeout) as e:
+                    logger.warning("Exception: {}".format(e))
+                    flag=0
+            except Exception as e:
+                logger.warning("Exception: {}".format(e))
+                flag=-1
+                logger.debug(list_features["DNS_Info_Exists"])
+        else:
+            flag=0
+        list_features["DNS_Info_Exists"]=flag
+        end=time.time()
+        ex_time=end-start
+        list_time["DNS_Info_Exists"]=ex_time
 
 def Network_dns_ttl(url, list_features, list_time):
     if config["Network_Features"]["dns_ttl"] == "True":
