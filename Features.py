@@ -203,8 +203,8 @@ summary=open(config["Summary"]["Path"],'w')
 #        end=time.time()
 #        ex_time=end-start
 #        list_time["return_address"]=ex_time
-def Email_Num_Content_type(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_type"] == "True":
+def Email_Header_Num_Content_type(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_type"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_type"]=len(content_type_list)
@@ -215,8 +215,8 @@ def Email_Num_Content_type(content_type_list, list_features, list_time):
         ex_time=end-start
         list_time["Num_Content_type"]=ex_time
 
-def Email_Num_Charset(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Charset"] == "True":
+def Email_Header_Num_Charset(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Charset"] == "True":
         start=time.time()
         try:
             list_features["Num_Charset"] = len(charset_list)
@@ -227,8 +227,8 @@ def Email_Num_Charset(charset_list, list_features, list_time):
         ex_time=end-start
         list_time["Num_Charset"]=ex_time
 
-def Email_Num_Unique_Charset(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Unique_Charset"] == "True":
+def Email_Header_Num_Unique_Charset(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Unique_Charset"] == "True":
         start=time.time()
         try:
             list_features["Num_Unique_Charset"] = len(set(charset_list))
@@ -240,11 +240,11 @@ def Email_Num_Unique_Charset(charset_list, list_features, list_time):
         list_time["Num_Unique_Charset"]=ex_time
 
 
-def Email_MIME_Version(MIME_version, list_features, list_time):
-    if config["Email_Features"]["MIME_Version"] == "True":
+def Email_Header_MIME_Version(MIME_version, list_features, list_time):
+    if config["Email_Header_Features"]["MIME_Version"] == "True":
         start=time.time()
         try:
-            #list_features["Email_MIME_Version"]=MIME_version
+            #list_features["Email_Header_MIME_Version"]=MIME_version
             #print("Mime_version: {}".format(MIME_version))
             if MIME_version != None:
                 list_features["MIME_Version"]=MIME_version
@@ -257,8 +257,8 @@ def Email_MIME_Version(MIME_version, list_features, list_time):
         ex_time=end-start
         list_time["MIME_Version"]=ex_time
 
-def Email_Num_Unique_Content_type(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Unique_Content_type"] == "True":
+def Email_Header_Num_Unique_Content_type(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Unique_Content_type"] == "True":
         start=time.time()
         try:
             list_features["Num_Unique_Content_type"]=len(set(content_type_list))
@@ -269,8 +269,8 @@ def Email_Num_Unique_Content_type(content_type_list, list_features, list_time):
         ex_time=end-start
         list_time["Num_Unique_Content_type"]=ex_time
 
-def Email_Num_Unique_Content_Disposition(content_disposition_list, list_features, list_time):
-    if config["Email_Features"]["Num_Unique_Content_Disposition"] == "True":
+def Email_Header_Num_Unique_Content_Disposition(content_disposition_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Unique_Content_Disposition"] == "True":
         start=time.time()
         try:
             list_features["Num_Unique_Content_Disposition"]=len(set(content_disposition_list))
@@ -281,8 +281,8 @@ def Email_Num_Unique_Content_Disposition(content_disposition_list, list_features
         ex_time=end-start
         list_time["Num_Unique_Content_Disposition"]=ex_time
 
-def Email_Num_Content_Disposition(content_disposition_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Disposition"] == "True":
+def Email_Header_Num_Content_Disposition(content_disposition_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Disposition"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Disposition"]=len(content_disposition_list)
@@ -293,8 +293,8 @@ def Email_Num_Content_Disposition(content_disposition_list, list_features, list_
         ex_time=end-start
         list_time["Num_Content_Disposition"]=ex_time
 
-def Email_Num_Content_Type_text_plain(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_text_plain"] == "True":
+def Email_Header_Num_Content_Type_text_plain(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_text_plain"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_text_plain"]=content_type_list.count("text/plain")
@@ -306,8 +306,8 @@ def Email_Num_Content_Type_text_plain(content_type_list, list_features, list_tim
         list_time["Num_Content_Type_text_plain"]=ex_time
 
 
-def Email_Num_Content_Type_text_html(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_text_html"] == "True":
+def Email_Header_Num_Content_Type_text_html(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_text_html"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_text_html"]=content_type_list.count("text/html")
@@ -318,8 +318,8 @@ def Email_Num_Content_Type_text_html(content_type_list, list_features, list_time
         ex_time=end-start
         list_time["Num_Content_Type_text_html"]=ex_time
 
-def Email_Num_Content_Type_Multipart_Encrypted(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_Encrypted"] == "True":
+def Email_Header_Num_Content_Type_Multipart_Encrypted(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_Encrypted"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_Encrypted"]=content_type_list.count("multipart/encrypted")
@@ -330,8 +330,8 @@ def Email_Num_Content_Type_Multipart_Encrypted(content_type_list, list_features,
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_Encrypted"]=ex_time
 
-def Email_Num_Content_Type_Multipart_Mixed(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_Mixed"] == "True":
+def Email_Header_Num_Content_Type_Multipart_Mixed(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_Mixed"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_Mixed"]=content_type_list.count("multipart/mixed")
@@ -342,8 +342,8 @@ def Email_Num_Content_Type_Multipart_Mixed(content_type_list, list_features, lis
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_Mixed"]=ex_time
 
-def Email_Num_Content_Type_Multipart_form_data(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_form_data"] == "True":
+def Email_Header_Num_Content_Type_Multipart_form_data(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_form_data"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_form_data"] = content_type_list.count("multipart/form-data")
@@ -354,8 +354,8 @@ def Email_Num_Content_Type_Multipart_form_data(content_type_list, list_features,
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_form_data"]=ex_time
 
-def Email_Num_Content_Type_Multipart_byterange(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_byterange"] == "True":
+def Email_Header_Num_Content_Type_Multipart_byterange(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_byterange"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_byterange"] = content_type_list.count("multipart/byterange")
@@ -366,8 +366,8 @@ def Email_Num_Content_Type_Multipart_byterange(content_type_list, list_features,
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_byterange"]=ex_time
 
-def Email_Num_Content_Type_Multipart_Parallel(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_Parallel"] == "True":
+def Email_Header_Num_Content_Type_Multipart_Parallel(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_Parallel"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_Parallel"] = content_type_list.count("multipart/parallel")
@@ -378,8 +378,8 @@ def Email_Num_Content_Type_Multipart_Parallel(content_type_list, list_features, 
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_Parallel"]=ex_time
 
-def Email_Num_Content_Type_Multipart_Report(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_Report"] == "True":
+def Email_Header_Num_Content_Type_Multipart_Report(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_Report"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_Report"] = content_type_list.count("multipart/report")
@@ -390,8 +390,8 @@ def Email_Num_Content_Type_Multipart_Report(content_type_list, list_features, li
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_Report"]=ex_time
 
-def Email_Num_Content_Type_Multipart_Alternative(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_Alternative"] == "True":
+def Email_Header_Num_Content_Type_Multipart_Alternative(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_Alternative"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_Alternative"] = content_type_list.count("multipart/alternative")
@@ -402,8 +402,8 @@ def Email_Num_Content_Type_Multipart_Alternative(content_type_list, list_feature
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_Alternative"]=ex_time
 
-def Email_Num_Content_Type_Multipart_Digest_Num(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_Digest_Num"] == "True":
+def Email_Header_Num_Content_Type_Multipart_Digest_Num(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_Digest_Num"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_Digest_Num"] = content_type_list.count("multipart/digest")
@@ -414,8 +414,8 @@ def Email_Num_Content_Type_Multipart_Digest_Num(content_type_list, list_features
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_Digest_Num"]=ex_time
 
-def Email_Num_Content_Type_Multipart_Signed_Num(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_Signed_Num"] == "True":
+def Email_Header_Num_Content_Type_Multipart_Signed_Num(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_Signed_Num"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_Signed_Num"] = content_type_list.count("multipart/signed")
@@ -426,8 +426,8 @@ def Email_Num_Content_Type_Multipart_Signed_Num(content_type_list, list_features
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_Signed_Num"]=ex_time
 
-def Email_Num_Content_Type_Multipart_X_Mixed_Replaced(content_type_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Multipart_X_Mixed_Replaced"] == "True":
+def Email_Header_Num_Content_Type_Multipart_X_Mixed_Replaced(content_type_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Multipart_X_Mixed_Replaced"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Multipart_X_Mixed_Replaced"] = content_type_list.count("multipart/x-mixed-replaced")
@@ -438,8 +438,8 @@ def Email_Num_Content_Type_Multipart_X_Mixed_Replaced(content_type_list, list_fe
         ex_time=end-start
         list_time["Num_Content_Type_Multipart_X_Mixed_Replaced"]=ex_time
 
-def Email_Num_Content_Type_Charset_us_ascii(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Charset_us_ascii"] == "True":
+def Email_Header_Num_Content_Type_Charset_us_ascii(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Charset_us_ascii"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Charset_us_ascii"]=charset_list.count("us_ascii")
@@ -450,8 +450,8 @@ def Email_Num_Content_Type_Charset_us_ascii(charset_list, list_features, list_ti
         ex_time=end-start
         list_time["Num_Content_Type_Charset_us_ascii"]=ex_time
 
-def Email_Num_Content_Type_Charset_utf_8(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Charset_utf_8"] == "True":
+def Email_Header_Num_Content_Type_Charset_utf_8(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Charset_utf_8"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Charset_utf_8"]=charset_list.count("utf_8")
@@ -462,8 +462,8 @@ def Email_Num_Content_Type_Charset_utf_8(charset_list, list_features, list_time)
         ex_time=end-start
         list_time["Num_Content_Type_Charset_utf_8"]=ex_time
 
-def Email_Num_Content_Type_Charset_utf_7(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Charset_utf_7"] == "True":
+def Email_Header_Num_Content_Type_Charset_utf_7(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Charset_utf_7"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Charset_utf_7"]=charset_list.count("utf_7")
@@ -474,8 +474,8 @@ def Email_Num_Content_Type_Charset_utf_7(charset_list, list_features, list_time)
         ex_time=end-start
         list_time["Num_Content_Type_Charset_utf_7"]=ex_time
 
-def Email_Num_Content_Type_Charset_gb2312(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Charset_gb2312"] == "True":
+def Email_Header_Num_Content_Type_Charset_gb2312(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Charset_gb2312"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Charset_gb2312"]=charset_list.count("gb2312")
@@ -486,8 +486,8 @@ def Email_Num_Content_Type_Charset_gb2312(charset_list, list_features, list_time
         ex_time=end-start
         list_time["Num_Content_Type_Charset_gb2312"]=ex_time
 
-def Email_Num_Content_Type_Charset_shift_jis(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Charset_shift_jis"] == "True":
+def Email_Header_Num_Content_Type_Charset_shift_jis(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Charset_shift_jis"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Charset_shift_jis"]=charset_list.count("shit_jis")
@@ -498,8 +498,8 @@ def Email_Num_Content_Type_Charset_shift_jis(charset_list, list_features, list_t
         ex_time=end-start
         list_time["Num_Content_Type_Charset_shift_jis"]=ex_time
 
-def Email_Num_Content_Type_Charset_koi(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Charset_koi"] == "True":
+def Email_Header_Num_Content_Type_Charset_koi(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Charset_koi"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Charset_koi"]=charset_list.count("koi")
@@ -510,9 +510,8 @@ def Email_Num_Content_Type_Charset_koi(charset_list, list_features, list_time):
         ex_time=end-start
         list_time["Num_Content_Type_Charset_koi"]=ex_time
 
-
-def Email_Num_Content_Type_Charset_iso2022_jp(charset_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Type_Charset_iso2022_jp"] == "True":
+def Email_Header_Num_Content_Type_Charset_iso2022_jp(charset_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Type_Charset_iso2022_jp"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Type_Charset_iso2022_jp"]=charset_list.count("iso2022-jp")
@@ -523,9 +522,8 @@ def Email_Num_Content_Type_Charset_iso2022_jp(charset_list, list_features, list_
         ex_time=end-start
         list_time["Num_Content_Type_Charset_iso2022_jp"]=ex_time
 
-
-def Email_Num_Attachment(num_attachment, list_features, list_time):
-    if config["Email_Features"]["Num_Attachment"] == "True":
+def Email_Header_Num_Attachment(num_attachment, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Attachment"] == "True":
         start=time.time()
         try:
             list_features["Num_Attachment"]=num_attachment
@@ -536,21 +534,8 @@ def Email_Num_Attachment(num_attachment, list_features, list_time):
         ex_time=end-start
         list_time["Num_Attachment"]=ex_time
 
-
-#def Email_Num_Attachment(file_extension_list, list_features, list_time):
-#    if config["Features"]["Num_Attachment"] == "True":
-#        start=time.time()
-#        try:
-#            list_features["Email_Num_Attachment"]=len(file_extension_list)
-#        except Exception as e:
-#            logger.warning("exception: " + str(e))
-#            list_features["Email_Num_Attachment"]=0
-#        end=time.time()
-#        ex_time=end-start
-#        list_time["Email_Num_Attachment"]=ex_time
-
-def Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_time):
-    if config["Email_Features"]["Num_Unique_Attachment_types"] == "True":
+def Email_Header_Num_Unique_Attachment_types(file_extension_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Unique_Attachment_types"] == "True":
         start=time.time()
         try:
             list_features["Num_Unique_Attachment_types"]=len(set(file_extension_list))
@@ -561,9 +546,8 @@ def Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_t
         ex_time=end-start
         list_time["Num_Unique_Attachment_types"]=ex_time
 
-
-def Email_Num_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Transfer_Encoding"] == "True":
+def Email_Header_Num_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Transfer_Encoding"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Transfer_Encoding"]=len(Content_Transfer_Encoding_list)
@@ -574,9 +558,8 @@ def Email_Num_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_fea
         ex_time=end-start
         list_time["Num_Content_Transfer_Encoding"]=ex_time
 
-
-def Email_Num_Unique_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_features, list_time):
-    if config["Email_Features"]["Num_Unique_Content_Transfer_Encoding"] == "True":
+def Email_Header_Num_Unique_Content_Transfer_Encoding(Content_Transfer_Encoding_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Unique_Content_Transfer_Encoding"] == "True":
         start=time.time()
         try:
             list_features["Num_Unique_Content_Transfer_Encoding"]=len(set(Content_Transfer_Encoding_list))
@@ -588,8 +571,8 @@ def Email_Num_Unique_Content_Transfer_Encoding(Content_Transfer_Encoding_list, l
         list_time["Num_Unique_Content_Transfer_Encoding"]=ex_time
 
 
-def Email_Num_Content_Transfer_Encoding_7bit(Content_Transfer_Encoding_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Transfer_Encoding_7bit"] == "True":
+def Email_Header_Num_Content_Transfer_Encoding_7bit(Content_Transfer_Encoding_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Transfer_Encoding_7bit"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Transfer_Encoding_7bit"]=Content_Transfer_Encoding_list.count('7bit')
@@ -600,8 +583,8 @@ def Email_Num_Content_Transfer_Encoding_7bit(Content_Transfer_Encoding_list, lis
         ex_time=end-start
         list_time["Num_Content_Transfer_Encoding_7bit"]=ex_time
 
-def Email_Num_Content_Transfer_Encoding_8bit(Content_Transfer_Encoding_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Transfer_Encoding_8bit"] == "True":
+def Email_Header_Num_Content_Transfer_Encoding_8bit(Content_Transfer_Encoding_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Transfer_Encoding_8bit"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Transfer_Encoding_8bit"]=Content_Transfer_Encoding_list.count('8bit')
@@ -612,8 +595,8 @@ def Email_Num_Content_Transfer_Encoding_8bit(Content_Transfer_Encoding_list, lis
         ex_time=end-start
         list_time["Num_Content_Transfer_Encoding_8bit"]=ex_time
 
-def Email_Num_Content_Transfer_Encoding_binary(Content_Transfer_Encoding_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Transfer_Encoding_binary"] == "True":
+def Email_Header_Num_Content_Transfer_Encoding_binary(Content_Transfer_Encoding_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Transfer_Encoding_binary"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Transfer_Encoding_binary"]=Content_Transfer_Encoding_list.count('binary')
@@ -624,8 +607,8 @@ def Email_Num_Content_Transfer_Encoding_binary(Content_Transfer_Encoding_list, l
         ex_time=end-start
         list_time["Num_Content_Transfer_Encoding_binary"]=ex_time
 
-def Email_Num_Content_Transfer_Encoding_quoted_printable(Content_Transfer_Encoding_list, list_features, list_time):
-    if config["Email_Features"]["Num_Content_Transfer_Encoding_quoted_printable"] == "True":
+def Email_Header_Num_Content_Transfer_Encoding_quoted_printable(Content_Transfer_Encoding_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Content_Transfer_Encoding_quoted_printable"] == "True":
         start=time.time()
         try:
             list_features["Num_Content_Transfer_Encoding_quoted_printable"]=Content_Transfer_Encoding_list.count('quoted-printable')
@@ -636,8 +619,8 @@ def Email_Num_Content_Transfer_Encoding_quoted_printable(Content_Transfer_Encodi
         ex_time=end-start
         list_time["Num_Content_Transfer_Encoding_quoted_printable"]=ex_time
 
-def Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_time):
-    if config["Email_Features"]["Num_Unique_Attachment_types"] == "True":
+def Email_Header_Num_Unique_Attachment_types(file_extension_list, list_features, list_time):
+    if config["Email_Header_Features"]["Num_Unique_Attachment_types"] == "True":
         start=time.time()
         try:
             list_features["Num_Unique_Attachment_types"]=len(set(file_extension_list))
@@ -648,8 +631,8 @@ def Email_Num_Unique_Attachment_types(file_extension_list, list_features, list_t
         ex_time=end-start
         list_time["Num_Unique_Attachment_types"]=ex_time
 
-def Email_size_in_Bytes(size_in_bytes ,list_features, list_time):
-    if config["Email_Features"]["size_in_Bytes"] == "True":
+def Email_Header_size_in_Bytes(size_in_bytes ,list_features, list_time):
+    if config["Email_Header_Features"]["size_in_Bytes"] == "True":
         start=time.time()
         try:
             list_features["size_in_Bytes"]=size_in_bytes
@@ -660,8 +643,8 @@ def Email_size_in_Bytes(size_in_bytes ,list_features, list_time):
         ex_time=end-start
         list_time["size_in_Bytes"]=ex_time
 
-def Email_return_path(return_addr, list_features, list_time):
-    if config["Email_Features"]["return_path"] == "True":
+def Email_Header_return_path(return_addr, list_features, list_time):
+    if config["Email_Header_Features"]["return_path"] == "True":
         start=time.time()
         try:
             list_features["return_path"]=return_addr
@@ -672,8 +655,8 @@ def Email_return_path(return_addr, list_features, list_time):
         ex_time=end-start
         list_time["return_path"]=ex_time
 
-def Email_X_mailer(x_mailer,list_features, list_time):
-    if config["Email_Features"]["X_mailer"] == "True":
+def Email_Header_X_mailer(x_mailer,list_features, list_time):
+    if config["Email_Header_Features"]["X_mailer"] == "True":
         start=time.time()
         try:
             list_features["X_mailer"]=x_mailer
@@ -685,8 +668,8 @@ def Email_X_mailer(x_mailer,list_features, list_time):
         ex_time=end-start
         list_time["X_mailer"]=ex_time
 
-def Email_X_originating_hostname(x_originating_hostname, list_features, list_time):
-    if config["Email_Features"]["X_originating_hostname"] == "True":
+def Email_Header_X_originating_hostname(x_originating_hostname, list_features, list_time):
+    if config["Email_Header_Features"]["X_originating_hostname"] == "True":
         start=time.time()
         try:
             list_features["X_originating_hostname"]=x_originating_hostname
@@ -697,8 +680,8 @@ def Email_X_originating_hostname(x_originating_hostname, list_features, list_tim
         ex_time=end-start
         list_time["X_originating_hostname"]=ex_time
 
-def Email_X_originating_ip(x_originating_ip, list_features, list_time):
-    if config["Email_Features"]["X_originating_ip"] == "True":
+def Email_Header_X_originating_ip(x_originating_ip, list_features, list_time):
+    if config["Email_Header_Features"]["X_originating_ip"] == "True":
         start=time.time()
         try:
             list_features["X_originating_ip"]=x_originating_ip
@@ -709,8 +692,8 @@ def Email_X_originating_ip(x_originating_ip, list_features, list_time):
         ex_time=end-start
         list_time["X_originating_ip"]=ex_time
 
-def Email_X_spam_flag(x_spam_flag, list_features, list_time):
-    if config["Email_Features"]["X_spam_flag"] == "True":
+def Email_Header_X_spam_flag(x_spam_flag, list_features, list_time):
+    if config["Email_Header_Features"]["X_spam_flag"] == "True":
         start=time.time()
         try:
             list_features["X_Spam_flag"]=x_spam_flag
@@ -721,8 +704,8 @@ def Email_X_spam_flag(x_spam_flag, list_features, list_time):
         ex_time=end-start
         list_time["X_Spam_flag"]=ex_time
 
-def Email_X_virus_scanned(x_virus_scanned, list_features, list_time):
-    if config["Email_Features"]["X_virus_scanned"] == "True":
+def Email_Header_X_virus_scanned(x_virus_scanned, list_features, list_time):
+    if config["Email_Header_Features"]["X_virus_scanned"] == "True":
         start=time.time()
         try:
             list_features["X_virus_scanned"]=x_virus_scanned
@@ -733,8 +716,8 @@ def Email_X_virus_scanned(x_virus_scanned, list_features, list_time):
         ex_time=end-start
         list_time["X_virus_scanned"]=ex_time
 
-def Email_Received_count(received, list_features, list_time):
-    if config["Email_Features"]["Received_count"] == "True":
+def Email_Header_Received_count(received, list_features, list_time):
+    if config["Email_Header_Features"]["Received_count"] == "True":
         start=time.time()
         #print("received {}".format(received))
         try:
@@ -751,8 +734,8 @@ def Email_Received_count(received, list_features, list_time):
         list_time["Received_count"]=ex_time
 
 
-def Email_Authentication_Results_SPF_Pass(authentication_results, list_features, list_time):
-    if config["Email_Features"]["Authentication_Results_SPF_Pass"] == "True":
+def Email_Header_Authentication_Results_SPF_Pass(authentication_results, list_features, list_time):
+    if config["Email_Header_Features"]["Authentication_Results_SPF_Pass"] == "True":
         start=time.time()
         try:
             if "spf=pass" in authentication_results:
@@ -766,8 +749,8 @@ def Email_Authentication_Results_SPF_Pass(authentication_results, list_features,
         ex_time=end-start
         list_time["Authentication_Results_SPF_Pass"]=ex_time
 
-def Email_Authentication_Results_DKIM_Pass(authentication_results, list_features, list_time):
-    if config["Email_Features"]["Authentication_Results_DKIM_Pass"] == "True":
+def Email_Header_Authentication_Results_DKIM_Pass(authentication_results, list_features, list_time):
+    if config["Email_Header_Features"]["Authentication_Results_DKIM_Pass"] == "True":
         start=time.time()
         try:
             if "dkim=pass" in authentication_results:
@@ -783,8 +766,8 @@ def Email_Authentication_Results_DKIM_Pass(authentication_results, list_features
         ex_time=end-start
         list_time["Authentication_Results_DKIM_Pass"]=ex_time
 
-def Email_X_Origininal_Authentication_results(x_original_authentication_results, list_features, list_time):
-    if config["Email_Features"]["X_Origininal_Authentication_results"] == "True":
+def Email_Header_X_Origininal_Authentication_results(x_original_authentication_results, list_features, list_time):
+    if config["Email_Header_Features"]["X_Origininal_Authentication_results"] == "True":
         start=time.time()
         try:
             list_features["X_Origininal_Authentication_results"]=x_original_authentication_results
@@ -796,8 +779,8 @@ def Email_X_Origininal_Authentication_results(x_original_authentication_results,
         ex_time=end-start
         list_time["X_Origininal_Authentication_results"]=ex_time
 
-def Email_Received_SPF(received_spf, list_features, list_time):
-    if config["Email_Features"]["Received_SPF"] == "True":
+def Email_Header_Received_SPF(received_spf, list_features, list_time):
+    if config["Email_Header_Features"]["Received_SPF"] == "True":
         start=time.time()
         try:
             list_features["Received_SPF"]=received_spf
@@ -809,8 +792,8 @@ def Email_Received_SPF(received_spf, list_features, list_time):
         ex_time=end-start
         list_time["Received_SPF"]=ex_time
 
-def Email_Dkim_Signature_Exists(dkim_signature, list_features, list_time):
-    if config["Email_Features"]["Dkim_Signature_Exists"] == "True":
+def Email_Header_Dkim_Signature_Exists(dkim_signature, list_features, list_time):
+    if config["Email_Header_Features"]["Dkim_Signature_Exists"] == "True":
         start=time.time()
         try:
             #dkim_signature is boolean
@@ -823,9 +806,9 @@ def Email_Dkim_Signature_Exists(dkim_signature, list_features, list_time):
         list_time["Dkim_Signature_Exists"]=ex_time
 
 
-def Email_compare_sender_domain_message_id_domain(sender_domain , message_id, list_features, list_time):
+def Email_Header_compare_sender_domain_message_id_domain(sender_domain , message_id, list_features, list_time):
     #global list_features
-    if config["Email_Features"]["compare_sender_domain_message_id_domain"] == "True":
+    if config["Email_Header_Features"]["compare_sender_domain_message_id_domain"] == "True":
         start=time.time()
         try:
             if message_id!="None":
@@ -847,8 +830,8 @@ def Email_compare_sender_domain_message_id_domain(sender_domain , message_id, li
         list_time["compare_sender_domain_message_id_domain"]=ex_time
 
 
-def Email_compare_sender_return(sender_full_address, return_addr, list_features, list_time):
-    if config["Email_Features"]["compare_sender_return"] == "True":
+def Email_Header_compare_sender_return(sender_full_address, return_addr, list_features, list_time):
+    if config["Email_Header_Features"]["compare_sender_return"] == "True":
         start=time.time()
         try:
             compare_sender_return=int(bool(sender_full_address==return_addr))
@@ -860,21 +843,8 @@ def Email_compare_sender_return(sender_full_address, return_addr, list_features,
         ex_time=end-start
         list_time["compare_sender_return"]=ex_time
 
-
-#def Content_Disposition(cdispo, list_features, list_time):
-#    if config["Features"]["Content_Disposition"] == "True":
-#        start=time.time()
-#        try:
-#            list_features["Content_Disposition"]=cdispo
-#        except Exception as e:
-#            logger.warning("exception: " + str(e))
-#            list_features["Content_Disposition"]="N/A"
-#        end=time.time()
-#        ex_time=end-start
-#        list_time["Content_Disposition"]=ex_time
-
-def Email_Test_Html(test_Html, list_features, list_time):
-    if config["Email_Features"]["Test_Html"] == "True":
+def Email_Header_Test_Html(test_Html, list_features, list_time):
+    if config["Email_Header_Features"]["Test_Html"] == "True":
         start=time.time()
         try:
             list_features["Test_Html"]=test_Html
@@ -885,8 +855,8 @@ def Email_Test_Html(test_Html, list_features, list_time):
         ex_time=end-start
         list_time["Test_Html"]=ex_time
 
-def Email_Test_Text(test_text, list_features, list_time):
-    if config["Email_Features"]["Test_Text"] == "True":
+def Email_Header_Test_Text(test_text, list_features, list_time):
+    if config["Email_Header_Features"]["Test_Text"] == "True":
         start=time.time()
         try:
             list_features["Test_Text"]=test_text
@@ -899,7 +869,7 @@ def Email_Test_Text(test_text, list_features, list_time):
 
 ##### Email URL features
 def Email_Number_Url(url_All, list_features, list_time):
-    if config["Email_Features"]["Number_Url"] == "True":
+    if config["Email_URL_Features"]["Number_Url"] == "True":
         start=time.time()
         try:
             list_features["Number_Url"]=len(url_All)
@@ -910,8 +880,8 @@ def Email_Number_Url(url_All, list_features, list_time):
         ex_time=end-start
         list_time["Number_Url"]=ex_time
 
-def Email_Number_Diff_Domain(url_All, list_features, list_time):
-    if config["Email_Features"]["Number_Diff_Domain"] == "True":
+def Email_URL_Number_Diff_Domain(url_All, list_features, list_time):
+    if config["Email_URL_Features"]["Number_Diff_Domain"] == "True":
         start=time.time()
         list_Domains=[]
         try:
@@ -929,8 +899,8 @@ def Email_Number_Diff_Domain(url_All, list_features, list_time):
         ex_time=end-start
         list_time["Number_Diff_Domain"]=ex_time
 
-def Email_Number_Diff_Subdomain(url_All, list_features, list_time):
-    if config["Email_Features"]["Number_Diff_Subdomain"] == "True":
+def Email_URL_Number_Diff_Subdomain(url_All, list_features, list_time):
+    if config["Email_URL_Features"]["Number_Diff_Subdomain"] == "True":
         start=time.time()
         list_Subdomains=[]
         try:
@@ -949,8 +919,8 @@ def Email_Number_Diff_Subdomain(url_All, list_features, list_time):
         ex_time=end-start
         list_time["Number_Diff_Subdomain"]=ex_time
 
-def Email_Number_link_at(url_All, list_features, list_time):
-    if config["Email_Features"]["Number_link_at"] == "True":
+def Email_URL_Number_link_at(url_All, list_features, list_time):
+    if config["Email_URL_Features"]["Number_link_at"] == "True":
         start=time.time()
         count=0
         try:
@@ -965,8 +935,8 @@ def Email_Number_link_at(url_All, list_features, list_time):
         ex_time=end-start
         list_time["Number_link_at"]=ex_time
 
-def Email_Number_link_sec_port(url_All, list_features, list_time):
-    if config["Email_Features"]["Number_link_sec_port"] == "True":
+def Email_URL_Number_link_sec_port(url_All, list_features, list_time):
+    if config["Email_URL_Features"]["Number_link_sec_port"] == "True":
         start=time.time()
         count=0
         try:
@@ -983,8 +953,8 @@ def Email_Number_link_sec_port(url_All, list_features, list_time):
 
 
 #### Body Features:
-def Email_recipient_name_body(body,recipient_name, list_features, list_time):
-    if config["Email_Features"]["recipient_name_body"] == "True":
+def Email_Body_recipient_name_body(body,recipient_name, list_features, list_time):
+    if config["Email_Body_Features"]["recipient_name_body"] == "True":
         start=time.time()
         try:
             recipient_name_body= int(bool(recipient_name in body))
@@ -999,9 +969,9 @@ def Email_recipient_name_body(body,recipient_name, list_features, list_time):
 #def html_in_body(body, list_features, list_time):
 #    if config["Features"]["html_in_body"] == "True":
 #        start=time.time()
-#        email_html=re.compile(r'text/html', flags=re.IGNORECASE)
+#        Email_Body_html=re.compile(r'text/html', flags=re.IGNORECASE)
 #        try:
-#            html_in_body=int(bool(re.search(email_html, body)))
+#            html_in_body=int(bool(re.search(Email_Body_html, body)))
 #        except Exception as e:
 #            logger.warning("exception: " + str(e))
 #            html_in_body=0
@@ -1011,8 +981,8 @@ def Email_recipient_name_body(body,recipient_name, list_features, list_time):
 #        list_time["html_in_body"]=ex_time
 #        #list_features[""]=
 
-def Email_number_of_words_body(body, list_features, list_time):
-    if config["Email_Features"]["number_of_words_body"] == "True":
+def Email_Body_number_of_words_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["number_of_words_body"] == "True":
         start=time.time()
         try:
             number_of_words_body = len(re.findall(r'\w+', body))
@@ -1024,8 +994,8 @@ def Email_number_of_words_body(body, list_features, list_time):
         ex_time=end-start
         list_time["number_of_words_body"]=ex_time
 
-def Email_number_of_unique_words_body(body, list_features, list_time):
-    if config["Email_Features"]["number_of_unique_words_body"] == "True":
+def Email_Body_number_of_unique_words_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["number_of_unique_words_body"] == "True":
         start=time.time()
         if body:
             try:
@@ -1040,8 +1010,8 @@ def Email_number_of_unique_words_body(body, list_features, list_time):
         ex_time=end-start
         list_time["number_of_unique_words_body"]=ex_time
 
-def Email_number_of_characters_body(body, list_features, list_time):
-    if config["Email_Features"]["number_of_characters_body"] == "True":
+def Email_Body_number_of_characters_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["number_of_characters_body"] == "True":
         start=time.time()
         try:
             number_of_characters_body = len(re.findall(r'\w', body))
@@ -1053,8 +1023,8 @@ def Email_number_of_characters_body(body, list_features, list_time):
         ex_time=end-start
         list_time["number_of_characters_body"]=ex_time
 
-def Email_number_of_special_characters_body(body, list_features, list_time):
-    if config["Email_Features"]["number_of_special_characters_body"] == "True":
+def Email_Body_number_of_special_characters_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["number_of_special_characters_body"] == "True":
         start=time.time()
         try:
             number_of_characters_body = len(re.findall(r'\w', body))
@@ -1068,8 +1038,8 @@ def Email_number_of_special_characters_body(body, list_features, list_time):
         list_time["number_of_special_characters_body"]=ex_time
 
 
-def Email_vocab_richness_body(body, list_features, list_time):
-    if config["Email_Features"]["vocab_richness_body"] == "True":
+def Email_Body_vocab_richness_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["vocab_richness_body"] == "True":
         start=time.time()
         try:
             vocab_richness_body=yule(body)
@@ -1082,8 +1052,8 @@ def Email_vocab_richness_body(body, list_features, list_time):
         list_time["vocab_richness_body"]=ex_time
 
 
-def Email_number_of_html_tags_body(body, list_features, list_time):
-    if config["Email_Features"]["number_of_html_tags_body"] == "True":
+def Email_Body_number_of_html_tags_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["number_of_html_tags_body"] == "True":
         start=time.time()
         try:
             if body:
@@ -1098,8 +1068,8 @@ def Email_number_of_html_tags_body(body, list_features, list_time):
         ex_time=end-start
         list_time["number_of_html_tags_body"]=ex_time
 
-def Email_number_unique_chars_body(body, list_features, list_time):
-    if config["Email_Features"]["number_unique_chars_body"] == "True":
+def Email_Body_number_unique_chars_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["number_unique_chars_body"] == "True":
         start=time.time()
         try:
             if body:
@@ -1108,15 +1078,15 @@ def Email_number_unique_chars_body(body, list_features, list_time):
                 number_unique_chars_body=0
         except Exception as e:
             logger.warning("exception: " + str(e))
-            number_unique_words_body = -1
-        list_features["number_unique_chars_body"]=number_unique_words_body
+            number_unique_chars_body = -1
+        list_features["number_unique_chars_body"]=number_unique_chars_body
         end=time.time()
         ex_time=end-start
         list_time["number_unique_chars_body"]=ex_time
         #list_features[""]=
 
-def Email_greetings_body(body, list_features, list_time):
-    if config["Email_Features"]["greetings_body"] == "True":
+def Email_Body_greetings_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["greetings_body"] == "True":
         start=time.time()
         try:
             if body:
@@ -1133,8 +1103,8 @@ def Email_greetings_body(body, list_features, list_time):
         list_time["greetings_body"]=ex_time
         #list_features[""]=
 
-def Email_hidden_text(body, list_features, list_time):
-    if config["Email_Features"]["hidden_text"] == "True":
+def Email_Body_hidden_text(body, list_features, list_time):
+    if config["Email_Body_Features"]["hidden_text"] == "True":
         start=time.time()
         regex_font_color=re.compile(r'<font +color="#FFFFF[0-9A-F]"',flags=re.DOTALL)
         try:
@@ -1150,8 +1120,8 @@ def Email_hidden_text(body, list_features, list_time):
         ex_time=end-start
         list_time["hidden_text"]=ex_time
 
-def Email_count_href_tag(body, list_features, list_time):
-    if config["Email_Features"]["count_href_tag"] == "True":
+def Email_Body_count_href_tag(body, list_features, list_time):
+    if config["Email_Body_Features"]["count_href_tag"] == "True":
         start=time.time()
         ultimate_regexp =re.compile(r"(?i)<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>", flags=re.MULTILINE)
         count_href_tag=0
@@ -1170,8 +1140,8 @@ def Email_count_href_tag(body, list_features, list_time):
         ex_time=end-start
         list_time["count_href_tag"]=ex_time
 
-def Email_end_tag_count(body, list_features, list_time):
-    if config["Email_Features"]["end_tag_count"] == "True":
+def Email_Body_end_tag_count(body, list_features, list_time):
+    if config["Email_Body_Features"]["end_tag_count"] == "True":
         start=time.time()
         ultimate_regexp =re.compile(r"(?i)<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>", flags=re.MULTILINE)
         open_tag_count=0
@@ -1192,8 +1162,8 @@ def Email_end_tag_count(body, list_features, list_time):
         list_time["end_tag_count"]=ex_time
         #list_features[""]=
 
-def Email_open_tag_count(body, list_features, list_time):
-    if config["Email_Features"]["open_tag_count"] == "True":
+def Email_Body_open_tag_count(body, list_features, list_time):
+    if config["Email_Body_Features"]["open_tag_count"] == "True":
         start=time.time()
         ultimate_regexp =re.compile(r"(?i)<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>", flags=re.MULTILINE)
         open_tag_count=0
@@ -1215,8 +1185,8 @@ def Email_open_tag_count(body, list_features, list_time):
         ex_time=end-start
         list_time["open_tag_count"]=ex_time
 
-def Email_on_mouse_over(body, list_features, list_time):
-    if config["Email_Features"]["on_mouse_over"] == "True":
+def Email_Body_on_mouse_over(body, list_features, list_time):
+    if config["Email_Body_Features"]["on_mouse_over"] == "True":
         start=time.time()
         ultimate_regexp =re.compile(r"(?i)<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>", flags=re.MULTILINE)
         on_mouse_over=0
@@ -1236,8 +1206,8 @@ def Email_on_mouse_over(body, list_features, list_time):
         ex_time=end-start
         list_time["on_mouse_over"]=ex_time
 
-def Email_blacklisted_words_body(body, list_features, list_time):
-    if config["Email_Features"]["blacklisted_words_body"] == "True":
+def Email_Body_blacklisted_words_body(body, list_features, list_time):
+    if config["Email_Body_Features"]["blacklisted_words_body"] == "True":
         start=time.time()
         blacklist_body=["urgent", "account", "closing", "act now", "click here", "limitied", "suspension", "your account", "verify your account", "agree", 'bank', 'dear'
                         ,"update", "comfirm", "customer", "client", "Suspend", "restrict", "verify", "login", "ssn", 'username','click','log','inconvenien','alert', 'paypal']        
@@ -1260,8 +1230,8 @@ def Email_blacklisted_words_body(body, list_features, list_time):
         list_time["blacklisted_words_body"]=ex_time
         #list_features[""]=
 
-def Email_blacklisted_words_subject(subject, list_features, list_time):
-    if config["Email_Features"]["blacklisted_words_subject"] == "True":
+def Email_Header_blacklisted_words_subject(subject, list_features, list_time):
+    if config["Email_Header_Features"]["blacklisted_words_subject"] == "True":
         start=time.time()
         blacklist_subject=["urgent", "account", "closing", "act now", "click here", "limitied", "suspension", "your account", "verify your account", "agree", 'bank', 'dear'
                         ,"update", "comfirm", "customer", "client", "Suspend", "restrict", "verify", "login", "ssn", 'username','click','log','inconvenien','alert', 'paypal']        
@@ -1281,8 +1251,8 @@ def Email_blacklisted_words_subject(subject, list_features, list_time):
         ex_time=end-start
         list_time["blacklisted_words_subject"]=ex_time
 
-def Email_Number_Cc(cc, list_features, list_time):
-    if config["Email_Features"]["Number_Cc"] == "True":
+def Email_Header_Number_Cc(cc, list_features, list_time):
+    if config["Email_Header_Features"]["Number_Cc"] == "True":
         start=time.time()
         try:
             if cc:
@@ -1296,8 +1266,8 @@ def Email_Number_Cc(cc, list_features, list_time):
         ex_time=end-start
         list_time["Number_Cc"]=ex_time
 
-def Email_Number_Bcc(Bcc, list_features, list_time):
-    if config["Email_Features"]["Number_Bcc"] == "True":
+def Email_Header_Number_Bcc(Bcc, list_features, list_time):
+    if config["Email_Header_Features"]["Number_Bcc"] == "True":
         start=time.time()
         try:
             if Bcc:
@@ -1311,8 +1281,8 @@ def Email_Number_Bcc(Bcc, list_features, list_time):
         ex_time=end-start
         list_time["Number_Bcc"]=ex_time
 
-def Email_Number_To(To, list_features, list_time):
-    if config["Email_Features"]["Number_To"] == "True":
+def Email_Header_Number_To(To, list_features, list_time):
+    if config["Email_Header_Features"]["Number_To"] == "True":
         start=time.time()
         try:
             if To:
@@ -1329,8 +1299,8 @@ def Email_Number_To(To, list_features, list_time):
         ex_time=end-start
         list_time["Number_To"]=ex_time
 
-def Email_Number_Of_Scripts(body, list_features, list_time):
-    if config["Email_Features"]["Number_Of_Scripts"] == "True":
+def Email_Body_Number_Of_Scripts(body, list_features, list_time):
+    if config["Email_Body_Features"]["Number_Of_Scripts"] == "True":
         start=time.time()
         Number_Of_Scripts=0
         if body:
@@ -1346,8 +1316,8 @@ def Email_Number_Of_Scripts(body, list_features, list_time):
         ex_time=end-start
         list_time["Number_Of_Scripts"]=ex_time
 
-def Email_Number_Of_Img_Links(body, list_features, list_time):
-    if config["Email_Features"]["Number_Of_Img_Links"] == "True":
+def Email_Body_Number_Of_Img_Links(body, list_features, list_time):
+    if config["Email_Body_Features"]["Number_Of_Img_Links"] == "True":
         start=time.time()
         Number_Of_Img_Links=0
         soup = BeautifulSoup(body, "html.parser")
@@ -1363,8 +1333,8 @@ def Email_Number_Of_Img_Links(body, list_features, list_time):
         ex_time=end-start
         list_time["Number_Of_Img_Links"]=ex_time
 
-def Email_Function_Words_Count(body, list_features, list_time):
-    if config["Email_Features"]["Function_Words_Count"] == "True":
+def Email_Body_Function_Words_Count(body, list_features, list_time):
+    if config["Email_Body_Features"]["Function_Words_Count"] == "True":
         start=time.time()
         Function_Words_Count=0
         if body:
@@ -1379,25 +1349,25 @@ def Email_Function_Words_Count(body, list_features, list_time):
         list_features["Function_Words_Count"]=Function_Words_Count
         end=time.time()
         ex_time=end-start
-        list_time["Email_Function_Words_Count"]=ex_time
+        list_time["Email_Body_Function_Words_Count"]=ex_time
 # def  bodyTextNotSimSubjectAndMinOneLink()
-# def Email_body_num_func_words(body, list_features, list_time):
-#   if config["Email_Features"]["body_num_func_words"] == "True":
+# def Email_Body_body_num_func_words(body, list_features, list_time):
+#   if config["Email_Body_Features"]["body_num_func_words"] == "True":
 #       start=time.time()
 #       body_num_func_words=0
 
 
 
 #def body_unique_words() x
-#def Email_num_img_links() x
+#def Email_Body_num_img_links() x
 #def num_of_sub_domains() x
 #def blacklist_words_in_subject() x
 
 
 # source for style metrics: https://pypi.python.org/pypi/textstat
 ## Styles metrics:
-def Email_flesh_read_score(body, list_features, list_time):
-    if config["Email_Features"]["flesh_read_score"] == "True":
+def Email_Body_flesh_read_score(body, list_features, list_time):
+    if config["Email_Body_Features"]["flesh_read_score"] == "True":
         start=time.time()
         if body:
             try:
@@ -1413,8 +1383,8 @@ def Email_flesh_read_score(body, list_features, list_time):
         list_time["flesh_read_score"]=ex_time
         #list_features[""]=
 
-def Email_smog_index(body, list_features, list_time):
-    if config["Email_Features"]["smog_index"] == "True":
+def Email_Body_smog_index(body, list_features, list_time):
+    if config["Email_Body_Features"]["smog_index"] == "True":
         start=time.time()
         if body:
             try:
@@ -1430,8 +1400,8 @@ def Email_smog_index(body, list_features, list_time):
         list_time["smog_index"]=ex_time
         #list_features[""]=
 
-def Email_flesh_kincaid_score(body, list_features, list_time):
-    if config["Email_Features"]["flesh_kincaid_score"] == "True":
+def Email_Body_flesh_kincaid_score(body, list_features, list_time):
+    if config["Email_Body_Features"]["flesh_kincaid_score"] == "True":
         start=time.time()
         if body:
             try:
@@ -1447,8 +1417,8 @@ def Email_flesh_kincaid_score(body, list_features, list_time):
         list_time["flesh_kincaid_score"]=ex_time
         #list_features[""]=
 
-def Email_coleman_liau_index(body, list_features, list_time):
-    if config["Email_Features"]["coleman_liau_index"] == "True":
+def Email_Body_coleman_liau_index(body, list_features, list_time):
+    if config["Email_Body_Features"]["coleman_liau_index"] == "True":
         start=time.time()
         if body:    
             try:
@@ -1464,8 +1434,8 @@ def Email_coleman_liau_index(body, list_features, list_time):
         list_time["coleman_liau_index"]=ex_time
         #list_features[""]=
 
-def Email_automated_readability_index(body, list_features, list_time):
-    if config["Email_Features"]["automated_readability_index"] == "True":
+def Email_Body_automated_readability_index(body, list_features, list_time):
+    if config["Email_Body_Features"]["automated_readability_index"] == "True":
         start=time.time()
         if body:    
             try:
@@ -1481,8 +1451,8 @@ def Email_automated_readability_index(body, list_features, list_time):
         list_time["automated_readability_index"]=ex_time
         #list_features[""]=
 
-def Email_dale_chall_readability_score(body, list_features, list_time):
-    if config["Email_Features"]["dale_chall_readability_score"] == "True":
+def Email_Body_dale_chall_readability_score(body, list_features, list_time):
+    if config["Email_Body_Features"]["dale_chall_readability_score"] == "True":
         start=time.time()
         if body:
             try:
@@ -1498,8 +1468,8 @@ def Email_dale_chall_readability_score(body, list_features, list_time):
         list_time["dale_chall_readability_score"]=ex_time
         #list_features[""]=
 
-def Email_difficult_words(body, list_features, list_time):
-    if config["Email_Features"]["difficult_words"] == "True":
+def Email_Body_difficult_words(body, list_features, list_time):
+    if config["Email_Body_Features"]["difficult_words"] == "True":
         start=time.time()
         if body:
             try:
@@ -1514,8 +1484,8 @@ def Email_difficult_words(body, list_features, list_time):
         ex_time=end-start
         list_time["difficult_words"]=ex_time
 
-def Email_linsear_score(body, list_features, list_time):
-    if config["Email_Features"]["linsear_score"] == "True":
+def Email_Body_linsear_score(body, list_features, list_time):
+    if config["Email_Body_Features"]["linsear_score"] == "True":
         start=time.time()
         if body:
             try:
@@ -1531,8 +1501,8 @@ def Email_linsear_score(body, list_features, list_time):
         list_time["linsear_score"]=ex_time
         #list_features[""]=
 
-def Email_gunning_fog(body, list_features, list_time):
-    if config["Email_Features"]["gunning_fog"] == "True":
+def Email_Body_gunning_fog(body, list_features, list_time):
+    if config["Email_Body_Features"]["gunning_fog"] == "True":
         start=time.time()
         if body:
             try:
@@ -1547,8 +1517,8 @@ def Email_gunning_fog(body, list_features, list_time):
         ex_time=end-start
         list_time["gunning_fog"]=ex_time
 
-def Email_text_standard(body, list_features, list_time):
-    if config["Email_Features"]["text_standard"] == "True":
+def Email_Body_text_standard(body, list_features, list_time):
+    if config["Email_Body_Features"]["text_standard"] == "True":
         start=time.time()
         if body:
             try:
@@ -1564,8 +1534,8 @@ def Email_text_standard(body, list_features, list_time):
         list_time["text_standard"]=ex_time
 
 #### Extract features from subject
-def Email_number_of_words_subject(subject, list_features, list_time):
-    if config["Email_Features"]["number_of_words_subject"] == "True":
+def Email_Header_number_of_words_subject(subject, list_features, list_time):
+    if config["Email_Header_Features"]["number_of_words_subject"] == "True":
         start=time.time()
         if subject:
             try:
@@ -1581,8 +1551,8 @@ def Email_number_of_words_subject(subject, list_features, list_time):
         ex_time=end-start
         list_time["number_of_words_subject"]=ex_time
 
-def Email_number_of_characters_subject(subject, list_features, list_time):
-    if config["Email_Features"]["number_of_characters_subject"] == "True":
+def Email_Header_number_of_characters_subject(subject, list_features, list_time):
+    if config["Email_Header_Features"]["number_of_characters_subject"] == "True":
         start=time.time()
         if subject:    
             try:
@@ -1597,8 +1567,8 @@ def Email_number_of_characters_subject(subject, list_features, list_time):
         ex_time=end-start
         list_time["number_of_characters_subject"]=ex_time
 
-def Email_number_of_special_characters_subject(subject, list_features, list_time):
-    if config["Email_Features"]["number_of_special_characters_subject"] == "True":
+def Email_Header_number_of_special_characters_subject(subject, list_features, list_time):
+    if config["Email_Header_Features"]["number_of_special_characters_subject"] == "True":
         start=time.time()
         if subject:    
             try:
@@ -1615,8 +1585,8 @@ def Email_number_of_special_characters_subject(subject, list_features, list_time
         list_time["number_of_special_characters_subject"]=ex_time
     
 
-def Email_binary_fwd(subject, list_features, list_time):
-    if config["Email_Features"]["binary_fwd"] == "True":
+def Email_Header_binary_fwd(subject, list_features, list_time):
+    if config["Email_Header_Features"]["binary_fwd"] == "True":
         start=time.time()
         if subject:    
             try:
@@ -1632,8 +1602,8 @@ def Email_binary_fwd(subject, list_features, list_time):
         ex_time=end-start
         list_time["binary_fwd"]=ex_time
 
-def Email_binary_re(subject, list_features, list_time):
-    if config["Email_Features"]["binary_re"] == "True":
+def Email_Header_binary_re(subject, list_features, list_time):
+    if config["Email_Header_Features"]["binary_re"] == "True":
         start=time.time()
         if subject:    
             try:
@@ -1649,8 +1619,8 @@ def Email_binary_re(subject, list_features, list_time):
         ex_time=end-start
         list_time["binary_fwd"]=ex_time
 
-def Email_vocab_richness_subject(subject, list_features, list_time):
-    if config["Email_Features"]["vocab_richness_subject"] == "True":
+def Email_Header_vocab_richness_subject(subject, list_features, list_time):
+    if config["Email_Header_Features"]["vocab_richness_subject"] == "True":
         start=time.time()
         if subject:
             try:
@@ -2306,9 +2276,9 @@ def URL_Kullback_Leibler_Divergence(list_features, list_time):
         ex_time=end-start
         list_time["Kullback_Leibler_Divergence"]=ex_time
 
-def URL_edit_distance(list_features, list_time):
+def URL_english_frequency_distance(list_features, list_time):
     #global list_features
-    if config["URL_Features"]["edit_distance"] == "True":
+    if config["URL_Features"]["english_frequency_distance"] == "True":
         start=time.time()
         char_dist = [.08167, .01492, .02782, .04253, .12702, .02228, .02015, .06094, .06966, .00153, .00772, .04025, .02406,
                  .06749, .07507, .01929, .00095, .05987, .06327, .09056, .02758, .00978, .02360, .00150, .01974, .00074]
@@ -3195,8 +3165,8 @@ def Javascript_number_of_total_suspicious_features(list_features,list_time):
         ex_time=end-start
         list_time["number_of_total_suspicious_features"]=ex_time
 
-def Email_tfidf_emails(list_time):
-    if config["Email_Features"]["tfidf_emails"] == "True":
+def Email_Body_tfidf_emails(list_time):
+    if config["Email_Body_Features"]["tfidf_emails"] == "True":
         start=time.time()
         Tfidf_matrix = Tfidf.tfidf_emails()
         end=time.time()
@@ -3204,8 +3174,8 @@ def Email_tfidf_emails(list_time):
         list_time["tfidf_emails"]=ex_time
         return Tfidf_matrix
 
-def Email_Header_Tokenizer(list_time):
-    if config["Email_Features"]["Header_Tokenizer"] == "True":
+def Email_Header_Header_Tokenizer(list_time):
+    if config["Email_Header_Features"]["Header_Tokenizer"] == "True":
         start=time.time()
         header_tokenizer=Tfidf.Header_Tokenizer()
         end=time.time()
@@ -3369,12 +3339,12 @@ def Extract_Features_Urls_Training():
             labels_train.append(1)
 
         #logger.info("\nfeature_list_dict_train2: {}\n".format(feature_list_dict_train2))
-        #corpus_train = data_legit_train + data_phish_train
+        corpus_train = data_legit_train + data_phish_train
 #
 #        #logger.info("--- %s final count seconds ---" % (time.time() - start_time))
-        #return feature_list_dict_train, labels_train, corpus_train,
+        return feature_list_dict_train, labels_train, corpus_train
 
-        #print("--- %s final count seconds ---" % (time.time() - start_time))
+        print("--- %s final count seconds ---" % (time.time() - start_time))
    
 def Extract_Features_Urls_Testing():
     start_time = time.time()
