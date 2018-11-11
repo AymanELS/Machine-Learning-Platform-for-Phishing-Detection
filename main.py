@@ -19,9 +19,7 @@ import argparse
 from sklearn.datasets import dump_svmlight_file
 
 
-parser = argparse.ArgumentParser(
-    description='A test script for http://stackoverflow.com/q/14097061/78845'
-)
+parser = argparse.ArgumentParser(description='Argument parser')
 parser.add_argument("-v", "--verbose", help="increase output verbosity",
                     action="store_true")
 
