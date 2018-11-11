@@ -60,9 +60,9 @@ def convert_to_vectorizer(list_of_feature_vectors, dataset_name):
 	sparse_matrix_features = vectorizer.transform(list_of_feature_vectors)
 	print ("Vectorizer shape:{}".format(sparse_matrix_features.shape))
 	joblib.dump(sparse_matrix_features,
-		    os.path.join(args.output_dir, "X_train_unprocessed" + dataset_name + ".pkl"))
+		    os.path.join(args.output_dir, "X_train_unprocessed_" + dataset_name + ".pkl"))
 	joblib.dump(vectorizer,
-		    os.path.join(args.output_dir, "vectorizer" + dataset_name + ".pkl"))
+		    os.path.join(args.output_dir, "vectorizer_" + dataset_name + ".pkl"))
 
 if __name__ == '__main__':
 	if not os.path.exists(args.output_dir):
