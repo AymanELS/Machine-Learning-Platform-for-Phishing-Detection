@@ -29,19 +29,19 @@ args = parser.parse_args()
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
 
-def load_datasets(matrix, labels, vectorizer): 
+def load_datasets(matrix, labels, vectorizer_path):
     X_train=joblib.load(matrix)
     y_train=joblib.load(labels)
-    vectorizer=joblib.load(vectorizer)
+    vectorizer=joblib.load(vectorizer_path)
     return X_train, y_train, vectorizer
 
 def main():
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-    
-    X_train_first_dataset, y_train_first_dataset, first_dataset_vectorizer = load_datasets(args.matrix[0], args.labels[0], args.labels[0])
-    X_train_second_dataset, y_train_second_dataset, second_dataset_vectorizer = load_datasets(args.matrix[1], args.labels[1], args.labels[1])
-    
+
+    X_train_first_dataset, y_train_first_dataset, first_dataset_vectorizer = load_datasets(args.matrix[0], args.labels[0], args.vectorizer[0])
+    X_train_second_dataset, y_train_second_dataset, second_dataset_vectorizer = load_datasets(args.matrix[1], args.labels[1], args.vectorizer[1])
+
     first_dataset_legit_size=y_train_first_dataset.count(0)
     second_dataset_legit_size=y_train_second_dataset.count(0)
 
@@ -59,7 +59,7 @@ def main():
         for i in second_dataset_feature_vector:
             f.write("{}\n".format(i))
 
-    first_dataset_list_features=first_dataset_vectorizer.get_feature_names()   
+    first_dataset_list_features=first_dataset_vectorizer.get_feature_names()
     second_dataset_list_features=second_dataset_vectorizer.get_feature_names()
 
     with open(os.path.join(args.output_dir, "feature_list_1.txt"),'w') as f:
@@ -85,9 +85,9 @@ def main():
             feature_name=feature.split("=")[0]
         else:
             feature_name=feature
-        if feature_name not in second_dataset_feature_vector_original:        
+        if feature_name not in second_dataset_feature_vector_original:
             second_dataset_feature_vector_original.append(feature_name)
-    
+
     common_features=[]
     for feature in first_dataset_feature_vector_original:
         if feature in second_dataset_feature_vector_original:
@@ -118,13 +118,13 @@ def main():
             feature_name=feature
         if feature_name in common_features:
             if feature not in new_feature_list:
-                new_feature_list.append(feature) 
+                new_feature_list.append(feature)
 
     new_feature_list=sorted(new_feature_list)
     with open(os.path.join(args.output_dir, "new_feature_list.txt"),'w') as f:
         for i in new_feature_list:
             f.write("%s\n" %i)
-    
+
     #build new list of features
     new_feature_vector=[{} for i in range(len(y_train_first_dataset+y_train_second_dataset))]
 
@@ -156,13 +156,13 @@ def main():
     with open(os.path.join(args.output_dir, "new_feature_vector.txt"),'w') as f:
         for i in new_feature_vector:
             f.write("{}\n".format(i))
-    
-    #Applying new transformation to both feature vector and create new sparse matrices 
+
+    #Applying new transformation to both feature vector and create new sparse matrices
     vectorizer=DictVectorizer()
     vectorizer.fit(new_feature_vector)
 
-    list_Features_new=vectorizer.get_feature_names()   
-      
+    list_Features_new=vectorizer.get_feature_names()
+
     with open(os.path.join(args.output_dir, "feature_vector_new.txt"),'w') as f:
         for i in list_Features_new:
             f.write("%s\n" %i)
@@ -171,8 +171,8 @@ def main():
     print("legitimate count 2: {}".format(second_dataset_legit_size))
     print("phish count 1: {}".format(first_dataset_phish_size))
     print("phish count 2: {}".format(second_dataset_phish_size))
-    
-    
+
+
     X_train=vectorizer.transform(new_feature_vector)
     print("X_1 Shape: {}".format(X_train_first_dataset.shape))
     print("X_2 Shape: {}".format(X_train_second_dataset.shape))

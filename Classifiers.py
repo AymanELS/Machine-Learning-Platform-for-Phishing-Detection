@@ -267,6 +267,7 @@ def Boosting(X,y, X_test, y_test):
 ############### imbalanced learning
 def DNN(X,y, X_test, y_test):
 	from sklearn.model_selection import StratifiedKFold
+	np.set_printoptions(threshold=np.nan)
 	def model_build(dim):
 		logger.debug("Start Building DNN Model >>>>>>")
 		K.set_learning_phase(1) #set learning phase
@@ -286,26 +287,23 @@ def DNN(X,y, X_test, y_test):
 	# model_dnn.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 	# logger.debug("model compile end >>>>>>")
 	dim=X.shape[1]	
-	logger.info(X[0].transpose().shape)
+	#logger.info(X[0].transpose().shape)
 	model_dnn = model_build(dim)	
 	if config["Evaluation Metrics"]["cross_val_score"]=="True":		
-		return -1
+		#return -1
 		seed = 7
 		np.random.seed(seed)
 		kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
 		cvscores = []
-		for train_index, test_index in kfold.split(X, y):	
-			logger.info(type(X))		
-			train_set_X = [X[i].transpose() for i in train_index]
-			test_set_X = [X[i].transpose() for i in test_index]
-			train_set_y = [y[i] for i in train_index]
-			test_set_y = [y[i] for i in test_index]			
-			logger.info(np.shape(train_set_X))
-			logger.info(np.shape(train_set_y))
-			model_dnn.fit(train_set_X, train_set_y, epochs=150, batch_size=10, verbose=0) #fit the model
-			scores = model_dnn.evaluate(test_test_X, test_test_y, verbose=0) #evaluate the model
+		for train_index, test_index in kfold.split(X, y):
+			logger.info(type(X[train_index]))	
+			# print (X[train_index])
+			# logger.info(X[train_index].toarray)
+			model_dnn.fit((X[train_index]).toarray(), y[train_index], epochs=150, batch_size=10, verbose=1) #fit the model
+			scores = model_dnn.evaluate(X[test_index].toarray(), y[test_index].toarray(), verbose=1) #evaluate the model
 			cvscores.append(scores[1])
 		return np.mean(cvscores)
+	
 	else:
 		model_dnn.fit(X, y, epochs=150, batch_size=100, verbose=0)
 		y_predict = model_dnn.predict(X_test)
