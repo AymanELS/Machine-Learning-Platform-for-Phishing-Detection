@@ -97,16 +97,16 @@ def SVM(X,y, X_test, y_test):
    		decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
    		max_iter=-1, probability=False, random_state=None, shrinking=True,
    		tol=0.001, verbose=False)
+	logger.info("SVM >>>>>>>")
 	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		logger.info(np.shape(X))
-		logger.info(np.sum(y))
+		#logger.info(np.shape(X))
+		#logger.info(np.sum(y))
 		score=Evaluation_Metrics.Cross_validation(clf, X, y)
 		logger.info(score)
 		return score
 	else:
 		clf.fit(X, y)
 		y_predict=clf.predict(X_test)
-		logger.info("SVM >>>>>>>")
 		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
 		return (eval_metrics_SVM)
 
@@ -116,16 +116,16 @@ def RandomForest(X,y, X_test, y_test):
 		 min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='auto', max_leaf_nodes=None,
 		  min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=1,
 		   random_state=None, verbose=0, warm_start=False, class_weight=None)
+		logger.info("RF >>>>>>>")
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
-			logger.info(np.shape(X))
-			logger.info(np.sum(y))
+			#logger.info(np.shape(X))
+			#logger.info(np.sum(y))
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score
 		else:
 			clf.fit(X,y)
 			y_predict=clf.predict(X_test)
-			logger.info("RF >>>>>>>")
 			eval_metrics_RF = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
 			return eval_metrics_RF
 
@@ -134,64 +134,101 @@ def DecisionTree(X,y, X_test, y_test):
 		clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
 		 min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None,
 		 min_impurity_decrease=0.0, min_impurity_split=None, class_weight=None, presort=False)
-		clf.fit(X,y)
-		y_predict=clf.predict(X_test)
 		logger.info("DT >>>>>>>")
-		eval_metrics_DT = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		return eval_metrics_DT
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			#logger.info(np.shape(X))
+			#logger.info(np.sum(y))
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			clf.fit(X,y)
+			y_predict=clf.predict(X_test)			
+			eval_metrics_DT = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+			return eval_metrics_DT
 
 ##### Gaussian Naive Bayes
 def GaussianNaiveBayes(X,y, X_test, y_test):
 		gnb = GaussianNB(priors=None)
+		logger.info("GNB >>>>>>>")
+		X=X.toarray()
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(gnb, X, y)
+			logger.info(score)
+			return score
 		#X=X.toarray()
 		#X_test=X_test.toarray()
-		gnb.fit(X,y)
-		y_predict=gnb.predict(X_test)
-		logger.info("GNB >>>>>>>")
-		eval_metrics_NB = Evaluation_Metrics.eval_metrics(gnb, X, y, y_test, y_predict)
-		return eval_metrics_NB
+		else:
+			gnb.fit(X,y)
+			y_predict=gnb.predict(X_test)
+			eval_metrics_NB = Evaluation_Metrics.eval_metrics(gnb, X, y, y_test, y_predict)
+			return eval_metrics_NB
 
 ##### Multinomial Naive Bayes
 def MultinomialNaiveBayes(X,y, X_test, y_test):
 		#X=X.toarray()
 		#X_test=X_test.toarray()
 		mnb=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
-		mnb.fit(X,y)
-		y_predict=mnb.predict(X_test)
 		logger.info("MNB >>>>>>>")
-		eval_metrics_MNB = Evaluation_Metrics.eval_metrics(mnb, X, y, y_test, y_predict)
-		return eval_metrics_MNB
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(mnb, X, y)
+			logger.info(score)
+			return score
+		else:
+			mnb.fit(X,y)
+			y_predict=mnb.predict(X_test)
+			eval_metrics_MNB = Evaluation_Metrics.eval_metrics(mnb, X, y, y_test, y_predict)
+			return eval_metrics_MNB
 
 ##### Logistic Regression
 def LogisticRegression(X,y, X_test, y_test):
 		clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1,
 			class_weight=None, random_state=None, solver='liblinear', max_iter=100, multi_class='ovr',
 			 verbose=0, warm_start=False, n_jobs=1)
-		clf.fit(X,y)
-		y_predict=clf.predict(X_test)
 		logger.info("LR >>>>>>>")
-		eval_metrics_LR = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		return eval_metrics_LR
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			#logger.info(np.shape(X))
+			#logger.info(np.sum(y))
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			clf.fit(X,y)
+			y_predict=clf.predict(X_test)
+			eval_metrics_LR = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+			return eval_metrics_LR
 
 ##### k-Nearest Neighbor
 def kNearestNeighbor(X,y, X_test, y_test):
 		clf=KNeighborsClassifier(n_neighbors=2, weights='uniform', algorithm='auto', leaf_size=30, p=2,
 		 metric='minkowski', metric_params=None, n_jobs=1,)
-		clf.fit(X,y)
-		y_predict=clf.predict(X_test)
 		logger.info("KNN >>>>>>>")
-		eval_metrics_KNN = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		return eval_metrics_KNN
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			#logger.info(np.shape(X))
+			#logger.info(np.sum(y))
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			clf.fit(X,y)
+			y_predict=clf.predict(X_test)
+			eval_metrics_KNN = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+			return eval_metrics_KNN
 
 ##### KMeans
 def KMeans(X,y, X_test, y_test):
 		clf=sklearn.cluster.KMeans(n_clusters=2, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto',
  		verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')
-		clf.fit(X,y)
-		logger.info("Kmeans")
-		y_predict=clf.predict(X_test)
-		eval_metrics_kmeans = Evaluation_Metrics.eval_metrics_cluster(y_test, y_predict)
-		return eval_metrics_kmeans
+		logger.info("Kmeans >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			clf.fit(X,y)
+			y_predict=clf.predict(X_test)
+			eval_metrics_kmeans = Evaluation_Metrics.eval_metrics_cluster(y_test, y_predict)
+			return eval_metrics_kmeans
 		#Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
 
 ##### Bagging
@@ -199,36 +236,79 @@ def Bagging(X,y, X_test, y_test):
 		clf=BaggingClassifier(base_estimator=DecisionTreeClassifier(), n_estimators=10, max_samples=1.0, max_features=1.0,
 		 bootstrap=True, bootstrap_features=False, oob_score=False, warm_start=False, n_jobs=1, random_state=None,
 		  verbose=0)
-		clf.fit(X,y)
-		y_predict=clf.predict(X_test)
 		logger.info("Bagging_scores >>>>>>>")
-		eval_metrics_bagging = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		return eval_metrics_bagging
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			clf.fit(X,y)
+			y_predict=clf.predict(X_test)
+			eval_metrics_bagging = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+			return eval_metrics_bagging
 
 #### Boosting
 def Boosting(X,y, X_test, y_test):
 		clf = AdaBoostClassifier(base_estimator=None, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R',
 		 random_state=None)
-		clf.fit(X,y)
-		y_predict=clf.predict(X_test)
 		logger.info("Boosting >>>>>>>")
-		eval_metrics_boosting = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
-		return eval_metrics_boosting
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			#logger.info(np.shape(X))
+			#logger.info(np.sum(y))
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			clf.fit(X,y)
+			y_predict=clf.predict(X_test)
+			eval_metrics_boosting = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+			return eval_metrics_boosting
 
 ############### imbalanced learning
 def DNN(X,y, X_test, y_test):
-		#X_test, y_test = load_dataset("feature_vector_extract_test.txt")
+	from sklearn.model_selection import StratifiedKFold
+	def model_build(dim):
+		logger.debug("Start Building DNN Model >>>>>>")
 		K.set_learning_phase(1) #set learning phase
 		model_dnn = Sequential()
-		dim=X.shape[1]
-		logger.debug("Start Building DNN Model")
 		model_dnn.add(Dense(80, kernel_initializer='normal', activation='relu', input_dim=dim)) #units in Dense layer as same as the input dim
 		model_dnn.add(Dense(1, activation='sigmoid'))
 		model_dnn.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 		logger.debug("model compile end >>>>>>")
+		return model_dnn
+
+	#X_test, y_test = load_dataset("feature_vector_extract_test.txt")
+	#K.set_learning_phase(1) #set learning phase
+	#model_dnn = Sequential()
+	# logger.debug("Start Building DNN Model ...")
+	# model_dnn.add(Dense(80, kernel_initializer='normal', activation='relu', input_dim=dim)) #units in Dense layer as same as the input dim
+	# model_dnn.add(Dense(1, activation='sigmoid'))
+	# model_dnn.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+	# logger.debug("model compile end >>>>>>")
+	dim=X.shape[1]	
+	logger.info(X[0].transpose().shape)
+	model_dnn = model_build(dim)	
+	if config["Evaluation Metrics"]["cross_val_score"]=="True":		
+		return -1
+		seed = 7
+		np.random.seed(seed)
+		kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
+		cvscores = []
+		for train_index, test_index in kfold.split(X, y):	
+			logger.info(type(X))		
+			train_set_X = [X[i].transpose() for i in train_index]
+			test_set_X = [X[i].transpose() for i in test_index]
+			train_set_y = [y[i] for i in train_index]
+			test_set_y = [y[i] for i in test_index]			
+			logger.info(np.shape(train_set_X))
+			logger.info(np.shape(train_set_y))
+			model_dnn.fit(train_set_X, train_set_y, epochs=150, batch_size=10, verbose=0) #fit the model
+			scores = model_dnn.evaluate(test_test_X, test_test_y, verbose=0) #evaluate the model
+			cvscores.append(scores[1])
+		return np.mean(cvscores)
+	else:
 		model_dnn.fit(X, y, epochs=150, batch_size=100, verbose=0)
-		y_predict=model_dnn.predict(X_test)
-		logger.info("DNN >>>>>>>")
+		y_predict = model_dnn.predict(X_test)
 		eval_metrics_DNN = Evaluation_Metrics.eval_metrics(model_dnn, X, y, y_test, y_predict.round())
 		return eval_metrics_DNN
 

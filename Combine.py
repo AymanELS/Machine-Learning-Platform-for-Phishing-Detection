@@ -18,24 +18,29 @@ config.read('Config_file.ini')
 
 def main():
 
-    if not os.path.exists("Data_Dump/Feature_Combine"):
-        os.makedirs("Data_Dump/Feature_Combine")
+    if not os.path.exists("Data_Dump/Feature_Combine_Convert"):
+        os.makedirs("Data_Dump/Feature_Combine_Convert")
     
+    path1_matrix = '/home/avisha/Feature_Extraction_Platform/Data_Dump/Converted_Data/URLs_Training/X_train_unprocessedopenphish.pkl'
+    path1_labels = '/home/avisha/Feature_Extraction_Platform/Data_Dump/Converted_Data/URLs_Training/y_trainopenphish.pkl'
+    path1_vectorizer =  '/home/avisha/Feature_Extraction_Platform/Data_Dump/Converted_Data/URLs_Training/vectorizeropenphish.pkl'      
 
-        
+    path2_matrix = '/home/avisha/Feature_Extraction_Platform/Data_Dump/Converted_Data/URLs_Training/X_train_unprocessedalexa_login.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 2: ")
+    path2_labels = '/home/avisha/Feature_Extraction_Platform/Data_Dump/Converted_Data/URLs_Training/y_trainalexa_login.pkl' #input("\nEnter path to labels (y_train) of dataset 2: ")
+    path2_vectorizer = '/home/avisha/Feature_Extraction_Platform/Data_Dump/Converted_Data/URLs_Training/vectorizeralexa_login.pkl' #input("\nEnter path to vectorizer.pkl of dataset2: ")
 
-    path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_features.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
-    path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_labels.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
-    path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
+    # path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_features.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
+    # path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_labels.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
+    # path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump/Feature_Reduce/openphish_100_vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
 
 
-    # path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
-    # path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/y_train.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
-    # path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
+    # # path1_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 1: ")
+    # # path1_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/y_train.pkl'#input("\nEnter path to labels (y_train) of dataset 1: ")
+    # # path1_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump_openphish_2/URLs_Training/vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset1: ")
 
-    path2_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 2: ")
-    path2_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/y_train.pkl' #input("\nEnter path to labels (y_train) of dataset 2: ")
-    path2_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset2: ")
+    # path2_matrix= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/X_train_unprocessed.pkl'#input("\nEnter path to feature matrix (X_train_unprocessed) of dataset 2: ")
+    # path2_labels= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/y_train.pkl' #input("\nEnter path to labels (y_train) of dataset 2: ")
+    # path2_vectorizer= '/home/avisha/Feature_Extraction_Platform/Data_Dump_alexa_login/URLs_Training/vectorizer.pkl' #input("\nEnter path to vectorizer.pkl of dataset2: ")
 
     X_train1=joblib.load(path1_matrix)
     y_train1=joblib.load(path1_labels)
@@ -45,13 +50,13 @@ def main():
     y_train2=joblib.load(path2_labels)
     vectorizer2=joblib.load(path2_vectorizer)
 
-    #X_train1=joblib.load("Data_Dump/Feature_Combine/X_train_unprocessed1.pkl")
-    #y_train1=joblib.load("Data_Dump/Feature_Combine/y_train1.pkl")
-    #vectorizer1=joblib.load("Data_Dump/Feature_Combine/vectorizer1.pkl")
+    #X_train1=joblib.load("Data_Dump/Feature_Combine_Convert/X_train_unprocessed1.pkl")
+    #y_train1=joblib.load("Data_Dump/Feature_Combine_Convert/y_train1.pkl")
+    #vectorizer1=joblib.load("Data_Dump/Feature_Combine_Convert/vectorizer1.pkl")
 
-    # X_train2=joblib.load("Data_Dump/Feature_Combine/X_train_unprocessed2.pkl")
-    # y_train2=joblib.load("Data_Dump/Feature_Combine/y_train2.pkl")
-    # vectorizer2=joblib.load("Data_Dump/Feature_Combine/vectorizer2.pkl")
+    # X_train2=joblib.load("Data_Dump/Feature_Combine_Convert/X_train_unprocessed2.pkl")
+    # y_train2=joblib.load("Data_Dump/Feature_Combine_Convert/y_train2.pkl")
+    # vectorizer2=joblib.load("Data_Dump/Feature_Combine_Convert/vectorizer2.pkl")
 
     number_legitimate1=y_train1.count(0)
     number_legitimate2=y_train2.count(0)
@@ -63,20 +68,20 @@ def main():
     feature_vector1=vectorizer1.inverse_transform(X_train1)
     feature_vector2=vectorizer2.inverse_transform(X_train2)
 
-    with open("Data_Dump/Feature_Combine/feature_vector_1.txt",'w') as f:
+    with open("Data_Dump/Feature_Combine_Convert/feature_vector_1.txt",'w') as f:
         for i in feature_vector1:
             f.write("{}\n".format(i))
-    with open("Data_Dump/Feature_Combine/feature_vector_2.txt",'w') as f:
+    with open("Data_Dump/Feature_Combine_Convert/feature_vector_2.txt",'w') as f:
         for i in feature_vector2:
             f.write("{}\n".format(i))
 
     list_Features_1=vectorizer1.get_feature_names()   
     list_Features_2=vectorizer2.get_feature_names()
 
-    with open("Data_Dump/Feature_Combine/feature_list_1.txt",'w') as f:
+    with open("Data_Dump/Feature_Combine_Convert/feature_list_1.txt",'w') as f:
         for i in list_Features_1:
             f.write("%s\n" %i)
-    with open("Data_Dump/Feature_Combine/feature_list_2.txt",'w') as f:
+    with open("Data_Dump/Feature_Combine_Convert/feature_list_2.txt",'w') as f:
         for i in list_Features_2:
             f.write("%s\n" %i)
 
@@ -98,10 +103,10 @@ def main():
             feature_name=feature
         if feature_name not in feature_vector2_original:        
             feature_vector2_original.append(feature_name)
-    #with open("Data_Dump/Feature_Combine/feature_vector1_original.txt",'w') as f:
+    #with open("Data_Dump/Feature_Combine_Convert/feature_vector1_original.txt",'w') as f:
     #    for i in feature_vector1_original:
     #        f.write("%s\n" %i)
-    #with open("Data_Dump/Feature_Combine/feature_vector2_original.txt",'w') as f:
+    #with open("Data_Dump/Feature_Combine_Convert/feature_vector2_original.txt",'w') as f:
     #    for i in feature_vector2_original:
     #        f.write("%s\n" %i)
 
@@ -139,7 +144,7 @@ def main():
                 new_feature_list.append(feature) 
 
     new_feature_list=sorted(new_feature_list)
-    with open("Data_Dump/Feature_Combine/new_feature_list.txt",'w') as f:
+    with open("Data_Dump/Feature_Combine_Convert/new_feature_list.txt",'w') as f:
         for i in new_feature_list:
             f.write("%s\n" %i)
     # #combined list of features:
@@ -183,7 +188,7 @@ def main():
                 new_feature_vector[number_legitimate1+number_legitimate2+number_phish1+i][feature]=0
 
 
-    with open("Data_Dump/Feature_Combine/new_feature_vector.txt",'w') as f:
+    with open("Data_Dump/Feature_Combine_Convert/new_feature_vector.txt",'w') as f:
         for i in new_feature_vector:
             f.write("{}\n".format(i))
     #create new feature vector:
@@ -202,7 +207,7 @@ def main():
 
     list_Features_new=vectorizer.get_feature_names()   
       
-    with open("Data_Dump/Feature_Combine/feature_vector_new.txt",'w') as f:
+    with open("Data_Dump/Feature_Combine_Convert/feature_vector_new.txt",'w') as f:
         for i in list_Features_new:
             f.write("%s\n" %i)
 
@@ -227,9 +232,9 @@ def main():
     print("new phish count: {}".format(y_train.count(1)))
 
 
-    joblib.dump(X_train, "Data_Dump/Feature_Combine/X_combined_unprocessed.pkl")
-    joblib.dump(y_train, "Data_Dump/Feature_Combine/y_combined_unprocessed.pkl")
-    joblib.dump(vectorizer, "Data_Dump/Feature_Combine/vectorizer_combined.pkl")
+    joblib.dump(X_train, "Data_Dump/Feature_Combine_Convert/X_combined_unprocessed.pkl")
+    joblib.dump(y_train, "Data_Dump/Feature_Combine_Convert/y_combined_unprocessed.pkl")
+    joblib.dump(vectorizer, "Data_Dump/Feature_Combine_Convert/vectorizer_combined.pkl")
 
     
 
