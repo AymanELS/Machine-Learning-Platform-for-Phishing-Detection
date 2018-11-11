@@ -36,20 +36,11 @@ def load_datasets(matrix, labels, vectorizer):
     return X_train, y_train, vectorizer
 
 def main():
-
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
     
-    first_dataset_matrix = args.matrix[0]
-    first_dataset_labels = args.labels[0]
-    first_dataset_vectorizer = args.labels[0]      
-
-    second_dataset_matrix = args.matrix[1]
-    second_dataset_labels = args.labels[1]
-    second_dataset_vectorizer = args.labels[1]
-
-    X_train_first_dataset, y_train_first_dataset, first_dataset_vectorizer = load_datasets(first_dataset_matrix, first_dataset_labels, first_dataset_vectorizer)
-    X_train_second_dataset, y_train_second_dataset, second_dataset_vectorizer = load_datasets(second_dataset_matrix, second_dataset_labels, second_dataset_vectorizer)
+    X_train_first_dataset, y_train_first_dataset, first_dataset_vectorizer = load_datasets(args.matrix[0], args.labels[0], args.labels[0])
+    X_train_second_dataset, y_train_second_dataset, second_dataset_vectorizer = load_datasets(args.matrix[1], args.labels[1], args.labels[1])
     
     first_dataset_legit_size=y_train_first_dataset.count(0)
     second_dataset_legit_size=y_train_second_dataset.count(0)
