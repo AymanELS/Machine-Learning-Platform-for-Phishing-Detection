@@ -5,6 +5,13 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.externals import joblib
 import pickle
 import argparse
+import re
+
+
+# prog = re.compile("('[a-zA-Z0-9_\-\. ]*':\"'[a-zA-Z0-9_\-\. ]*'\")|('[a-zA-Z0-9_\-\. ]*':\"[a-zA-Z0-9_\-\. ]*\")|('[a-zA-Z0-9_\-\. ]*':[0-9\.[0-9]*)|('[a-zA-Z0-9_\-\. ]*':*)")
+
+prog = re.compile ("""('[a-zA-Z0-9_\-\. ]*':"'[a-zA-Z0-9_\-\. ]*'")|('[a-zA-Z0-9_\-\. ]*':'[a-z0-9\.\s\/\-0-9]*')|('[a-zA-Z0-9_\-\. ]*':[0-9\.0-9]*)""")
+
 
 parser = argparse.ArgumentParser(description='Argument parser')
 
@@ -33,10 +40,15 @@ def convert_from_text_todict(path_to_features_readable):
 		for line in lines:
 			if line != '\n' and line.startswith('URL:') == False:
 				feature_vector_as_strings.append(line)
+			#elif line != '\n' and line.startswith('email:') == False:
+			#	feature_vector_as_strings.append(line)
 	##########################################
 	list_feature_vector_as_strings = []
 	for i, string in enumerate(feature_vector_as_strings):
-		split_feature = string.split()
+		#print (string)
+		tuple_regex_feature = prog.findall(string)
+		split_feature = [*map(''.join,tuple_regex_feature)]
+		#print (split_feature)
 		list_feature_vector_as_strings.append(split_feature)
 	###############################################
 	dict_feature_vector_as_strings = []
@@ -51,6 +63,7 @@ def convert_from_text_todict(path_to_features_readable):
 			else:
 				dict[(item[0])[1:-1]] = (item[1])[1:-1]
 		dict_feature_vector_as_strings.append(dict)
+		#print (dict)
 	return (dict_feature_vector_as_strings)
 
 ##########################################
