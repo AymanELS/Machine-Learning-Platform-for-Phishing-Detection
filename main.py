@@ -150,7 +150,7 @@ def main():
         X, selection = Feature_Selection.Feature_Ranking(X, y,k, feature_list_dict_train)
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
             joblib.dump(selection,"Data_Dump/Emails_Training/selection.pkl")
-        elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+        elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
             joblib.dump(selection,"Data_Dump/URLs_Training/selection.pkl")
 
 
