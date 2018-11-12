@@ -99,8 +99,6 @@ def SVM(X,y, X_test, y_test):
    		tol=0.001, verbose=False)
 	logger.info("SVM >>>>>>>")
 	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		#logger.info(np.shape(X))
-		#logger.info(np.sum(y))
 		score=Evaluation_Metrics.Cross_validation(clf, X, y)
 		logger.info(score)
 		return score
@@ -267,6 +265,7 @@ def Boosting(X,y, X_test, y_test):
 ############### imbalanced learning
 def DNN(X,y, X_test, y_test):
 	from sklearn.model_selection import StratifiedKFold
+	np.set_printoptions(threshold=np.nan)
 	def model_build(dim):
 		logger.debug("Start Building DNN Model >>>>>>")
 		K.set_learning_phase(1) #set learning phase
@@ -277,41 +276,29 @@ def DNN(X,y, X_test, y_test):
 		logger.debug("model compile end >>>>>>")
 		return model_dnn
 
-	#X_test, y_test = load_dataset("feature_vector_extract_test.txt")
-	#K.set_learning_phase(1) #set learning phase
-	#model_dnn = Sequential()
-	# logger.debug("Start Building DNN Model ...")
-	# model_dnn.add(Dense(80, kernel_initializer='normal', activation='relu', input_dim=dim)) #units in Dense layer as same as the input dim
-	# model_dnn.add(Dense(1, activation='sigmoid'))
-	# model_dnn.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-	# logger.debug("model compile end >>>>>>")
 	dim=X.shape[1]	
-	logger.info(X[0].transpose().shape)
+	# logger.info(X[0].transpose().shape)
 	model_dnn = model_build(dim)	
 	if config["Evaluation Metrics"]["cross_val_score"]=="True":		
-		return -1
+		#return -1
 		seed = 7
 		np.random.seed(seed)
 		kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
 		cvscores = []
-		for train_index, test_index in kfold.split(X, y):	
-			logger.info(type(X))		
-			train_set_X = [X[i].transpose() for i in train_index]
-			test_set_X = [X[i].transpose() for i in test_index]
-			train_set_y = [y[i] for i in train_index]
-			test_set_y = [y[i] for i in test_index]			
-			logger.info(np.shape(train_set_X))
-			logger.info(np.shape(train_set_y))
-			model_dnn.fit(train_set_X, train_set_y, epochs=150, batch_size=10, verbose=0) #fit the model
-			scores = model_dnn.evaluate(test_test_X, test_test_y, verbose=0) #evaluate the model
+		for train_index, test_index in kfold.split(X, y):
+			y_np_array = np.array(y)
+			y_train = y_np_array[train_index]
+			y_test = y_np_array[test_index]
+			model_dnn.fit(X[train_index], y_train, epochs=150, batch_size=10, verbose=0) #fit the model
+			scores = model_dnn.evaluate(X[test_index], y_test, verbose=0) #evaluate the model
 			cvscores.append(scores[1])
 		return np.mean(cvscores)
+	
 	else:
 		model_dnn.fit(X, y, epochs=150, batch_size=100, verbose=0)
 		y_predict = model_dnn.predict(X_test)
 		eval_metrics_DNN = Evaluation_Metrics.eval_metrics(model_dnn, X, y, y_test, y_predict.round())
 		return eval_metrics_DNN
-
 def HDDT():
 	#java -cp <path to weka-hddt.jar> weka.classifiers.trees.HTree -U -A -B -t <training file> -T <testing file>
 	weka_hddt_path="weka-hddt-3-7-1.jar"
