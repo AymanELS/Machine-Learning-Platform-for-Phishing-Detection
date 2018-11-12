@@ -39,6 +39,7 @@ def main():
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
 
+    print("Loading dataset")
     X_train_first_dataset, y_train_first_dataset, first_dataset_vectorizer = load_datasets(args.matrix[0], args.labels[0], args.vectorizer[0])
     X_train_second_dataset, y_train_second_dataset, second_dataset_vectorizer = load_datasets(args.matrix[1], args.labels[1], args.vectorizer[1])
 
@@ -47,8 +48,7 @@ def main():
 
     first_dataset_phish_size=y_train_first_dataset.count(1)
     second_dataset_phish_size=y_train_second_dataset.count(1)
-
-    #Transforming back the sparse matrix into dictionnary of features (feature vectors):
+    print("Transforming back the sparse matrix into dictionnary of features (feature vectors)")
     first_dataset_feature_vector=first_dataset_vectorizer.inverse_transform(X_train_first_dataset)
     second_dataset_feature_vector=second_dataset_vectorizer.inverse_transform(X_train_second_dataset)
 
@@ -69,7 +69,7 @@ def main():
         for i in second_dataset_list_features:
             f.write("%s\n" %i)
 
-    # remove one-hot encoding from feature vectors
+    print("remove one-hot encoding from feature vectors")
     first_dataset_feature_vector_original=[]
     for feature in first_dataset_list_features:
         if '=' in feature:
@@ -101,7 +101,7 @@ def main():
 
     common_features=sorted(common_features)
 
-    # new list of features with one-hot encoding:
+    print("new list of features with one-hot encoding:")
     new_feature_list=[]
     for feature in first_dataset_list_features:
         if "=" in feature:
@@ -125,7 +125,7 @@ def main():
         for i in new_feature_list:
             f.write("%s\n" %i)
 
-    #build new list of features
+    print("build new list of features")
     new_feature_vector=[{} for i in range(len(y_train_first_dataset+y_train_second_dataset))]
 
     for feature in new_feature_list:
@@ -157,7 +157,7 @@ def main():
         for i in new_feature_vector:
             f.write("{}\n".format(i))
 
-    #Applying new transformation to both feature vector and create new sparse matrices
+    print("Applying new transformation to both feature vector and create new sparse matrices")
     vectorizer=DictVectorizer()
     vectorizer.fit(new_feature_vector)
 

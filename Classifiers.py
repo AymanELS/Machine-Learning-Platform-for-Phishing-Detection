@@ -99,8 +99,6 @@ def SVM(X,y, X_test, y_test):
    		tol=0.001, verbose=False)
 	logger.info("SVM >>>>>>>")
 	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		#logger.info(np.shape(X))
-		#logger.info(np.sum(y))
 		score=Evaluation_Metrics.Cross_validation(clf, X, y)
 		logger.info(score)
 		return score
