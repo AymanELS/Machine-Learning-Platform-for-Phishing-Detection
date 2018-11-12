@@ -11,8 +11,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_predict, cross_validate
 from sklearn.cluster import KMeans
+from sklearn.metrics import confusion_matrix, accuracy_score, make_scorer
 from imblearn.datasets import make_imbalance
 from imblearn.under_sampling import RandomUnderSampler,CondensedNearestNeighbour
 from imblearn.under_sampling import EditedNearestNeighbours
@@ -78,10 +79,17 @@ def F1_score(y_test, y_predict):
 		return f1_score
 		#return F1_score
 
+def tn(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 0]
+def tp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[1, 1]
+def fn(y_true, y_pred): return confusion_matrix(y_true, y_pred)[1, 0]
+def fp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 1]
 def Cross_validation(clf, X, y):
-		score = cross_val_score(clf, X, y, cv=10, verbose=1)
-		logger.info("10 fold Cross_Validation: {}".format(score.mean()))
-		return score
+		scoring = {'tp' : make_scorer(tp), 'tn' : make_scorer(tn),
+		           'fp' : make_scorer(fp), 'fn' : make_scorer(fn)}
+		cv_results = cross_validate(clf, X, y, cv=10, scoring=scoring, verbose=1, n_jobs=-1, return_train_score=False)
+		#scores = cross_validate(clf, X, y, cv=10, verbose=1, n_jobs=-1,)
+		#conf_mat = confusion_matrix(y, y_predict)
+		logger.info("10 fold Cross_Validation: {}".format(cv_results))
 
 def Homogenity(y_test,y_predict):
 		homogenity=sklearn.metrics.homogeneity_score(y_test,y_predict)
