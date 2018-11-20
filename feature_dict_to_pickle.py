@@ -11,8 +11,8 @@ import numpy as np
 
 # prog = re.compile("('[a-zA-Z0-9_\-\. ]*':\"'[a-zA-Z0-9_\-\. ]*'\")|('[a-zA-Z0-9_\-\. ]*':\"[a-zA-Z0-9_\-\. ]*\")|('[a-zA-Z0-9_\-\. ]*':[0-9\.[0-9]*)|('[a-zA-Z0-9_\-\. ]*':*)")
 
-prog = re.compile ("""('[a-zA-Z0-9_\-\. ]*':"'[a-zA-Z0-9_\-\. ]*'")|('[a-zA-Z0-9_\-\. ]*':'[a-z0-9\.\s\/\-0-9]*')|('[a-zA-Z0-9_\-\. ]*':[0-9\.0-9]*)""")
-
+#prog = re.compile ("""('[a-zA-Z0-9_\-\. ]*':"'[a-zA-Z0-9_\-\. ]*'")|('[a-zA-Z0-9_\-\. ]*':'[a-z0-9\.\s\/\-0-9]*')|('[a-zA-Z0-9_\-\. ]*':[0-9\.0-9]*)""")
+prog = re.compile("""('[a-zA-Z0-9_\-\. ]*':"'[a-zA-Z0-9_\-\. ]*'")|('[a-zA-Z0-9_\-\. ]*':'[a-z0-9\.\s\/\-0-9]*')|('[a-zA-Z0-9_\-\. ]*':-?[0-9\.0-9]*)""")
 
 parser = argparse.ArgumentParser(description='Argument parser')
 
@@ -92,4 +92,3 @@ if __name__ == '__main__':
 
 	dict_feature_vectors_openphish = convert_from_text_todict(args.features)
 	convert_to_vectorizer(dict_feature_vectors_openphish, args.dataset_name, args.label)
-
