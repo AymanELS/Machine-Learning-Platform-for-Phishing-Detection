@@ -9,6 +9,8 @@ from sklearn.datasets import dump_svmlight_file
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import FeatureUnion
 import random
+import math
+import Features_Support
 
 parser = argparse.ArgumentParser(description='Argument parser')
 
@@ -20,11 +22,7 @@ parser.add_argument('--label', type=str, required=True,
                     help='path to the label files.')
 parser.add_argument('--vectorizer', type=str, required=True,
                     help='path to the vectorizer pickle files.')
-parser.add_argument('--mode', type=int, required=True, default=1, 
-                    help='modes of extraction; if 0 - extract the percentage of URLs specified; if 1 - extract the number of URLs specified')
-parser.add_argument('--percentage_to_extract', type=int, default=50,  
-                    help='takes a percentage of instances to be extracted.')
-parser.add_argument('--number_of_instances', type=int, default=100,  
+parser.add_argument('--number_of_instances', type=float, default=100,  
                     help='takes a number of instances to be extracted.')
 parser.add_argument('--dataset', type=str, required=True, 
                     help='name of the dataset')
@@ -48,10 +46,10 @@ def main():
 	
 	number_total = len(y_train)
 	print("Dataset Size:{}".format(number_total))
-	if args.mode == 0:
-		number_to_extract =  ((args.percentage_to_extract)/100)*number_total
-	if args.mode == 1:
-		number_to_extract = args.number_of_instances
+	if args.number_of_instances <= 1:
+		number_to_extract =  math.ceil(args.number_of_instances*number_total)
+	else:
+		number_to_extract = math.ceil(args.number_of_instances)
 	if number_total < number_to_extract:
 		print('Sample size exceeded population size.')
 		exit()
@@ -77,9 +75,11 @@ def main():
 			f.write("{}\n".format(i))
 
 	X_new = vectorizer.transform(new_feature_vector)
+	X_processed= Features_Support.Preprocessing(X_new)
 	
 	joblib.dump(vectorizer, os.path.join(args.output_dir, args.dataset+str(number_to_extract)+'_vectorizer.pkl'))
 	joblib.dump(X_new, os.path.join(args.output_dir, args.dataset+str(number_to_extract)+'_X_train_unprocessed.pkl'))
+	joblib.dump(X_processed, os.path.join(args.output_dir, args.dataset+str(number_to_extract)+'_X_train_processed.pkl'))
 	joblib.dump(new_labels, os.path.join(args.output_dir, args.dataset+str(number_to_extract)+'_y_train.pkl'))
 
 if __name__ == '__main__':
