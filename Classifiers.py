@@ -149,7 +149,7 @@ def DecisionTree(X,y, X_test, y_test):
 def GaussianNaiveBayes(X,y, X_test, y_test):
 		gnb = GaussianNB(priors=None)
 		logger.info("GNB >>>>>>>")
-		X=X.toarray()
+		#X=X.toarray()
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(gnb, X, y)
 			logger.info(score)
