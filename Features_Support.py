@@ -40,6 +40,7 @@ from sklearn.feature_extraction import DictVectorizer
 import logging
 import traceback
 import ntpath
+import copy
 logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
@@ -729,8 +730,8 @@ def Vectorization_Testing(list_dict_features_test, vec):
 
 def dump_features(header, content, list_features, features_output, list_dict,list_time, time_dict):
     logger.debug("list_features: " + str(len(list_features)))
-    list_dict.append(list_features)
-    time_dict.append(list_time)
+    list_dict.append(copy.copy(list_features))
+    time_dict.append(copy.copy(list_time))
     with open(features_output+"_feature_vector.pkl",'ab') as feature_tracking:
         pickle.dump("URL: "+header, feature_tracking)
         pickle.dump(list_features,feature_tracking)
@@ -744,8 +745,8 @@ def dump_features(header, content, list_features, features_output, list_dict,lis
 
 def dump_features_emails(header, list_features, features_output, list_dict,list_time, time_dict):
     logger.debug("list_features: " + str(len(list_features)))
-    list_dict.append(list_features)
-    time_dict.append(list_time)
+    list_dict.append(copy.copy(list_features))
+    time_dict.append(copy.copy(list_time))
     with open(features_output+"_feature_vector.pkl",'ab') as feature_tracking:
         pickle.dump("email: "+str(header), feature_tracking)
         pickle.dump(list_features,feature_tracking)
@@ -1256,6 +1257,7 @@ def url_features(filepath, list_features, list_dict, list_time, time_dict, corpu
                     logger.debug(traceback.format_exc())
                     logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                     Bad_URLs_List.append(rawurl)
+               
     except Exception as e:
         logger.warning("exception: " + str(e))
         logger.debug(traceback.format_exc())

@@ -3322,8 +3322,7 @@ def Extract_Features_Urls_Training():
         Bad_URLs_List=[]
         t0 = time.time()
         #with open("Data_Dump/URLs_Training/features_url_training_legit.pkl",'ab') as feature_tracking:
-        labels_legit_train, data_legit_train=extract_url_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
-        #with open ("Data_Dump/URLs_Training/features_url_training_phish.pkl",'ab') as feature_tracking:
+        labels_legit_train, data_legit_train=extract_url_features(dataset_path_legit_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)          
         labels_all_train, data_phish_train=extract_url_features(dataset_path_phish_train, feature_list_dict_train, extraction_time_dict_train, Bad_URLs_List)
         logger.info("Feature extraction time is: {}s".format(time.time() - t0)) 
         logger.debug(">>>>> Feature extraction: Training Set >>>>> Done ")
