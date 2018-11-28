@@ -7,23 +7,23 @@ import pickle
 import argparse
 import re
 import Features_Support
-
+from scipy.sparse import hstack
 
 # prog = re.compile("('[a-zA-Z0-9_\-\. ]*':\"'[a-zA-Z0-9_\-\. ]*'\")|('[a-zA-Z0-9_\-\. ]*':\"[a-zA-Z0-9_\-\. ]*\")|('[a-zA-Z0-9_\-\. ]*':[0-9\.[0-9]*)|('[a-zA-Z0-9_\-\. ]*':*)")
 
-prog = re.compile ("""('[a-zA-Z0-9_\-\. ]*':"'[a-zA-Z0-9_\-\. ]*'")|('[a-zA-Z0-9_\-\. ]*':'[a-z0-9\.\s\/\-0-9]*')|('[a-zA-Z0-9_\-\. ]*':[0-9\.0-9]*)""")
-prog2= re.compile(r"(>url: .*?<)|(^URL: .*?<)", flags=re.IGNORECASE)
-prog3= re.compile("^url: .*?\n", flags=re.IGNORECASE|re.MULTILINE)
-prog4= re.compile("\nurl: .*?\n", flags=re.IGNORECASE)
 
 parser = argparse.ArgumentParser(description='Argument parser')
 
 parser.add_argument("-v", "--verbose", help="increase output verbosity",
                     action="store_true")
 parser.add_argument('--html_content', type=str, required=True,
-                    help='path to the human-readable feature file.')
+                    help='path to the html pkl file.')
 parser.add_argument('--features', type=str, required=False,
-                    help='path to the human-readable feature file.')
+                    help='path to the feature sparse matrix unprocessed file.')
+parser.add_argument('--dataset_name', type=str, required=False,
+                    help=' name of dataset.')
+parser.add_argument('--output_dir', type=str, required=False,
+                    help='directory to store the features.')
 
 args = parser.parse_args()
 
@@ -31,64 +31,45 @@ args = parser.parse_args()
 def convert_from_pkl_to_text(file):
 	text=''
 	first_line=1
+	corpus=[]
 	with open(file, 'rb') as f:
 		try:
 			while(True):
 				data=joblib.load(f)
-				#print(data)
-				#print(re.findall(prog2,str(data)))
-				#	url=re.findall(prog2,data)[0]
-				#	print(url)
-				#	url= ">"+url+"\n<"
-				#	data=re.sub(prog2,url,data)
-				# 
-				if data.startswith("URL: "):
-					if first_line==1:
-						data=data+"\n"
-						first_line=0
-					else:
-						data="\n"+data+"\n"
-					text=text+data
-				else:
-					text=text+data
+				if data.startswith("URL: ")==False:
+					corpus.append(data)
 		except (EOFError):
 			pass
-	with open("html_content.txt",'w', errors='ignore') as g:
-		g.write(text)
-	return text
+	#with open(os.path.join(args.output_dir,args.dataset_name+"_html_content.txt"),'w', errors='ignore') as g:
+	#	g.write(str(corpus))
+	return corpus
 
-def convert_from_text_todict(text):
-	html_dict=[]
-	#f=open("html_content.txt",'r',errors='ignore')
-	#text=f.read()
-	#result2=str(re.split(prog3,str(text))[0])
-	#html_dict.append(result1)
-	html_dict= re.split(prog4,text)
-	html_dict[0]=(re.split(prog3,html_dict[0]))[1]
-	#print(html_dict[0])
-	print("Length of dictionary of features: {}".format(len(html_dict)))
-	return html_dict
 
-def Tfidf_Vectorizer(html_dict):
-	vectorizer=TfidfVectorizer()
-	tfidf_matrix=vectorizer.fit_transform(html_dict)
-	joblib.dump(tfidf_matrix, 'tfidf_matrix.pkl')
+def Tfidf_Vectorizer(corpus):
+	vectorizer=TfidfVectorizer(analyzer='word', ngram_range=(1,1),
+                     min_df = 5, stop_words = 'english', sublinear_tf=True)
+	tfidf_matrix=vectorizer.fit_transform(corpus)
+	joblib.dump(tfidf_matrix, os.path.join(args.output_dir,args.dataset_name+'_tfidf_matrix_combined.pkl'))
 	return tfidf_matrix
 
 def Combine_Matrix(m1, m2):
+	print(m1.shape, m2.shape)
 	X=hstack([m1, m2])
 	X=Features_Support.Preprocessing(X)
-	joblib.dump(X,"Features_with_Tfidf_processed.pkl")
+	joblib.dump(X, os.path.join(args.output_dir,args.dataset_name+"_Features_with_Tfidf_processed.pkl"))
 
 if __name__ == '__main__':
-	text=convert_from_pkl_to_text(args.html_content)
-	html_dict=convert_from_text_todict(text)
-	with open("html_dict.txt",'w', errors='ignore') as f:
-		#for i in html_dict:
-		f.write(str(html_dict))
-	tfidf_matrix=Tfidf_Vectorizer(html_dict)
+	if not os.path.exists(args.output_dir):
+		os.makedirs(args.output_dir)
+	corpus=convert_from_pkl_to_text(args.html_content[0])
+	print("length of list of html content (rows in tfidf matrix): {}".format(len(corpus)))
+	#with open("list_html_content.txt",'w', errors='ignore') as f:
+	#	#for i in html_dict:
+	#	f.write(str(html_dict))
+	tfidf_matrix=Tfidf_Vectorizer(corpus)
 	if args.features:
-		Combine_Matrix(args.features,tfidf_matrix)
+		X_features = joblib.load(args.features)
+		Combine_Matrix(X_features,tfidf_matrix)
 
 
 	#dict_feature_vectors_openphish = convert_from_text_todict(args.features)
