@@ -10,6 +10,8 @@ import argparse
 from sklearn.datasets import dump_svmlight_file
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.pipeline import FeatureUnion
+import Features_Support
+from collections import Counter
 
 parser = argparse.ArgumentParser(description='Argument parser')
 
@@ -43,12 +45,12 @@ def main():
     X_train_first_dataset, y_train_first_dataset, first_dataset_vectorizer = load_datasets(args.matrix[0], args.labels[0], args.vectorizer[0])
     X_train_second_dataset, y_train_second_dataset, second_dataset_vectorizer = load_datasets(args.matrix[1], args.labels[1], args.vectorizer[1])
 
-    first_dataset_legit_size=y_train_first_dataset.count(0)
-    second_dataset_legit_size=y_train_second_dataset.count(0)
+    first_dataset_legit_size=(Counter(y_train_first_dataset))[0]
+    second_dataset_legit_size=(Counter(y_train_second_dataset))[0]
 
-    first_dataset_phish_size=y_train_first_dataset.count(1)
-    second_dataset_phish_size=y_train_second_dataset.count(1)
-    print("Transforming back the sparse matrix into dictionnary of features (feature vectors)")
+    first_dataset_phish_size=(Counter(y_train_first_dataset))[1]
+    second_dataset_phish_size=(Counter(y_train_second_dataset))[1]
+    print("Transforming back the sparse matrix into dictionary of features (feature vectors)")
     first_dataset_feature_vector=first_dataset_vectorizer.inverse_transform(X_train_first_dataset)
     second_dataset_feature_vector=second_dataset_vectorizer.inverse_transform(X_train_second_dataset)
 
@@ -126,7 +128,9 @@ def main():
             f.write("%s\n" %i)
 
     print("build new list of features")
-    new_feature_vector=[{} for i in range(len(y_train_first_dataset+y_train_second_dataset))]
+    print (type(y_train_first_dataset))
+    print (type(y_train_second_dataset))
+    new_feature_vector=[{} for i in range(np.shape(y_train_first_dataset)[0]+np.shape(y_train_second_dataset)[0])]
 
     for feature in new_feature_list:
         #print("feature: {}".format(feature))
@@ -177,13 +181,14 @@ def main():
     print("X_1 Shape: {}".format(X_train_first_dataset.shape))
     print("X_2 Shape: {}".format(X_train_second_dataset.shape))
     print("X_new Shape: {}".format(X_train.shape))
-    y_train=[0 for i in range(first_dataset_legit_size+second_dataset_legit_size)] + [1 for i in range(y_train_first_dataset.count(1) + y_train_second_dataset.count(1))]
+    y_train=[0 for i in range(first_dataset_legit_size+second_dataset_legit_size)] + [1 for i in range(first_dataset_phish_size + second_dataset_phish_size)]
     print("y length: {}".format(len(y_train)))
     print("new legitimate count: {}".format(y_train.count(0)))
     print("new phish count: {}".format(y_train.count(1)))
 
 
     joblib.dump(X_train, os.path.join(args.output_dir, "X_combined_unprocessed.pkl"))
+    joblib.dump(Features_Support.Preprocessing(X_train),os.path.join(args.output_dir, "X_combined_processed.pkl"))
     joblib.dump(y_train, os.path.join(args.output_dir, "y_combined_unprocessed.pkl"))
     joblib.dump(vectorizer, os.path.join(args.output_dir, "vectorizer_combined.pkl"))
 
