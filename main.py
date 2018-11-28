@@ -104,6 +104,33 @@ def Confirmation():
     answer = query_yes_no("Do you wish to continue?")
     return answer
 
+def load_dataset(load_test=False):
+    y_test = None
+    X_test = None
+    if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+        vectorizer= joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
+        X_train=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
+        y_train=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
+        try:
+            if load_test:
+                X_test=joblib.load("Data_Dump/Emails_Testing/X_test.pkl")
+                y_test=joblib.load("Data_Dump/Emails_Testing/y_test.pkl")
+        except FileNotFoundError as ex:
+            logger.warn("Test files not found {}".format(ex))
+
+    elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
+        vectorizer= joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
+        X_train=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
+        y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
+        try:
+            if load_test:
+                X_test=joblib.load("Data_Dump/URLs_Testing/X_test.pkl")
+                y_test=joblib.load("Data_Dump/URLs_Testing/y_test.pkl")
+        except FileNotFoundError as ex:
+            logger.warn("Test files not found {}".format(ex))
+
+    return X_train, y_train, X_test, y_test
+
 def main():
     Feature_extraction=False #flag for feature extraction
     flag_training=False
@@ -134,16 +161,9 @@ def main():
                 joblib.dump(vectorizer,"Data_Dump/URLs_Training/vectorizer.pkl")
         
         else: 
-            if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
-                vectorizer= joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
-                X=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
-                y=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
-            elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
-                vectorizer= joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
-                X=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
-                y=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
-            #feature_list_dict_train=None
+            X, y = load_dataset()
             feature_list_dict_train=vectorizer.inverse_transform(X)
+
         logger.info("Select Best Features ######")
         k = int(config["Feature Selection"]["number of best features"])
         #X, selection = Feature_Selection.Select_Best_Features_Training(X, y, k)
@@ -152,8 +172,6 @@ def main():
             joblib.dump(selection,"Data_Dump/Emails_Training/selection.pkl")
         elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
             joblib.dump(selection,"Data_Dump/URLs_Training/selection.pkl")
-
-
 ### Email FEature Extraction
     elif config["Extraction"]["Feature Extraction"]=='True':
         Feature_extraction=True
@@ -346,12 +364,9 @@ def main():
 
     if config["Classification"]["Running the classifiers"]=="True":
         if Feature_extraction==False:
+            X_train, y_train, X_test, y_test = load_dataset(True)
             if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
-                X_train=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
-                y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
-                X_test=joblib.load("Data_Dump/URLs_Testing/X_test.pkl")
-                y_test=joblib.load("Data_Dump/URLs_Testing/y_test.pkl")
-                #vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
+                vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
                 #features_extracted=vectorizer.get_feature_names()
                 #logger.info(features_extracted)
                 # Features_training=vectorizer.inverse_transform(X_train)
@@ -389,10 +404,6 @@ def main():
                 #logger.info(len(vectorizer.get_feature_names()))
 
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-                X_train=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
-                y_train=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
-                X_test=joblib.load("Data_Dump/Emails_Testing/X_test.pkl")
-                y_test=joblib.load("Data_Dump/Emails_Testing/y_test.pkl")
                 vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
                 features_extracted = vectorizer.get_feature_names()
                 logger.info(len(features_extracted))

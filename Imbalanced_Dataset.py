@@ -46,7 +46,7 @@ config.read('Config_file.ini')
 def CondensedNearestNeighbour(X,y):
 	#X, y = load_svmlight_file(file)
 	cnn=imblearn.under_sampling.CondensedNearestNeighbour(ratio='auto', return_indices=False, random_state=None,
-	 n_neighbors=2, n_seeds_S=1, n_jobs=1)
+	 n_neighbors=2, n_seeds_S=1, n_jobs=-1)
 	X_res, y_res = cnn.fit_sample(X, y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res))) 
 	return X_res, y_res
@@ -56,7 +56,7 @@ def CondensedNearestNeighbour(X,y):
 def EditedNearestNeighbours(X,y):
 	#X, y = load_svmlight_file(file)
 	enn=imblearn.under_sampling.EditedNearestNeighbours(ratio='auto', return_indices=False, random_state=None,
-	 n_neighbors=3, kind_sel='all', n_jobs=1)
+	 n_neighbors=3, kind_sel='all', n_jobs=-1)
 	X_res, y_res = enn.fit_sample(X, y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res))) 
 	return X_res, y_res
@@ -65,7 +65,7 @@ def EditedNearestNeighbours(X,y):
 def RepeatedEditedNearestNeighbour(X,y):
 	#X, y = load_svmlight_file(file)
 	renn=imblearn.under_sampling.RepeatedEditedNearestNeighbours(ratio='auto', return_indices=False, random_state=None,
-	 size_ngh=None, n_neighbors=3, max_iter=100, kind_sel='all', n_jobs=1)
+	 size_ngh=None, n_neighbors=3, max_iter=100, kind_sel='all', n_jobs=-1)
 	X_res, y_res = renn.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -74,7 +74,7 @@ def RepeatedEditedNearestNeighbour(X,y):
 def AllKNN(X,y):
 	#X, y = load_svmlight_file(file)
 	allknn=imblearn.under_sampling.AllKNN(ratio='auto', return_indices=False, random_state=None, size_ngh=None, n_neighbors=3,
-	 kind_sel='all', allow_minority=False, n_jobs=1)
+	 kind_sel='all', allow_minority=False, n_jobs=8)
 	X_res, y_res = allknn.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -83,7 +83,7 @@ def AllKNN(X,y):
 def InstanceHardnessThreshold(X,y):
 	#X, y = load_svmlight_file(file)
 	InstanceHardnessThreshold=imblearn.under_sampling.InstanceHardnessThreshold(estimator=None, ratio='auto', return_indices=False,
- 																random_state=None, cv=5, n_jobs=1)
+ 																random_state=None, cv=5, n_jobs=-1)
 	X_res, y_res = InstanceHardnessThreshold.fit_sample(X,y)
 		#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -91,7 +91,7 @@ def InstanceHardnessThreshold(X,y):
 def NearMiss(X,y):
 	#X, y = load_svmlight_file(file)
 	nearmiss=imblearn.under_sampling.NearMiss(ratio='auto', return_indices=False, 
-		random_state=None, version=1, size_ngh=None, n_neighbors=3, ver3_samp_ngh=None, n_neighbors_ver3=3, n_jobs=1)
+		random_state=None, version=1, size_ngh=None, n_neighbors=3, ver3_samp_ngh=None, n_neighbors_ver3=3, n_jobs=-1)
 	X_res, y_res = nearmiss.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -100,14 +100,14 @@ def NearMiss(X,y):
 def NeighbourhoodCleaningRule(X,y):
 	#X, y = load_svmlight_file(file)
 	cleaningrule=imblearn.under_sampling.NeighbourhoodCleaningRule(ratio='auto', return_indices=False, random_state=None,
-			size_ngh=None, n_neighbors=3, kind_sel='all', threshold_cleaning=0.5, n_jobs=1)
+			size_ngh=None, n_neighbors=3, kind_sel='all', threshold_cleaning=0.5, n_jobs=-1)
 	X_res, y_res = cleaningrule.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
 
 def OneSidedSelection(X,y):
 	#X, y = load_svmlight_file(file)
-	oneside=imblearn.under_sampling.OneSidedSelection(ratio='auto', return_indices=False, random_state=None, size_ngh=None, n_neighbors=None, n_seeds_S=1, n_jobs=1)
+	oneside=imblearn.under_sampling.OneSidedSelection(ratio='auto', return_indices=False, random_state=None, size_ngh=None, n_neighbors=None, n_seeds_S=1, n_jobs=-1)
 	X_res, y_res = oneside.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -121,14 +121,14 @@ def RandomUnderSampler(X,y):
 
 def TomekLinks(X,y):
 	#X, y = load_svmlight_file(file)
-	tomeklinks=imblearn.under_sampling.TomekLinks(ratio='auto', return_indices=False, random_state=None, n_jobs=1)
+	tomeklinks=imblearn.under_sampling.TomekLinks(ratio='auto', return_indices=False, random_state=None, n_jobs=-1)
 	X_res, y_res = tomeklinks.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
 
 def ADASYN(X,y):
 	#X, y = load_svmlight_file(file)
-	adasyn=imblearn.over_sampling.ADASYN(ratio='auto', random_state=None, k=None, n_neighbors=5, n_jobs=1)
+	adasyn=imblearn.over_sampling.ADASYN(ratio='auto', random_state=None, k=None, n_neighbors=5, n_jobs=-1)
 	X_res, y_res = adasyn.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -142,7 +142,7 @@ def RandomOverSampler(X,y):
 
 def SMOTE(X,y):
 	#X, y = load_svmlight_file(file)
-	smote=imblearn.over_sampling.SMOTE(ratio='auto', random_state=None, k=None, k_neighbors=5, m=None, m_neighbors=10, out_step=0.5, kind='regular', svm_estimator=None, n_jobs=1)
+	smote=imblearn.over_sampling.SMOTE(ratio='auto', random_state=None, k=None, k_neighbors=5, m=None, m_neighbors=10, out_step=0.5, kind='regular', svm_estimator=None, n_jobs=-1)
 	X_res, y_res = smote.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -179,6 +179,7 @@ def load_imbalanced_dataset(file):
 	return X_res, y_res
 
 def Make_Imbalanced_Dataset(X,y):
+	logger.debug("Making imbalanced dataset")
 	if config['Imbalanced Datasets']['CondensedNearestNeighbour'] == "True":
 		X_res, y_res = CondensedNearestNeighbour(X,y)
 	elif config['Imbalanced Datasets']['EditedNearestNeighbours'] == "True":

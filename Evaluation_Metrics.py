@@ -112,7 +112,7 @@ def Balanced_accuracy_score(y_test,y_predict):
 		b_accuracy=sklearn.metrics.balanced_accuracy_score(y_test,y_predict)
 		logger.info("Balanced_accuracy_score: {}".format(b_accuracy))
 
-def eval_metrics(clf, X, y, y_test, y_predict):
+def eval_metrics(clf, y_test, y_predict):
 	summary=Features.summary
 	summary.write("\n\nEvaluation metrics used:\n")
 	summary.write("\n\n Supervised metrics:\n")
