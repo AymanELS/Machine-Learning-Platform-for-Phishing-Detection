@@ -147,6 +147,13 @@ def SMOTE(X,y):
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
 
+def SMOTENC(X,y):
+	#X, y = load_svmlight_file(file)
+	smote=imblearn.over_sampling.SMOTENC(n_jobs=-1)
+	X_res, y_res = smote.fit_sample(X,y)
+	#print('Resampled dataset shape {}'.format(Counter(y_res)))
+	return X_res, y_res
+
 #### 
 def load_imbalanced_dataset(file):
 	X,y = load_svmlight_file(file)
@@ -176,6 +183,8 @@ def load_imbalanced_dataset(file):
 		X_res, y_res = RandomOverSampler(X,y)
 	elif config['Imbalanced Datasets']['SMOTE'] == "True":
 		X_res, y_res = SMOTE(X,y)
+	elif config['Imbalanced Datasets']['SMOTENC'] == "True":
+		X_res, y_res = SMOTENC(X,y)
 	return X_res, y_res
 
 def Make_Imbalanced_Dataset(X,y):
@@ -206,4 +215,6 @@ def Make_Imbalanced_Dataset(X,y):
 		X_res, y_res = RandomOverSampler(X,y)
 	elif config['Imbalanced Datasets']['SMOTE'] == "True":
 		X_res, y_res = SMOTE(X,y)
+	elif config['Imbalanced Datasets']['SMOTENC'] == "True":
+		X_res, y_res = SMOTENC(X,y)
 	return X_res, y_res
