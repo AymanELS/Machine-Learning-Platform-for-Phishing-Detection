@@ -64,8 +64,7 @@ def EditedNearestNeighbours(X,y):
 #### Repeated Edited Nearest Neighbour
 def RepeatedEditedNearestNeighbour(X,y):
 	#X, y = load_svmlight_file(file)
-	renn=imblearn.under_sampling.RepeatedEditedNearestNeighbours(ratio='auto', return_indices=False, random_state=None,
-	 size_ngh=None, n_neighbors=3, max_iter=100, kind_sel='all', n_jobs=-1)
+	renn=imblearn.under_sampling.RepeatedEditedNearestNeighbours(n_jobs=-1)
 	X_res, y_res = renn.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -107,7 +106,7 @@ def NeighbourhoodCleaningRule(X,y):
 
 def OneSidedSelection(X,y):
 	#X, y = load_svmlight_file(file)
-	oneside=imblearn.under_sampling.OneSidedSelection(ratio='auto', return_indices=False, random_state=None, size_ngh=None, n_neighbors=None, n_seeds_S=1, n_jobs=-1)
+	oneside=imblearn.under_sampling.OneSidedSelection(n_jobs=-1)
 	X_res, y_res = oneside.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
