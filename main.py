@@ -127,7 +127,7 @@ def load_dataset(load_test=False):
         except FileNotFoundError as ex:
             logger.warn("Test files not found {}".format(ex))
 
-    return X_train, y_train, X_test, y_test
+    return X_train, y_train, X_test, y_test, vectorizer
 
 def main():
     Feature_extraction=False #flag for feature extraction
@@ -159,7 +159,7 @@ def main():
                 joblib.dump(vectorizer,"Data_Dump/URLs_Training/vectorizer.pkl")
         
         else: 
-            X, y = load_dataset()
+            X, y, X_test, y_test, vectorizer = load_dataset()
             feature_list_dict_train=vectorizer.inverse_transform(X)
 
         logger.info("Select Best Features ######")
@@ -362,44 +362,49 @@ def main():
 
     if config["Classification"]["Running the classifiers"]=="True":
         if Feature_extraction==False:
-            X_train, y_train, X_test, y_test = load_dataset(True)
+            X_train, y_train, X_test, y_test, vectorizer = load_dataset(True)
             if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
                 vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
-                #features_extracted=vectorizer.get_feature_names()
+                features_extracted=vectorizer.get_feature_names()
                 #logger.info(features_extracted)
-                # Features_training=vectorizer.inverse_transform(X_train)
-                # Features_testing=vectorizer.inverse_transform(X_test)
-                # mask=[]
-                # #mask.append(0)
-                # list_restricted_features=[]
-                #         #logger.info("Section: {} ".format(section))
-                # for feature in features_extracted:
-                #     feature_name=feature
-                #     if "=" in feature:
-                #         feature_name=feature.split("=")[0]
-                #     if "url_char_distance_" in feature:
-                #         feature_name="char_distance"
-                #     for section in ["HTML_Features", "URL_Features", "Network_Features", "Javascript_Features"]:
-                #         try:
-                #             if config[section][feature_name]=="True":
-                #                 if config[section][section.lower()]=="True":
-                #                     logger.info("Feature: {}".format(feature))
-                #                     list_restricted_features.append(feature)
-                #                     mask.append(1)
-                #                 else:
-                #                     mask.append(0)
-                #         except KeyError as e:
-                #             pass
-                # vectorizer.restrict(mask)
-                # logger.info((vectorizer.get_feature_names()))
-                # X_train=vectorizer.transform(Features_training)
-                # X_test=vectorizer.transform(Features_testing)
-                # if not os.path.exists("Data_Dump/URLs_Classification"):
-                #     os.makedirs("Data_Dump/URLs_Classification")
-                # joblib.dump(vectorizer, "Data_Dump/URLs_Classification/vectorizer_restricted.pkl")
-                # joblib.dump(X_train,"Data_Dump/URLs_Classification/X_train_restricted.pkl")
-                # joblib.dump(X_test,"Data_Dump/URLs_Classification/X_test_restricted.pkl")
-                #logger.info(len(vectorizer.get_feature_names()))
+                import numpy as np
+                logger.info(np.shape(X_train))
+                Features_training=vectorizer.inverse_transform(X_train)
+                if X_test is not None:
+                    Features_testing=vectorizer.inverse_transform(X_test)
+                mask=[]
+                mask.append(0)
+                list_restricted_features=[]
+                #logger.info("Section: {} ".format(section))
+                for feature in features_extracted:
+                    feature_name=feature
+                    if "=" in feature:
+                        feature_name=feature.split("=")[0]
+                    if "url_char_distance_" in feature:
+                        feature_name="char_distance"
+                    for section in ["HTML_Features", "URL_Features", "Network_Features", "Javascript_Features"]:
+                        try:
+                            if config[section][feature_name]=="True":
+                                if config[section][section.lower()]=="True":
+                                    list_restricted_features.append(feature)
+                                    mask.append(1)
+                                else:
+                                    mask.append(0)
+                        except KeyError as e:
+                            pass
+                vectorizer.restrict(mask)
+                #logger.info((vectorizer.get_feature_names()))
+                X_train=vectorizer.transform(Features_training)
+                logger.info(np.shape(X_train))
+                if X_test is not None:
+                    X_test=vectorizer.transform(Features_testing)
+                if not os.path.exists("Data_Dump/URLs_Classification"):
+                    os.makedirs("Data_Dump/URLs_Classification")
+                joblib.dump(vectorizer, "Data_Dump/URLs_Classification/vectorizer_restricted.pkl")
+                joblib.dump(X_train,"Data_Dump/URLs_Classification/X_train_restricted.pkl")
+                if X_test is not None:
+                    joblib.dump(X_test,"Data_Dump/URLs_Classification/X_test_restricted.pkl")
+                logger.info(len(vectorizer.get_feature_names()))
 
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
                 vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
