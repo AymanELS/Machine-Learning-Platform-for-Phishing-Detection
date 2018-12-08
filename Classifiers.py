@@ -98,206 +98,259 @@ def fit_classifier(clf, X, y, X_train_balanced=None, y_train_balanced=None):
 
 
 
-def SVM(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-		clf = svm.SVC(C=1.0, cache_size=200, class_weight='balanced', coef0=0.0,
-        	        decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
-	                max_iter=-1, probability=False, random_state=None, shrinking=True,
-	                tol=0.001, verbose=False)
+def SVM(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+			clf = svm.SVC(C=1.0, cache_size=200, class_weight='balanced', coef0=0.0,
+	        	        decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+		                max_iter=-1, probability=False, random_state=None, shrinking=True,
+		                tol=0.001, verbose=False)
+		else:
+			clf = svm.SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+		   		decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
+		   		max_iter=-1, probability=False, random_state=None, shrinking=True,
+		   		tol=0.001, verbose=False)
+		logger.info("SVM >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			clf.fit(X, y)
+			y_predict=clf.predict(X_test)
+			eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_SVM, clf
 	else:
-		clf = svm.SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-	   		decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
-	   		max_iter=-1, probability=False, random_state=None, shrinking=True,
-	   		tol=0.001, verbose=False)
-	logger.info("SVM >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(clf, X, y)
-		logger.info(score)
-		return score
-	else:
-		clf.fit(X, y)
 		y_predict=clf.predict(X_test)
 		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
-		return (eval_metrics_SVM)
+		return eval_metrics_SVM, clf
 
 ######## Random Forest
-def RandomForest(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-		clf = RandomForestClassifier(n_estimators=10, criterion='gini', max_depth=None, min_samples_split=2,
-			min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='auto', max_leaf_nodes=None,
-			min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=1,
-			random_state=None, verbose=0, warm_start=False, class_weight='balanced')
+def RandomForest(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+			clf = RandomForestClassifier(n_estimators=10, criterion='gini', max_depth=None, min_samples_split=2,
+				min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='auto', max_leaf_nodes=None,
+				min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=1,
+				random_state=None, verbose=0, warm_start=False, class_weight='balanced')
+		else:
+			clf = RandomForestClassifier(n_estimators=10, criterion='gini', max_depth=None, min_samples_split=2,
+				min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='auto', max_leaf_nodes=None,
+				min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=1,
+				random_state=None, verbose=0, warm_start=False, class_weight=None)
+		logger.info("RF >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)
+			eval_metrics_RF = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_RF, clf
 	else:
-		clf = RandomForestClassifier(n_estimators=10, criterion='gini', max_depth=None, min_samples_split=2,
-			min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='auto', max_leaf_nodes=None,
-			min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=True, oob_score=False, n_jobs=1,
-			random_state=None, verbose=0, warm_start=False, class_weight=None)
-	logger.info("RF >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(clf, X, y)
-		logger.info(score)
-		return score
-	else:
-		fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 		y_predict=clf.predict(X_test)
-		eval_metrics_RF = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
-		return eval_metrics_RF
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
 
 ###### Decition Tree
-def DecisionTree(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-		clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
-                        min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None,
-                        min_impurity_decrease=0.0, min_impurity_split=None, class_weight='balanced', presort=False)
+def DecisionTree(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+			clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
+	                        min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None,
+	                        min_impurity_decrease=0.0, min_impurity_split=None, class_weight='balanced', presort=False)
+		else:
+			clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
+				min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None,
+				min_impurity_decrease=0.0, min_impurity_split=None, class_weight=None, presort=False)
+		logger.info("DT >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)			
+			eval_metrics_DT = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_DT, clf
 	else:
-		clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=None, min_samples_split=2,
-			min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None,
-			min_impurity_decrease=0.0, min_impurity_split=None, class_weight=None, presort=False)
-	logger.info("DT >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(clf, X, y)
-		logger.info(score)
-		return score
-	else:
-		fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
-		y_predict=clf.predict(X_test)			
-		eval_metrics_DT = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
-		return eval_metrics_DT
+		y_predict=clf.predict(X_test)
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
+
 
 ##### Gaussian Naive Bayes
-def GaussianNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-		logger.warn("GaussianNaiveBayes does not support weighted classification")
-		return
-	gnb = GaussianNB(priors=None)
-	logger.info("GNB >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(gnb, X, y)
-		logger.info(score)
-		return score
+def GaussianNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None,clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+			logger.warn("GaussianNaiveBayes does not support weighted classification")
+			return
+		clf = GaussianNB(priors=None)
+		logger.info("GNB >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=gnb.predict(X_test)
+			eval_metrics_NB = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_NB, clf
 	else:
-		fit_classifier(gnb, X, y, X_train_balanced, y_train_balanced)
-		y_predict=gnb.predict(X_test)
-		eval_metrics_NB = Evaluation_Metrics.eval_metrics(gnb, y_test, y_predict)
-		return eval_metrics_NB
+		y_predict=clf.predict(X_test)
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
 
 ##### Multinomial Naive Bayes
-def MultinomialNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-                logger.warn("MultinomialNaiveBayes does not support weighted classification")
-                return
-	mnb=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
-	logger.info("MNB >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(mnb, X, y)
-		logger.info(score)
-		return score
+def MultinomialNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+	                logger.warn("MultinomialNaiveBayes does not support weighted classification")
+	                return
+		clf=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
+		logger.info("MNB >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=mnb.predict(X_test)
+			eval_metrics_MNB = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_MNB, clf
 	else:
-		fit_classifier(mnb, X, y, X_train_balanced, y_train_balanced)
-		y_predict=mnb.predict(X_test)
-		eval_metrics_MNB = Evaluation_Metrics.eval_metrics(mnb, y_test, y_predict)
-		return eval_metrics_MNB
-
-##### Logistic Regression
-def LogisticRegression(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-		clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1,
-			class_weight='balanced', random_state=None, solver='liblinear', max_iter=100, multi_class='ovr',
-			verbose=0, warm_start=False, n_jobs=1)
-	else:
-		clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1,
-			class_weight=None, random_state=None, solver='liblinear', max_iter=100, multi_class='ovr',
-			verbose=0, warm_start=False, n_jobs=1)
-	logger.info("LR >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(clf, X, y)
-		logger.info(score)
-		return score
-	else:
-		fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 		y_predict=clf.predict(X_test)
-		eval_metrics_LR = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
-		return eval_metrics_LR
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
+	
+##### Logistic Regression
+def LogisticRegression(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if cls is None:
+		if config["Classifiers"]["weighted"] == "True":
+			clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1,
+				class_weight='balanced', random_state=None, solver='liblinear', max_iter=100, multi_class='ovr',
+				verbose=0, warm_start=False, n_jobs=1)
+		else:
+			clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1,
+				class_weight=None, random_state=None, solver='liblinear', max_iter=100, multi_class='ovr',
+				verbose=0, warm_start=False, n_jobs=1)
+		logger.info("LR >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)
+			eval_metrics_LR = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_LR, clf
+	else:
+		y_predict=clf.predict(X_test)
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
 
 ##### k-Nearest Neighbor
-def kNearestNeighbor(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-                logger.warn("kNearestNeighbor does not support weighted classification")
-                return
-
-	clf=KNeighborsClassifier(n_neighbors=2, weights='uniform', algorithm='auto', leaf_size=30, p=2,
-		metric='minkowski', metric_params=None, n_jobs=1,)
-	logger.info("KNN >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(clf, X, y)
-		logger.info(score)
-		return score
+def kNearestNeighbor(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+	                logger.warn("kNearestNeighbor does not support weighted classification")
+	                return
+	
+		clf=KNeighborsClassifier(n_neighbors=2, weights='uniform', algorithm='auto', leaf_size=30, p=2,
+			metric='minkowski', metric_params=None, n_jobs=1,)
+		logger.info("KNN >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)
+			eval_metrics_KNN = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_KNN, clf
 	else:
-		fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 		y_predict=clf.predict(X_test)
-		eval_metrics_KNN = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
-		return eval_metrics_KNN
-
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
+	
 ##### KMeans
-def KMeans(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-                logger.warn("KMeans does not support weighted classification")
-                return
-
-	clf=sklearn.cluster.KMeans(n_clusters=2, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto',
-		verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')
-	logger.info("Kmeans >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(clf, X, y)
-		logger.info(score)
-		return score
+def KMeans(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+	                logger.warn("KMeans does not support weighted classification")
+	                return
+	
+		clf=sklearn.cluster.KMeans(n_clusters=2, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto',
+			verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')
+		logger.info("Kmeans >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)
+			eval_metrics_kmeans = Evaluation_Metrics.eval_metrics_cluster(y_test, y_predict)
+			return eval_metrics_kmeans, clf
+			#Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
 	else:
-		fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 		y_predict=clf.predict(X_test)
-		eval_metrics_kmeans = Evaluation_Metrics.eval_metrics_cluster(y_test, y_predict)
-		return eval_metrics_kmeans
-		#Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
 
 ##### Bagging
-def Bagging(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-		base_classifier=DecisionTreeClassifier(class_weight='balanced')
+def Bagging(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+			base_classifier=DecisionTreeClassifier(class_weight='balanced')
+		else:
+			base_classifier=DecisionTreeClassifier()
+	
+		clf=BaggingClassifier(base_estimator=base_classifier, n_estimators=10, max_samples=1.0, max_features=1.0,
+			bootstrap=True, bootstrap_features=False, oob_score=False, warm_start=False, n_jobs=1, random_state=None,
+			verbose=0)
+		logger.info("Bagging_scores >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)
+			eval_metrics_bagging = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_bagging, clf
 	else:
-		base_classifier=DecisionTreeClassifier()
-
-	clf=BaggingClassifier(base_estimator=base_classifier, n_estimators=10, max_samples=1.0, max_features=1.0,
-		bootstrap=True, bootstrap_features=False, oob_score=False, warm_start=False, n_jobs=1, random_state=None,
-		verbose=0)
-	logger.info("Bagging_scores >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(clf, X, y)
-		logger.info(score)
-		return score
-	else:
-		fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 		y_predict=clf.predict(X_test)
-		eval_metrics_bagging = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
-		return eval_metrics_bagging
+		logger.info(np.shape(y_test))
+		logger.info(np.shape(X_test))
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
 
 #### Boosting
-def Boosting(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
-	if config["Classifiers"]["weighted"] == "True":
-		base_classifier=DecisionTreeClassifier(class_weight='balanced')
+def Boosting(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+			base_classifier=DecisionTreeClassifier(class_weight='balanced')
+		else:
+			base_classifier=DecisionTreeClassifier()
+	
+		clf = AdaBoostClassifier(base_estimator=base_classifier, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R',
+			random_state=None)
+		logger.info("Boosting >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)
+			eval_metrics_boosting = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+			return eval_metrics_boosting, clf
 	else:
-		base_classifier=DecisionTreeClassifier()
-
-	clf = AdaBoostClassifier(base_estimator=base_classifier, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R',
-		random_state=None)
-	logger.info("Boosting >>>>>>>")
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":
-		score=Evaluation_Metrics.Cross_validation(clf, X, y)
-		logger.info(score)
-		return score
-	else:
-		fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 		y_predict=clf.predict(X_test)
-		eval_metrics_boosting = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
-		return eval_metrics_boosting
+		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_SVM, clf
 
 ############### imbalanced learning
 def DNN(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
@@ -339,10 +392,13 @@ def DNN(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
 		y_predict = model_dnn.predict(X_test)
 		eval_metrics_DNN = Evaluation_Metrics.eval_metrics(model_dnn, X, y, y_test, y_predict.round())
 		return eval_metrics_DNN
+
 def HDDT():
 	#java -cp <path to weka-hddt.jar> weka.classifiers.trees.HTree -U -A -B -t <training file> -T <testing file>
+	
 	weka_hddt_path="weka-hddt-3-7-1.jar"
 	subprocess.call(['java', '-cp', weka_hhdt_path,'weka.classifiers.trees.HTree', '-U', '-A' '-B' '-t', y_predict, y_test])
+
 ##To-Do: Add DNN and OLL
 ####
 def rank_classifier(eval_clf_dict, metric_str):
@@ -366,70 +422,107 @@ def rank_classifier(eval_clf_dict, metric_str):
 		sorted_eval_clf_dict[tuple[1]] = eval_clf_dict[tuple[1]]
 	logger.info(sorted_eval_clf_dict)
 
-
-
 def classifiers(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
 	logger.info("##### Classifiers #####")
 	summary=Features.summary
 	summary.write("\n##############\n\nClassifiers Used:\n")
 	eval_metrics_per_classifier_dict = {}
-	if not X_test and config["Evaluation Metrics"]["cross_val_score"] != "True":
-		X, X_test, y, y_test = train_test_split(X, y, train_size=0.9, test_size=0.1)
-	if config["Evaluation Metrics"]["cross_val_score"] != "True":
-		if config["Imbalanced Datasets"]["make_imbalanced_dataset"] == "True":
-			X_train_balanced, y_train_balanced = Imbalanced_Dataset.Make_Imbalanced_Dataset(X, y)
-	#X,y, X_test, y_test=load_dataset()
-	#X,y, X_test, y_test=load_dictionary()
+	if config["Classification"]["load model"] != "True":
+		if X_test is None and config["Evaluation Metrics"]["cross_val_score"] != "True":
+			X, X_test, y, y_test = train_test_split(X, y, train_size=0.9, test_size=0.1)
+		if config["Evaluation Metrics"]["cross_val_score"] != "True":
+			if config["Imbalanced Datasets"]["make_imbalanced_dataset"] == "True":
+				X_train_balanced, y_train_balanced = Imbalanced_Dataset.Make_Imbalanced_Dataset(X, y)
+		trained_model = None
 	if config["Classifiers"]["SVM"] == "True":
-		eval_SVM = SVM(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_svm.pkl")
+		eval_SVM, model = SVM(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['SVM'] = eval_SVM
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_svm.pkl")
 		summary.write("SVM\n")
 	if config["Classifiers"]["RandomForest"] == "True":
-		eval_RF = RandomForest(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_RF.pkl")
+		eval_RF, model = RandomForest(X,y, X_test, y_test, X_train_balanced, y_train_balanced,trained_model)
 		eval_metrics_per_classifier_dict['RF'] = eval_RF
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_RF.pkl")
 		summary.write("Random Forest\n")
 	if config["Classifiers"]["DecisionTree"] == "True":
-		eval_DT = DecisionTree(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_DT.pkl")
+		eval_DT, model = DecisionTree(X,y, X_test, y_test, None, None, trained_model)
 		eval_metrics_per_classifier_dict['Dec_tree'] = eval_DT
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_DT.pkl")
 		summary.write("Decision Tree \n")
 	if config["Classifiers"]["GaussianNaiveBayes"] == "True":
-		eval_NB = GaussianNaiveBayes(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_GNB.pkl")
+		eval_NB, model = GaussianNaiveBayes(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['NB'] = eval_NB
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_GNB.pkl")
 		summary.write("Gaussian Naive Bayes \n")
 	if config["Classifiers"]["MultinomialNaiveBayes"] == "True":
-		eval_MNB =  MultinomialNaiveBayes(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_MNB.pkl")
+		eval_MNB, model =  MultinomialNaiveBayes(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['MNB'] = eval_MNB
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_MNB.pkl")
 		summary.write("Multinomial Naive Bayes \n")
 	if config["Classifiers"]["LogisticRegression"] == "True":
-		eval_LR = LogisticRegression(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_LR.pkl")
+		eval_LR, model = LogisticRegression(X,y, X_test, y_test, X_train_balanced, y_train_balanced, traine_model)
 		eval_metrics_per_classifier_dict['LR'] = eval_LR
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_LR.pkl")
 		summary.write("Logistic Regression\n")
 	if config["Classifiers"]["kNearestNeighbor"] == "True":
-		eval_knn = kNearestNeighbor(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_KNN.pkl")
+		eval_knn, model = kNearestNeighbor(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['KNN'] = eval_knn
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_KNN.pkl")
 		summary.write("kNearest Neighbor\n")
 	if config["Classifiers"]["KMeans"] == "True":
-		eval_kmeans = KMeans(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_Kmeans.pkl")
+		eval_kmeans, model = KMeans(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['KMeans'] = eval_kmeans
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_Kmeans.pkl")
 		summary.write("kMeans \n")
 	if config["Classifiers"]["Bagging"] == "True":
-		eval_bagging = Bagging(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_bagging.pkl")
+		eval_bagging, model = Bagging(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['Bagging'] = eval_bagging
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_bagging.pkl")
 		summary.write("Bagging \n")
 	if config["Classifiers"]["Boosting"] == "True":
-		eval_boosting = Boosting(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_boosting.pkl")
+		eval_boosting, model = Boosting(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['Boosting'] = eval_boosting
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/model_boosting.pkl")
 		summary.write("Boosting \n")
 	if config["Classifiers"]["DNN"] == "True":
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/model_DNN.pkl")
 		eval_dnn = DNN(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
 		eval_metrics_per_classifier_dict['DNN'] = eval_dnn
 		summary.write("DNN \n")
-	# print (eval_metrics_per_classifier_dict)
+	logger.info(eval_metrics_per_classifier_dict)
 	if config["Classification"]["Rank Classifiers"] == "True":
-		# print (eval_metrics_per_classifier_dict)
-		# print ("The classifiers ranked: ")
 		rank_classifier(eval_metrics_per_classifier_dict, config["Classification"]["rank on metric"])
-
 
 def fit_MNB(X,y):
 	mnb=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)

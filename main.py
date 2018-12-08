@@ -22,13 +22,15 @@ from sklearn.datasets import dump_svmlight_file
 parser = argparse.ArgumentParser(description='Argument parser')
 parser.add_argument("-v", "--verbose", help="increase output verbosity",
                     action="store_true")
+parser.add_argument("-o", "--output_input_dir", help="Output/input directory to read features or dump extracted features",
+                    type=str, default="Data_Dump")
+
+args = parser.parse_args()
 
 config=configparser.ConfigParser()
 config.read('Config_file.ini')
 
 def setup_logger():
-    args = parser.parse_args()
-
     # create formatter
     # formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
     formatter = logging.Formatter('[%(asctime)s] p%(process)s {%(filename)s:%(lineno)d} %(levelname)s - %(message)s','%m-%d %H:%M:%S')
@@ -102,28 +104,39 @@ def Confirmation():
     answer = query_yes_no("Do you wish to continue?")
     return answer
 
-def load_dataset(load_test=False):
+def load_dataset(load_train=True, load_test=False):
     y_test = None
     X_test = None
+    X_train = None
+    y_train = None
+    vectorizer = None
     if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-        vectorizer= joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
-        X_train=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
-        y_train=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
+        if load_train:
+            email_train_dir = os.path.join(args.output_input_dir, "Emails_Training")
+            vectorizer= joblib.load(os.path.join(email_train_dir, "vectorizer.pkl"))
+            X_train=joblib.load(os.path.join(email_train_dir, "X_train.pkl"))
+            y_train=joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
         try:
             if load_test:
-                X_test=joblib.load("Data_Dump/Emails_Testing/X_test.pkl")
-                y_test=joblib.load("Data_Dump/Emails_Testing/y_test.pkl")
+                email_test_dir = os.path.join(args.output_input_dir, "Emails_Testing")
+                vectorizer= joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
+                X_test=joblib.load(os.path.join(email_test_dir, "X_test.pkl"))
+                y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
         except FileNotFoundError as ex:
             logger.warn("Test files not found {}".format(ex))
 
     elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
-        vectorizer= joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
-        X_train=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
-        y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
+        if load_train:
+            url_train_dir = os.path.join(args.output_input_dir, "URLs_Training")
+            vectorizer= joblib.load(os.path.join(url_train_dir, "vectorizer.pkl"))
+            X_train=joblib.load(os.path.join(url_train_dir, "X_train.pkl"))
+            y_train=joblib.load(os.path.join(url_train_dir, "y_train.pkl"))
         try:
             if load_test:
-                X_test=joblib.load("Data_Dump/URLs_Testing/X_test.pkl")
-                y_test=joblib.load("Data_Dump/URLs_Testing/y_test.pkl")
+                url_test_dir = os.path.join(args.output_input_dir, "URLs_Testing")
+                vectorizer= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
+                X_test=joblib.load(os.path.join(url_test_dir, "X_test.pkl"))
+                y_test=joblib.load(os.path.join(url_test_dir, "y_test.pkl"))
         except FileNotFoundError as ex:
             logger.warn("Test files not found {}".format(ex))
 
@@ -138,25 +151,30 @@ def main():
 
 
 ### Feature ranking only
+    ranking_dir = os.path.join(args.output_input_dir, "Feature_Ranking")
+    email_train_dir = os.path.join(args.output_input_dir, "Emails_Training")
+    email_test_dir = os.path.join(args.output_input_dir, "Emails_Testing")
+    url_train_dir = os.path.join(args.output_input_dir, "URLs_Training")
+    url_test_dir = os.path.join(args.output_input_dir, "URLs_Testing")
     if config["Feature Selection"]["Feature Ranking Only"]=='True':
         if config["Extraction"]["feature extraction"] == "True":
-            if not os.path.exists("Data_Dump/Feature_Ranking"):
-                os.makedirs("Data_Dump/Feature_Ranking")
+            if not os.path.exists(ranking_dir):
+                os.makedirs(ranking_dir)
             if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
-                if not os.path.exists("Data_Dump/Emails_Training"):
-                    os.makedirs("Data_Dump/Emails_Training")
+                if not os.path.exists(email_train_dir):
+                    os.makedirs(email_train_dir)
                 (feature_list_dict_train, y, corpus)=Features.Extract_Features_Emails_Training()
                 X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
                 X=Features_Support.Preprocessing(X)
-                joblib.dump(vectorizer,"Data_Dump/Emails_Training/vectorizer.pkl")
+                joblib.dump(vectorizer,os.path.join(email_train_dir, "vectorizer.pkl"))
 
             elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
-                if not os.path.exists("Data_Dump/URLs_Training"):
-                    os.makedirs("Data_Dump/URLs_Training")
+                if not os.path.exists(url_train_dir):
+                    os.makedirs(url_train_dir)
                 (feature_list_dict_train, y, corpus_train)=Features.Extract_Features_Urls_Training()
                 X, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
                 X=Features_Support.Preprocessing(X)
-                joblib.dump(vectorizer,"Data_Dump/URLs_Training/vectorizer.pkl")
+                joblib.dump(vectorizer,os.path.join(url_train_dir, "vectorizer.pkl"))
         
         else: 
             X, y, X_test, y_test, vectorizer = load_dataset()
@@ -167,30 +185,30 @@ def main():
         #X, selection = Feature_Selection.Select_Best_Features_Training(X, y, k)
         X, selection = Feature_Selection.Feature_Ranking(X, y,k, feature_list_dict_train)
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
-            joblib.dump(selection,"Data_Dump/Emails_Training/selection.pkl")
+            joblib.dump(selection, os.path.join(email_train_dir, "selection.pkl"))
         elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
-            joblib.dump(selection,"Data_Dump/URLs_Training/selection.pkl")
+            joblib.dump(selection, os.path.join(url_train_dir, "selection.pkl"))
 ### Email FEature Extraction
     elif config["Extraction"]["Feature Extraction"]=='True':
         Feature_extraction=True
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
             if config["Extraction"]["Training Dataset"] == "True":
                 # Create Data Dump directory if doesn't exist
-                if not os.path.exists("Data_Dump/Emails_Training"):
-                    os.makedirs("Data_Dump/Emails_Training")
+                if not os.path.exists(email_train_dir):
+                    os.makedirs(email_train_dir)
                 # Extract features in a dictionnary for each email. return a list of dictionaries
                 (feature_list_dict_train, y_train, corpus_train)=Features.Extract_Features_Emails_Training()
                 # Tranform the list of dictionaries into a sparse matrix
                 X_train, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
                 # Save model for vectorization
-                joblib.dump(vectorizer,"Data_Dump/Emails_Training/vectorizer.pkl")
+                joblib.dump(vectorizer, os.path.join(email_train_dir, "vectorizer.pkl"))
                 # Add tfidf if the user marked it as True
                 if config["Email_Features"]["tfidf_emails"] == "True":
                     logger.info("tfidf_emails_train ######")
                     Tfidf_train, tfidf_vectorizer=Tfidf.tfidf_training(corpus_train)
                     X_train=hstack([X_train, Tfidf_train])
                     # Save tfidf model
-                    joblib.dump(tfidf_vectorizer,"Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
+                    joblib.dump(tfidf_vectorizer, os.path.join(email_train_dir, "tfidf_vectorizer.pkl"))
                 
                 # Use Min_Max_scaling for prepocessing the feature matrix
                 X_train=Features_Support.Preprocessing(X_train)
@@ -203,7 +221,7 @@ def main():
                     #X_train, selection = Feature_Selection.Select_Best_Features_Training(X_train, y_train, k)
                     X_train, selection = Feature_Selection.Feature_Ranking(X_train, y_train,k, feature_list_dict_train)
                     # dump selection model
-                    joblib.dump(selection,"Data_Dump/Emails_Training/selection.pkl")
+                    joblib.dump(selection, os.path.join(email_train_dir, "selection.pkl"))
                     logger.info("### Feature Ranking and Selection for Training Done!")
                 
                 
@@ -215,8 +233,8 @@ def main():
                 #fit_MNB(X_train, y_train)
                 # Save features for training dataset
                 #dump_svmlight_file(X_train,y_train,"Data_Dump/Emails_Training/Feature_Matrix.txt")
-                joblib.dump(X_train,"Data_Dump/Emails_Training/X_train.pkl")
-                joblib.dump(y_train,"Data_Dump/Emails_Training/y_train.pkl")
+                joblib.dump(X_train, os.path.join(email_train_dir, "X_train.pkl"))
+                joblib.dump(y_train, os.path.join(email_train_dir, "y_train.pkl"))
 
                 # flag to mark if training was done
                 flag_training=True
@@ -225,9 +243,9 @@ def main():
             if config["Extraction"]["Testing Dataset"] == "True":
                 # if training was done in another instance of the plaform then load the necessary files
                 if flag_training==False:
-                    X_train=joblib.load("Data_Dump/Emails_Training/X_train.pkl")
-                    y_train=joblib.load("Data_Dump/Emails_Training/y_train.pkl")
-                    vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
+                    X_train=joblib.load(os.path.join(email_train_dir, "X_train.pkl"))
+                    y_train=joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
+                    vectorizer=joblib.load(os.path.join(email_train_dir, "vectorizer.pkl"))
                     
                 # Extract features in a dictionnary for each email. return a list of dictionaries
                 (feature_list_dict_test, y_test, corpus_test)=Features.Extract_Features_Emails_Testing()
@@ -236,7 +254,7 @@ def main():
                 
                 # Add tfidf if the user marked it as True
                 if config["Email_Features"]["tfidf_emails"] == "True":
-                    tfidf_vectorizer=joblib.load("Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
+                    tfidf_vectorizer=joblib.load(os.path.join(email_train_dir, "tfidf_vectorizer.pkl"))
                     logger.info("tfidf_emails_train ######")
                     Tfidf_test=Tfidf.tfidf_testing(corpus_test, tfidf_vectorizer)
                     X_test=hstack([X_test, Tfidf_test])
@@ -247,7 +265,7 @@ def main():
                 # feature ranking
                 if config["Feature Selection"]["select best features"]=="True":
                     #k: Number of Best features
-                    selection=joblib.load("Data_Dump/Emails_Training/selection.pkl")
+                    selection=joblib.load(os.path.join(email_train_dir, "selection.pkl"))
                     k = int(config["Feature Selection"]["number of best features"])
                     X_test = Feature_Selection.Select_Best_Features_Testing(X_test, selection, k, feature_list_dict_test)
                     logger.info("### Feature Ranking and Selection for Training Done!")
@@ -257,18 +275,18 @@ def main():
                     X_test, y_test=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_test, y_test)
 
                 #Dump Testing feature matrix with labels
-                if not os.path.exists("Data_Dump/Emails_Testing"):
-                    os.makedirs("Data_Dump/Emails_Testing")
-                joblib.dump(X_test,"Data_Dump/Emails_Testing/X_test.pkl")
-                joblib.dump(y_test,"Data_Dump/Emails_Testing/y_test.pkl")
+                if not os.path.exists(email_test_dir):
+                    os.makedirs(email_test_dir)
+                joblib.dump(X_test, os.path.join(email_test_dir, "X_test.pkl"))
+                joblib.dump(y_test, os.path.join(email_test_dir, "y_test.pkl"))
                 logger.info("Feature Extraction for testing dataset: Done!")
 
 ######## URL feature extraction
         elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
             if config["Extraction"]["Training Dataset"] == "True":
                 # Create directory to store dada
-                if not os.path.exists("Data_Dump/URLs_Training"):
-                    os.makedirs("Data_Dump/URLs_Training")
+                if not os.path.exists(url_train_dir):
+                    os.makedirs(url_train_dir)
 
                 # Extract features in a dictionnary for each email. return a list of dictionaries
                 (feature_list_dict_train, y_train, corpus_train)=Features.Extract_Features_Urls_Training()
@@ -276,21 +294,21 @@ def main():
                 # Tranform the list of dictionaries into a sparse matrix
                 X_train, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
                 # Dump vectorizer
-                joblib.dump(vectorizer,"Data_Dump/URLs_Training/vectorizer.pkl")
-                joblib.dump(X_train,"Data_Dump/URLs_Training/X_train_unprocessed.pkl")
+                joblib.dump(vectorizer, os.path.join(url_train_dir, "vectorizer.pkl"))
+                joblib.dump(X_train, os.path.join(url_train_dir, "X_train_unprocessed.pkl"))
                 # Add tfidf if the user marked it as True
                 if config["HTML_Features"]["tfidf_websites"] == "True":
                     logger.info("Extracting TFIDF features for training websites ###### ######")
                     Tfidf_train, tfidf_vectorizer=Tfidf.tfidf_training(corpus_train)
-                    joblib.dump(Tfidf_train, "Data_Dump/URLs_Training/tfidf_features.pkl")
+                    joblib.dump(Tfidf_train, os.path.join(url_train_dir, "tfidf_features.pkl"))
                     X_train=hstack([X_train, Tfidf_train])
                     #dump tfidf vectorizer
-                    joblib.dump(tfidf_vectorizer,"Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
+                    joblib.dump(tfidf_vectorizer, os.path.join(url_train_dir, "tfidf_vectorizer.pkl"))
                 
-                joblib.dump(X_train,"Data_Dump/URLs_Training/X_train_unprocessed_with_tfidf.pkl")
+                joblib.dump(X_train, os.path.join(url_train_dir, "X_train_unprocessed_with_tfidf.pkl"))
                 # Use Min_Max_scaling for prepocessing the feature matrix
                 X_train=Features_Support.Preprocessing(X_train)
-                joblib.dump(X_train,"Data_Dump/URLs_Training/X_train_processed.pkl")
+                joblib.dump(X_train, os.path.join(url_train_dir, "X_train_processed.pkl"))
 
                 # Feature Selection
                 if config["Feature Selection"]["select best features"]=="True":
@@ -298,16 +316,16 @@ def main():
                     k = int(config["Feature Selection"]["number of best features"])
                     X_train, selection = Feature_Selection.Feature_Ranking(X_train, y_train,k, feature_list_dict_train)
                     #Dump model
-                    joblib.dump(selection,"Data_Dump/URLs_Training/selection.pkl")
-                    joblib.dump(X_train,"Data_Dump/URLs_Training/X_train_processed_best_features.pkl")
+                    joblib.dump(selection, os.path.join(url_train_dir, "selection.pkl"))
+                    joblib.dump(X_train, os.path.join(url_train_dir, "X_train_processed_best_features.pkl"))
 
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_train, y_train=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_train, y_train)
                 # dump features and labels and vectorizers
 
-                joblib.dump(X_train,"Data_Dump/URLs_Training/X_train.pkl")
-                joblib.dump(y_train,"Data_Dump/URLs_Training/y_train.pkl")
+                joblib.dump(X_train, os.path.join(url_train_dir, "X_train.pkl"))
+                joblib.dump(y_train, os.path.join(url_train_dir, "y_train.pkl"))
 
                 # flag to mark if training was done
                 flag_training=True
@@ -316,65 +334,68 @@ def main():
             if config["Extraction"]["Testing Dataset"] == "True":
                 # if training was done in another instance of the plaform then load the necessary files
                 if flag_training==False:
-                    X_train=joblib.load("Data_Dump/URLs_Training/X_train.pkl")
-                    y_train=joblib.load("Data_Dump/URLs_Training/y_train.pkl")
-                    vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
+                    X_train=joblib.load(os.path.join(url_train_dir, "X_train.pkl"))
+                    y_train=joblib.load(os.path.join(url_train_dir, "y_train.pkl"))
+                    vectorizer=joblib.load(os.path.join(url_train_dir, "vectorizer.pkl"))
                     
                 # Extract features in a dictionnary for each email. return a list of dictionaries
                 (feature_list_dict_test, y_test, corpus_test)=Features.Extract_Features_Urls_Testing()
                 # Tranform the list of dictionaries into a sparse matrix
                 X_test=Features_Support.Vectorization_Testing(feature_list_dict_test, vectorizer)
-                joblib.dump(X_test,"Data_Dump/URLs_Testing/X_test_unprocessed.pkl")
+                joblib.dump(X_test, os.path.join(url_test_dir, "X_test_unprocessed.pkl"))
                 # TFIDF
                 if config["HTML_Features"]["tfidf_websites"] == "True":
                     if flag_training==False:
-                        tfidf_vectorizer=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
+                        tfidf_vectorizer=joblib.load( os.path.join(url_train_dir, "tfidf_vectorizer.pkl"))
                     logger.info("Extracting TFIDF features for testing websites ######")
                     Tfidf_test=Tfidf.tfidf_testing(corpus_test, tfidf_vectorizer)
-                    joblib.dump(Tfidf_test, "Data_Dump/URLs_Testing/tfidf_features.pkl")
+                    joblib.dump(Tfidf_test, os.path.join(url_test_dir, "tfidf_features.pkl"))
                     X_test=hstack([X_test, Tfidf_test])
                 
-                joblib.dump(X_test,"Data_Dump/URLs_Testing/X_test_unprocessed_with_tfidf.pkl")
+                joblib.dump(X_test, os.path.join(url_test_dir, "X_test_unprocessed_with_tfidf.pkl"))
                 # Use Min_Max_scaling for prepocessing the feature matrix
                 X_test=Features_Support.Preprocessing(X_test)
-                joblib.dump(X_train,"Data_Dump/URLs_Training/X_test_processed.pkl")
+                joblib.dump(X_test, os.path.join(url_test_dir, "X_test_processed.pkl"))
                 
                 # Feature Selection
                 if config["Feature Selection"]["select best features"]=="True":
                     if flag_training==False:
-                        selection=joblib.load("Data_Dump/URLs_Training/selection.pkl")
+                        selection=joblib.load(os.path.join(url_train_dir, "selection.pkl"))
                     #k: Number of Best features
                     k = int(config["Feature Selection"]["number of best features"])
                     X_test = Feature_Selection.Select_Best_Features_Testing(X_test, selection, k, feature_list_dict_test)
-                    joblib.dump(X_train,"Data_Dump/URLs_Training/X_test_processed_best_features.pkl")
+                    joblib.dump(X_test, os.path.join(url_test_dir, "X_test_processed_best_features.pkl"))
                 
                 
                 # Test on imbalanced datasets
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_test, y_test=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_test, y_test)
                 #Dump Testing feature matrix with labels
-                if not os.path.exists("Data_Dump/URLs_Testing"):
-                    os.makedirs("Data_Dump/URLs_Testing")
-                joblib.dump(X_test,"Data_Dump/URLs_Testing/X_test.pkl")
-                joblib.dump(y_test,"Data_Dump/URLs_Testing/y_test.pkl")
+                if not os.path.exists(url_test_dir):
+                    os.makedirs(url_test_dir)
+                joblib.dump(X_test, os.path.join(url_test_dir, "X_test.pkl"))
+                joblib.dump(y_test, os.path.join(url_test_dir, "y_test.pkl"))
                 logger.info("Feature Extraction for testing dataset: Done!")
 
 
     if config["Classification"]["Running the classifiers"]=="True":
         if Feature_extraction==False:
-            X_train, y_train, X_test, y_test, vectorizer = load_dataset(True)
+            if config["Classification"]["load model"] == "True":
+                X_train, y_train, X_test, y_test, vectorizer = load_dataset(load_train=False, load_test=True)
+                logger.info("loading test dataset only")
+            else:
+                X_train, y_train, X_test, y_test, vectorizer = load_dataset(load_train=True, load_test=True)
             if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
-                vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
                 features_extracted=vectorizer.get_feature_names()
                 #logger.info(features_extracted)
                 import numpy as np
-                logger.info(np.shape(X_train))
-                Features_training=vectorizer.inverse_transform(X_train)
+                if X_train is not None:
+                    logger.info(np.shape(X_train))
+                    Features_training=vectorizer.inverse_transform(X_train)
                 if X_test is not None:
                     Features_testing=vectorizer.inverse_transform(X_test)
                 mask=[]
-                mask.append(0)
-                list_restricted_features=[]
+                #mask.append(0)
                 #logger.info("Section: {} ".format(section))
                 for feature in features_extracted:
                     feature_name=feature
@@ -386,28 +407,30 @@ def main():
                         try:
                             if config[section][feature_name]=="True":
                                 if config[section][section.lower()]=="True":
-                                    list_restricted_features.append(feature)
                                     mask.append(1)
                                 else:
                                     mask.append(0)
+                            else:
+                                mask.append(0)
                         except KeyError as e:
                             pass
                 vectorizer.restrict(mask)
                 #logger.info((vectorizer.get_feature_names()))
-                X_train=vectorizer.transform(Features_training)
-                logger.info(np.shape(X_train))
+                url_classification_dir =  os.path.join(args.output_input_dir, "URLs_Classification")
+                if X_train is not None:
+                    X_train=vectorizer.transform(Features_training)
+                    logger.info(np.shape(X_train))
                 if X_test is not None:
                     X_test=vectorizer.transform(Features_testing)
-                if not os.path.exists("Data_Dump/URLs_Classification"):
-                    os.makedirs("Data_Dump/URLs_Classification")
-                joblib.dump(vectorizer, "Data_Dump/URLs_Classification/vectorizer_restricted.pkl")
-                joblib.dump(X_train,"Data_Dump/URLs_Classification/X_train_restricted.pkl")
+                if not os.path.exists(url_classification_dir):
+                    os.makedirs(url_classification_dir)
+                joblib.dump(vectorizer, os.path.join(url_classification_dir, "vectorizer_restricted.pkl"))
+                if X_train is not None:
+                    joblib.dump(X_train, os.path.join(url_classification_dir, "X_train_restricted.pkl"))
                 if X_test is not None:
-                    joblib.dump(X_test,"Data_Dump/URLs_Classification/X_test_restricted.pkl")
+                    joblib.dump(X_test, os.path.join(url_classification_dir, "X_test_restricted.pkl"))
                 logger.info(len(vectorizer.get_feature_names()))
-
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-                vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
                 features_extracted = vectorizer.get_feature_names()
                 logger.info(len(features_extracted))
                 mask= []
