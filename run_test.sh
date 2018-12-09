@@ -10,4 +10,5 @@ mv "$OUTPUT_DIR/URLs_Testing/y_train_test.pkl" "$OUTPUT_DIR/URLs_Testing/y_test.
 rm "$OUTPUT_DIR/URLs_Testing/X_train_unprocessed_test.pkl"
 
 output=$(python main.py --output_input_dir $OUTPUT_DIR --ignore_confirmation 2>&1 >/dev/null)
-echo "$output" | grep Classifiers.py:521
+echo "$output" | grep "'CM'"
+echo "$output" | grep "Confusion Matrix"
