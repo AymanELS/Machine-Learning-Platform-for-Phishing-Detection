@@ -34,7 +34,7 @@ config=configparser.ConfigParser()
 config.read('Config_file.ini')
 
 def Confusion_matrix(y_test, y_predict):
-		confusion_matrix=sklearn.metrics.confusion_matrix(y_test, y_predict)
+		confusion_matrix=sklearn.metrics.confusion_matrix(y_test, y_predict, labels=[0,1])
 		tn, fp, fn, tp=confusion_matrix.ravel()
 		logger.info("Confusion Matrix (TN, FP, FN, TP):({}, {}, {}, {})".format(tn, fp, fn, tp))
 		return ([tn, fp, fn, tp])

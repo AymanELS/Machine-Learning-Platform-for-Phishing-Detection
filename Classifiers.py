@@ -322,8 +322,6 @@ def Bagging(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, c
 			return eval_metrics_bagging, clf
 	else:
 		y_predict=clf.predict(X_test)
-		logger.info(np.shape(y_test))
-		logger.info(np.shape(X_test))
 		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
 		return eval_metrics_SVM, clf
 

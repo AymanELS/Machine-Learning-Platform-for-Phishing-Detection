@@ -644,7 +644,11 @@ def mean_scaling(Array_Features):
 
 def min_max_scaling(Array_Features):
     min_max_scaler = preprocessing.MinMaxScaler()
-    minmaxScaled_Array_features=min_max_scaler.fit_transform(Array_Features)
+    if np.shape(Array_Features)[0] == 1:
+        minmaxScaled_Array_features=min_max_scaler.fit_transform(np.transpose(Array_Features))
+        minmaxScaled_Array_features = np.transpose(minmaxScaled_Array_features)
+    else:
+        minmaxScaled_Array_features=min_max_scaler.fit_transform(Array_Features)
     #get min and max of array features
     min_Array_Features=min_max_scaler.min_
     #max_Array_Features=min_max_scaler.max_  #does not exit

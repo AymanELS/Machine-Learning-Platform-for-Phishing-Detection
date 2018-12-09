@@ -7,7 +7,7 @@ import pickle
 import argparse
 import re
 import numpy as np
-
+import Features_Support
 
 # prog = re.compile("('[a-zA-Z0-9_\-\. ]*':\"'[a-zA-Z0-9_\-\. ]*'\")|('[a-zA-Z0-9_\-\. ]*':\"[a-zA-Z0-9_\-\. ]*\")|('[a-zA-Z0-9_\-\. ]*':[0-9\.[0-9]*)|('[a-zA-Z0-9_\-\. ]*':*)")
 
@@ -77,13 +77,14 @@ def convert_to_vectorizer(list_of_feature_vectors, dataset_name, data_type):
 	print ("Vectorizer shape:{}".format(sparse_matrix_features.shape))
 	joblib.dump(sparse_matrix_features,
 		    os.path.join(args.output_dir, "X_train_unprocessed_" + dataset_name + ".pkl"))
+	joblib.dump(Features_Support.Preprocessing(sparse_matrix_features),
+		    os.path.join(args.output_dir, "X_train_processed_" + dataset_name + ".pkl"))
 	joblib.dump(vectorizer,
 		    os.path.join(args.output_dir, "vectorizer_" + dataset_name + ".pkl"))
 	if data_type.lower() == "phish":
 		labels = np.ones(len(list_of_feature_vectors))
 	if data_type.lower() == "legit":
 		labels = np.zeros(len(list_of_feature_vectors))
-	print ("Labels shape:{}".format(labels.shape))
 	joblib.dump(labels, os.path.join(args.output_dir, "y_train_" + dataset_name + ".pkl"))
 
 if __name__ == '__main__':
