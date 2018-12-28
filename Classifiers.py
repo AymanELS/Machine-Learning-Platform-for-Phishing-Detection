@@ -114,7 +114,7 @@ def SVM(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=N
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			clf.fit(X, y)
 			y_predict=clf.predict(X_test)
@@ -142,7 +142,7 @@ def RandomForest(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=No
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=clf.predict(X_test)
@@ -168,7 +168,7 @@ def DecisionTree(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=No
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=clf.predict(X_test)			
@@ -191,7 +191,7 @@ def GaussianNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_balan
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=gnb.predict(X_test)
@@ -213,7 +213,7 @@ def MultinomialNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_ba
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=mnb.predict(X_test)
@@ -226,7 +226,7 @@ def MultinomialNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_ba
 	
 ##### Logistic Regression
 def LogisticRegression(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
-	if cls is None:
+	if clf is None:
 		if config["Classifiers"]["weighted"] == "True":
 			clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1,
 				class_weight='balanced', random_state=None, solver='liblinear', max_iter=100, multi_class='ovr',
@@ -239,7 +239,7 @@ def LogisticRegression(X,y, X_test, y_test, X_train_balanced=None, y_train_balan
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=clf.predict(X_test)
@@ -263,7 +263,7 @@ def kNearestNeighbor(X,y, X_test, y_test, X_train_balanced=None, y_train_balance
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=clf.predict(X_test)
@@ -287,7 +287,7 @@ def KMeans(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, cl
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=clf.predict(X_test)
@@ -314,7 +314,7 @@ def Bagging(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, c
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=clf.predict(X_test)
@@ -339,7 +339,7 @@ def Boosting(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, 
 		if config["Evaluation Metrics"]["cross_val_score"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
-			return score
+			return score, None
 		else:
 			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
 			y_predict=clf.predict(X_test)
@@ -431,7 +431,7 @@ def classifiers(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=Non
 		if config["Evaluation Metrics"]["cross_val_score"] != "True":
 			if config["Imbalanced Datasets"]["make_imbalanced_dataset"] == "True":
 				X_train_balanced, y_train_balanced = Imbalanced_Dataset.Make_Imbalanced_Dataset(X, y)
-		trained_model = None
+	trained_model = None
 	if config["Classifiers"]["SVM"] == "True":
 		if config["Classification"]["load model"] == "True":
 			trained_model = joblib.load("Data_Dump/model_svm.pkl")
@@ -475,7 +475,7 @@ def classifiers(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=Non
 	if config["Classifiers"]["LogisticRegression"] == "True":
 		if config["Classification"]["load model"] == "True":
 			trained_model = joblib.load("Data_Dump/model_LR.pkl")
-		eval_LR, model = LogisticRegression(X,y, X_test, y_test, X_train_balanced, y_train_balanced, traine_model)
+		eval_LR, model = LogisticRegression(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['LR'] = eval_LR
 		if config["Classification"]["save model"] == "True" and model is not None:
 			joblib.dump(model, "Data_Dump/model_LR.pkl")

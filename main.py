@@ -419,8 +419,8 @@ def main():
                                 mask.append(0)
                         except KeyError as e:
                             pass
+                logger.info(len(vectorizer_train.get_feature_names()))
                 vectorizer_train.restrict(mask)
-                #logger.info((vectorizer.get_feature_names()))
                 url_classification_dir =  os.path.join(args.output_input_dir, "URLs_Classification")
                 if X_train is not None:
                     X_train=vectorizer_train.transform(Features_training)
