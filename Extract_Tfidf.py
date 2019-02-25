@@ -30,7 +30,7 @@ args = parser.parse_args()
 def website_tfidf():
         corpus=convert_from_pkl_to_text(args.html_content[0])
         print("length of list of html content (rows in tfidf matrix): {}".format(len(corpus)))
-        tfidf_matrix=Tfidf_Vectorizer(corpus)
+        tfidf_matrix=Tfidf_Vectorizer(corpus)i
         if args.features:
                 X_features = joblib.load(args.features)
                 return Combine_Matrix(X_features,tfidf_matrix)
@@ -42,9 +42,9 @@ def url_tfidf(word=True, X_input=None):
         corpus=convert_from_pkl_to_text(args.html_content[0])
         print("length of list of URLs (rows in tfidf matrix): {}".format(len(corpus)))
         if word:
-                tfidf_matrix=Tfidf_Vectorizer(corpus, analyzer='word', tokenizer=url_tokenizer)
+                tfidf_matrix=Tfidf_Vectorizer(corpus, analyzer='word', tokenizer=url_tokenizer, idf=False)
         else:
-                tfidf_matrix=Tfidf_Vectorizer(corpus, analyzer='char')
+                tfidf_matrix=Tfidf_Vectorizer(corpus, analyzer='char', idf=False)
         if X_input:
                 return Combine_Matrix(X_input,tfidf_matrix)
 
@@ -68,9 +68,13 @@ def convert_from_pkl_to_text(file, url=False):
 	return corpus
 
 
-def Tfidf_Vectorizer(corpus, analyzer='word', tokenizer=None):
-	vectorizer=TfidfVectorizer(analyzer=analyzer, ngram_range=(1,1), tokenizer=tokenizer,
-                     min_df = 5, stop_words = 'english', sublinear_tf=True)
+def Tfidf_Vectorizer(corpus, analyzer='word', tokenizer=None, idf=True):
+        if idf:
+	        vectorizer=TfidfVectorizer(analyzer=analyzer, ngram_range=(1,1), tokenizer=tokenizer,
+                             min_df = 5, stop_words = 'english', sublinear_tf=True)
+        else:
+                vectorizer=CountVectorizer(analyzer=analyzer, ngram_range=(1,1), tokenizer=tokenizer,
+                        min_df = 5, stop_words = 'english')
 	tfidf_matrix=vectorizer.fit_transform(corpus)
 	joblib.dump(tfidf_matrix, os.path.join(args.output_dir,args.dataset_name+'_tfidf_matrix_combined.pkl'))
 	return tfidf_matrix
