@@ -27,8 +27,29 @@ parser.add_argument('--output_dir', type=str, required=False,
 
 args = parser.parse_args()
 
+def website_tfidf():
+        corpus=convert_from_pkl_to_text(args.html_content[0])
+        print("length of list of html content (rows in tfidf matrix): {}".format(len(corpus)))
+        tfidf_matrix=Tfidf_Vectorizer(corpus)
+        if args.features:
+                X_features = joblib.load(args.features)
+                return Combine_Matrix(X_features,tfidf_matrix)
 
-def convert_from_pkl_to_text(file):
+def url_tokenizer(input):
+    return re.split('[^a-zA-Z]', input) 
+
+def url_tfidf(word=True, X_input=None):
+        corpus=convert_from_pkl_to_text(args.html_content[0])
+        print("length of list of URLs (rows in tfidf matrix): {}".format(len(corpus)))
+        if word:
+                tfidf_matrix=Tfidf_Vectorizer(corpus, analyzer='word', tokenizer=url_tokenizer)
+        else:
+                tfidf_matrix=Tfidf_Vectorizer(corpus, analyzer='char')
+        if X_input:
+                return Combine_Matrix(X_input,tfidf_matrix)
+
+
+def convert_from_pkl_to_text(file, url=False):
 	text=''
 	first_line=1
 	corpus=[]
@@ -36,8 +57,10 @@ def convert_from_pkl_to_text(file):
 		try:
 			while(True):
 				data=joblib.load(f)
-				if data.startswith("URL: ")==False:
-					corpus.append(data)
+                                if url and data.startswith("URL: "):
+                                                corpus.append(data.split(":")[1])
+                                elif not url and not data.startswith("URL: "):
+					        corpus.append(data)
 		except (EOFError):
 			pass
 	#with open(os.path.join(args.output_dir,args.dataset_name+"_html_content.txt"),'w', errors='ignore') as g:
@@ -45,8 +68,8 @@ def convert_from_pkl_to_text(file):
 	return corpus
 
 
-def Tfidf_Vectorizer(corpus):
-	vectorizer=TfidfVectorizer(analyzer='word', ngram_range=(1,1),
+def Tfidf_Vectorizer(corpus, analyzer='word', tokenizer=None):
+	vectorizer=TfidfVectorizer(analyzer=analyzer, ngram_range=(1,1), tokenizer=tokenizer,
                      min_df = 5, stop_words = 'english', sublinear_tf=True)
 	tfidf_matrix=vectorizer.fit_transform(corpus)
 	joblib.dump(tfidf_matrix, os.path.join(args.output_dir,args.dataset_name+'_tfidf_matrix_combined.pkl'))
@@ -56,20 +79,16 @@ def Combine_Matrix(m1, m2):
 	print(m1.shape, m2.shape)
 	X=hstack([m1, m2])
 	X=Features_Support.Preprocessing(X)
-	joblib.dump(X, os.path.join(args.output_dir,args.dataset_name+"_Features_with_Tfidf_processed.pkl"))
+	#joblib.dump(X, os.path.join(args.output_dir,args.dataset_name+"_Features_with_Tfidf_processed.pkl"))
+        return X
 
 if __name__ == '__main__':
 	if not os.path.exists(args.output_dir):
 		os.makedirs(args.output_dir)
-	corpus=convert_from_pkl_to_text(args.html_content[0])
-	print("length of list of html content (rows in tfidf matrix): {}".format(len(corpus)))
-	#with open("list_html_content.txt",'w', errors='ignore') as f:
-	#	#for i in html_dict:
-	#	f.write(str(html_dict))
-	tfidf_matrix=Tfidf_Vectorizer(corpus)
+        X = url_tfidf(False, url_tfidf(True, website_tfidf()))
+
 	if args.features:
-		X_features = joblib.load(args.features)
-		Combine_Matrix(X_features,tfidf_matrix)
+                joblib.dump(X, os.path.join(args.output_dir,args.dataset_name+"_Features_with_Tfidf_processed.pkl"))
 
 
 	#dict_feature_vectors_openphish = convert_from_text_todict(args.features)
