@@ -286,6 +286,9 @@ def main():
                 joblib.dump(X_test, os.path.join(email_test_dir, "X_test.pkl"))
                 joblib.dump(y_test, os.path.join(email_test_dir, "y_test.pkl"))
                 logger.info("Feature Extraction for testing dataset: Done!")
+            else:
+                X_test = None
+                y_test = None
 
 ######## URL feature extraction
         elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
@@ -382,6 +385,9 @@ def main():
                 joblib.dump(X_test, os.path.join(url_test_dir, "X_test.pkl"))
                 joblib.dump(y_test, os.path.join(url_test_dir, "y_test.pkl"))
                 logger.info("Feature Extraction for testing dataset: Done!")
+            else:
+                X_test = None
+                y_test = None
 
 
     if config["Classification"]["Running the classifiers"]=="True":

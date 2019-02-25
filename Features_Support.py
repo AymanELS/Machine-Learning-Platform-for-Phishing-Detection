@@ -907,6 +907,12 @@ def single_url_feature(url, list_features,list_time):
         Features.URL_Double_Slashes_Not_Beginning_Count(url, list_features, list_time)
         logger.debug("URL_Double_Slashes_Not_Beginning_Count")
 
+        Features.URL_Brand_In_Url(url, list_features, list_time)
+        logger.debug("URL_Bran_In_URL")
+
+        Features.URL_Is_Whitelisted(url, list_features, list_time)
+        logger.debug("URL_Is_Whitelisted")
+
 def single_html_features(soup, html, url, list_features, list_time):
     if config["HTML_Features"]["html_features"] == "True":
         Features.HTML_number_of_tags(soup, list_features, list_time)
