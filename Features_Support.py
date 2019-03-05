@@ -993,6 +993,9 @@ def single_html_features(soup, html, url, list_features, list_time):
         Features.HTML_URL_Is_Redirect(html, url, list_features, list_time)
         logger.debug("URL_Is_Redirect")
 
+        Features.HTML_Is_Login(html, url, list_features, list_time)
+        logger.debug("HTML_Is_Login")
+
 
 def single_email_features(body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
                 , Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes, subject, sender_full, recipient_full, recipient_name, recipient_full_address, recipient_domain,message_id
