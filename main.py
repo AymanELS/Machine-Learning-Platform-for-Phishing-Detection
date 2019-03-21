@@ -184,12 +184,12 @@ def main():
         
         else: 
             X, y, X_test, y_test, vectorizer_train, vectorizer_test = load_dataset()
-            feature_list_dict_train=vectorizer_train.inverse_transform(X)
+            #feature_list_dict_train=vectorizer_train.inverse_transform(X)
 
         logger.info("Select Best Features ######")
         k = int(config["Feature Selection"]["number of best features"])
         #X, selection = Feature_Selection.Select_Best_Features_Training(X, y, k)
-        X, selection = Feature_Selection.Feature_Ranking(X, y,k, feature_list_dict_train)
+        X, selection = Feature_Selection.Feature_Ranking(X, y,k)
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True": 
             joblib.dump(selection, os.path.join(email_train_dir, "selection.pkl"))
         elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
