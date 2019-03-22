@@ -45,10 +45,12 @@ def Feature_Ranking(X, y, k):
 		os.makedirs("Data_Dump/Feature_Ranking")
 	if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
 		emails=True
+		urls=False
 		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
 		vectorizer_tfidf=joblib.load("Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
 	elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 		urls=True
+		emails=False
 		vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
 		vectorizer_tfidf=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
 	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
@@ -65,7 +67,7 @@ def Feature_Ranking(X, y, k):
 		if emails:
 			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
 		if urls:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
+			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
 		return X, rfe
 
 	#Chi-2
@@ -85,7 +87,7 @@ def Feature_Ranking(X, y, k):
 		if emails:
 			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
 		if urls:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
+			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
 		return X, model
 
 	# Information Gain
@@ -107,7 +109,7 @@ def Feature_Ranking(X, y, k):
 		if emails:
 			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
 		if urls:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
+			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
 		return X, vectorizer
 
 	#Gini
@@ -129,8 +131,8 @@ def Feature_Ranking(X, y, k):
 		if emails:
 			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
 		if urls:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
-		return X_train, vectorizer
+			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
+		return X, vectorizer
 	
 
 def Select_Best_Features_Training(X, y, k):
