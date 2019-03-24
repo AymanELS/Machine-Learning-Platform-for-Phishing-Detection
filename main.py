@@ -126,12 +126,10 @@ def load_dataset(load_train=True, load_test=False):
         try:
             if load_test:
                 if config["Classification"]["Attack Features"] == "True":
-                    email_test_dir = os.path.join(args.output_input_dir, "Emails_Attacking")
-                    vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
-                    with open(os.path.join(email_test_dir,"features.txt"),'r') as f:
+                    with open(os.path.join(email_train_dir,"features.txt"),'r') as f:
                           dict_test=eval(f.read())
                     X_test=vectorizer_train.fit_transform(dict_test)
-                    y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
+                    y_test=joblib.load(os.path.join(email_train_dir, "y_test.pkl"))
                 else:
                     email_test_dir = os.path.join(args.output_input_dir, "Emails_Testing")
                     vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
@@ -150,12 +148,10 @@ def load_dataset(load_train=True, load_test=False):
         try:
             if load_test:
                 if config["Classification"]["Attack Features"] == "True":
-                    email_test_dir = os.path.join(args.output_input_dir, "URLs_Attacking")
-                    vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
-                    with open(os.path.join(email_test_dir,"features.txt"),'r') as f:
+                    with open(os.path.join(url_train_dir,"features.txt"),'r') as f:
                           dict_test=eval(f.read())
                     X_test=vectorizer_test.fit_transform(dict_test)
-                    y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
+                    y_test=joblib.load(os.path.join(url_train_dir, "y_test.pkl"))
                 else:
                     vectorizer_test= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
                     X_test=joblib.load(os.path.join(url_test_dir, "X_test.pkl"))
