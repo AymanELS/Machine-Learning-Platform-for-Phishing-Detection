@@ -117,17 +117,26 @@ def load_dataset(load_train=True, load_test=False):
     vectorizer_train = None
     vectorizer_test = None
     if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+        email_train_dir = os.path.join(args.output_input_dir, "Emails_Training")
         vectorizer_train=joblib.load(os.path.join(email_train_dir, "vectorizer.pkl"))
-        if load_train:
-            email_train_dir = os.path.join(args.output_input_dir, "Emails_Training")
+        if load_train:       
             X_train=joblib.load(os.path.join(email_train_dir, "X_train.pkl"))
             y_train=joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
+            
         try:
             if load_test:
-                email_test_dir = os.path.join(args.output_input_dir, "Emails_Testing")
-                vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
-                X_test=joblib.load(os.path.join(email_test_dir, "X_test.pkl"))
-                y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
+                if config["Classification"]["Attack Features"] == "True":
+                    email_test_dir = os.path.join(args.output_input_dir, "Emails_Attacking")
+                    vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
+                    with open(os.path.join(email_test_dir,"features.txt"),'r') as f:
+                          dict_test=eval(f.read())
+                    X_test=vectorizer_train.fit_transform(dict_test)
+                    y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
+                else:
+                    email_test_dir = os.path.join(args.output_input_dir, "Emails_Testing")
+                    vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
+                    X_test=joblib.load(os.path.join(email_test_dir, "X_test.pkl"))
+                    y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
         except FileNotFoundError as ex:
             logger.warn("Test files not found {}".format(ex))
 
@@ -140,9 +149,17 @@ def load_dataset(load_train=True, load_test=False):
             y_train=joblib.load(os.path.join(url_train_dir, "y_train.pkl"))
         try:
             if load_test:
-                vectorizer_test= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
-                X_test=joblib.load(os.path.join(url_test_dir, "X_test.pkl"))
-                y_test=joblib.load(os.path.join(url_test_dir, "y_test.pkl"))
+                if config["Classification"]["Attack Features"] == "True":
+                    email_test_dir = os.path.join(args.output_input_dir, "URLs_Attacking")
+                    vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
+                    with open(os.path.join(email_test_dir,"features.txt"),'r') as f:
+                          dict_test=eval(f.read())
+                    X_test=vectorizer_test.fit_transform(dict_test)
+                    y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
+                else:
+                    vectorizer_test= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
+                    X_test=joblib.load(os.path.join(url_test_dir, "X_test.pkl"))
+                    y_test=joblib.load(os.path.join(url_test_dir, "y_test.pkl"))
         except FileNotFoundError as ex:
             logger.warn("Test files not found {}".format(ex))
 
@@ -225,7 +242,7 @@ def main():
                     logger.info("Select Best Features ######")
                     k = int(config["Feature Selection"]["number of best features"])
                     #X_train, selection = Feature_Selection.Select_Best_Features_Training(X_train, y_train, k)
-                    X_train, selection = Feature_Selection.Feature_Ranking(X_train, y_train,k, feature_list_dict_train)
+                    X_train, selection = Feature_Selection.Feature_Ranking(X_train, y_train,k)
                     # dump selection model
                     joblib.dump(selection, os.path.join(email_train_dir, "selection.pkl"))
                     logger.info("### Feature Ranking and Selection for Training Done!")
@@ -285,6 +302,8 @@ def main():
                     os.makedirs(email_test_dir)
                 joblib.dump(X_test, os.path.join(email_test_dir, "X_test.pkl"))
                 joblib.dump(y_test, os.path.join(email_test_dir, "y_test.pkl"))
+                if config["Extraction"]["Dump Features txt"] == "True":
+                    joblib.dump(feature_list_dict_train,os.path.join(url_train_dir, "Features.txt"))
                 logger.info("Feature Extraction for testing dataset: Done!")
             else:
                 X_test = None
@@ -323,7 +342,7 @@ def main():
                 if config["Feature Selection"]["select best features"]=="True":
                     #k: Number of Best features
                     k = int(config["Feature Selection"]["number of best features"])
-                    X_train, selection = Feature_Selection.Feature_Ranking(X_train, y_train,k, feature_list_dict_train)
+                    X_train, selection = Feature_Selection.Feature_Ranking(X_train, y_train,k)
                     #Dump model
                     joblib.dump(selection, os.path.join(url_train_dir, "selection.pkl"))
                     joblib.dump(X_train, os.path.join(url_train_dir, "X_train_processed_best_features.pkl"))
@@ -335,7 +354,8 @@ def main():
 
                 joblib.dump(X_train, os.path.join(url_train_dir, "X_train.pkl"))
                 joblib.dump(y_train, os.path.join(url_train_dir, "y_train.pkl"))
-
+                if config["Extraction"]["Dump Features txt"] == "True":
+                    joblib.dump(feature_list_dict_train,os.path.join(url_train_dir, "Features.txt"))
                 # flag to mark if training was done
                 flag_training=True
                 logger.info("Feature Extraction for training dataset: Done!")
@@ -398,74 +418,76 @@ def main():
             else:
                 X_train, y_train, X_test, y_test, vectorizer_train, vectorizer_test = load_dataset(load_train=True, load_test=True)
             if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
-                features_extracted=vectorizer_train.get_feature_names()
-                #logger.info(features_extracted)
-                import numpy as np
-                if X_train is not None:
-                    Features_training=vectorizer_train.inverse_transform(X_train)
-                if X_test is not None:
-                    Features_testing=vectorizer_test.inverse_transform(X_test)
-                mask=[]
-                #mask.append(0)
-                #logger.info("Section: {} ".format(section))
-                for feature in features_extracted:
-                    feature_name=feature
-                    if "=" in feature:
-                        feature_name=feature.split("=")[0]
-                    if "url_char_distance_" in feature:
-                        feature_name="char_distance"
-                    for section in ["HTML_Features", "URL_Features", "Network_Features", "Javascript_Features"]:
-                        try:
-                            if config[section][feature_name]=="True":
-                                if config[section][section.lower()]=="True":
-                                    mask.append(1)
+                if config["Classification"]["load model"] == "False":
+                    features_extracted=vectorizer_train.get_feature_names()
+                    #logger.info(features_extracted)
+                    import numpy as np
+                    if X_train is not None:
+                        Features_training=vectorizer_train.inverse_transform(X_train)
+                    if X_test is not None:
+                        Features_testing=vectorizer_test.inverse_transform(X_test)
+                    mask=[]
+                    #mask.append(0)
+                    #logger.info("Section: {} ".format(section))
+                    for feature in features_extracted:
+                        feature_name=feature
+                        if "=" in feature:
+                            feature_name=feature.split("=")[0]
+                        if "url_char_distance_" in feature:
+                            feature_name="char_distance"
+                        for section in ["HTML_Features", "URL_Features", "Network_Features", "Javascript_Features"]:
+                            try:
+                                if config[section][feature_name]=="True":
+                                    if config[section][section.lower()]=="True":
+                                        mask.append(1)
+                                    else:
+                                        mask.append(0)
                                 else:
                                     mask.append(0)
+                            except KeyError as e:
+                                pass
+                    logger.info(len(vectorizer_train.get_feature_names()))
+                    vectorizer_train.restrict(mask)
+                    url_classification_dir =  os.path.join(args.output_input_dir, "URLs_Classification")
+                    if X_train is not None:
+                        X_train=vectorizer_train.transform(Features_training)
+                        logger.info(np.shape(X_train))
+                    if X_test is not None:
+                        X_test=vectorizer_train.transform(Features_testing)
+                    if not os.path.exists(url_classification_dir):
+                        os.makedirs(url_classification_dir)
+                    joblib.dump(vectorizer_train, os.path.join(url_classification_dir, "vectorizer_restricted.pkl"))
+                    if X_train is not None:
+                        joblib.dump(X_train, os.path.join(url_classification_dir, "X_train_restricted.pkl"))
+                    if X_test is not None:
+                        joblib.dump(X_test, os.path.join(url_classification_dir, "X_test_restricted.pkl"))
+                    logger.info(len(vectorizer_train.get_feature_names()))
+            elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+                if config["Classification"]["load model"] == "False":
+                    features_extracted = vectorizer_train.get_feature_names()
+                    logger.info(len(features_extracted))
+                    mask= []
+                    for feature_name in features_extracted:
+                        if "=" in feature_name:
+                            feature_name=feature_name.split("=")[0]
+                        if "count_in_body" in feature_name:
+                            if config["Email_Features"]["blacklisted_words_body"] == "True":
+                                mask.append(1)
                             else:
                                 mask.append(0)
-                        except KeyError as e:
-                            pass
-                logger.info(len(vectorizer_train.get_feature_names()))
-                vectorizer_train.restrict(mask)
-                url_classification_dir =  os.path.join(args.output_input_dir, "URLs_Classification")
-                if X_train is not None:
-                    X_train=vectorizer_train.transform(Features_training)
-                    logger.info(np.shape(X_train))
-                if X_test is not None:
-                    X_test=vectorizer_train.transform(Features_testing)
-                if not os.path.exists(url_classification_dir):
-                    os.makedirs(url_classification_dir)
-                joblib.dump(vectorizer_train, os.path.join(url_classification_dir, "vectorizer_restricted.pkl"))
-                if X_train is not None:
-                    joblib.dump(X_train, os.path.join(url_classification_dir, "X_train_restricted.pkl"))
-                if X_test is not None:
-                    joblib.dump(X_test, os.path.join(url_classification_dir, "X_test_restricted.pkl"))
-                logger.info(len(vectorizer_train.get_feature_names()))
-            elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-                features_extracted = vectorizer.get_feature_names()
-                logger.info(len(features_extracted))
-                mask= []
-                for feature_name in features_extracted:
-                    if "=" in feature_name:
-                        feature_name=feature_name.split("=")[0]
-                    if "count_in_body" in feature_name:
-                        if config["Email_Features"]["blacklisted_words_body"] == "True":
-                            mask.append(1)
+                        elif "count_in_subject" in feature_name:
+                            if config["Email_Features"]["blacklisted_words_subject"] == "True":
+                                mask.append(1)
+                            else:
+                                mask.append(0)
                         else:
-                            mask.append(0)
-                    elif "count_in_subject" in feature_name:
-                        if config["Email_Features"]["blacklisted_words_subject"] == "True":
-                            mask.append(1)
-                        else:
-                            mask.append(0)
-                    else:
-                        if config["Email_Features"][feature_name]=="True":
-                            mask.append(1)
-                        else:
-                            mask.append(0)
-                logger.info(mask)
-                vectorizer=vectorizer.restrict(mask)
-                logger.info(len(vectorizer.get_feature_names()))
+                            if config["Email_Features"][feature_name]=="True":
+                                mask.append(1)
+                            else:
+                                mask.append(0)
+                    logger.info(mask)
+                    vectorizer=vectorizer_train.restrict(mask)
+                    logger.info(len(vectorizer.get_feature_names()))
                 #X_train=vectorizer.transform(X_train)
 
         logger.info("Running the Classifiers....")

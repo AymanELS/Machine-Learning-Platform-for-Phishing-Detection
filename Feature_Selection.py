@@ -58,7 +58,10 @@ def Feature_Ranking(X, y, k):
 		rfe = RFE(model, k)
 		rfe.fit(X,y)
 		X=rfe.transform(X)
-		features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
+		if config["Feature Selection"]["with Tfidf"]=="True":
+			features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
+		else:
+			features_list=(vectorizer.get_feature_names())
 		res= dict(zip(features_list,rfe.ranking_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
 		with open("Data_Dump/Feature_Ranking/Feature_ranking_rfe.txt",'w') as f:
@@ -74,7 +77,10 @@ def Feature_Ranking(X, y, k):
 	elif config["Feature Selection"]["Chi-2"] == "True":
 		model= sklearn.feature_selection.SelectKBest(chi2, k)
 		model.fit(X, y)
-		features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
+		if config["Feature Selection"]["with Tfidf"]=="True":
+			features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
+		else:
+			features_list=(vectorizer.get_feature_names())
 		res= dict(zip(features_list,model.scores_))
 		for key, value in res.items():
 			if math.isnan(res[key]):
@@ -95,7 +101,10 @@ def Feature_Ranking(X, y, k):
 		model= sklearn.feature_selection.SelectFromModel(DecisionTreeClassifier(criterion='entropy'), threshold=-np.inf, max_features=k)
 		model.fit(X,y)
 		# dump Feature Selection in a file
-		features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
+		if config["Feature Selection"]["with Tfidf"]=="True":
+			features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
+		else:
+			features_list=(vectorizer.get_feature_names())
 		res= dict(zip(features_list,model.estimator_.feature_importances_))
 		for key, value in res.items():
 			if math.isnan(res[key]):
@@ -116,7 +125,10 @@ def Feature_Ranking(X, y, k):
 	elif config["Feature Selection"]["Gini"] == "True":
 		model= sklearn.feature_selection.SelectFromModel(DecisionTreeClassifier(criterion='gini'), threshold=-np.inf, max_features=k)
 		model.fit(X,y)
-		features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
+		if config["Feature Selection"]["with Tfidf"]=="True":
+			features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
+		else:
+			features_list=(vectorizer.get_feature_names())
 		res= dict(zip(features_list,model.estimator_.feature_importances_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
 		for key, value in res.items():

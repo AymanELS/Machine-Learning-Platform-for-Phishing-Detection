@@ -432,89 +432,91 @@ def classifiers(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=Non
 			if config["Imbalanced Datasets"]["make_imbalanced_dataset"] == "True":
 				X_train_balanced, y_train_balanced = Imbalanced_Dataset.Make_Imbalanced_Dataset(X, y)
 	trained_model = None
+	if not os.path.exists("Data_Dump/Models"):
+		os.makedirs("Data_Dump/Models")
 	if config["Classifiers"]["SVM"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_svm.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_svm.pkl")
 		eval_SVM, model = SVM(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['SVM'] = eval_SVM
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_svm.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_svm.pkl")
 		summary.write("SVM\n")
 	if config["Classifiers"]["RandomForest"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_RF.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_RF.pkl")
 		eval_RF, model = RandomForest(X,y, X_test, y_test, X_train_balanced, y_train_balanced,trained_model)
 		eval_metrics_per_classifier_dict['RF'] = eval_RF
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_RF.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_RF.pkl")
 		summary.write("Random Forest\n")
 	if config["Classifiers"]["DecisionTree"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_DT.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_DT.pkl")
 		eval_DT, model = DecisionTree(X,y, X_test, y_test, None, None, trained_model)
 		eval_metrics_per_classifier_dict['Dec_tree'] = eval_DT
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_DT.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_DT.pkl")
 		summary.write("Decision Tree \n")
 	if config["Classifiers"]["GaussianNaiveBayes"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_GNB.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_GNB.pkl")
 		eval_NB, model = GaussianNaiveBayes(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['NB'] = eval_NB
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_GNB.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_GNB.pkl")
 		summary.write("Gaussian Naive Bayes \n")
 	if config["Classifiers"]["MultinomialNaiveBayes"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_MNB.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_MNB.pkl")
 		eval_MNB, model =  MultinomialNaiveBayes(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['MNB'] = eval_MNB
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_MNB.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_MNB.pkl")
 		summary.write("Multinomial Naive Bayes \n")
 	if config["Classifiers"]["LogisticRegression"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_LR.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_LR.pkl")
 		eval_LR, model = LogisticRegression(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['LR'] = eval_LR
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_LR.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_LR.pkl")
 		summary.write("Logistic Regression\n")
 	if config["Classifiers"]["kNearestNeighbor"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_KNN.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_KNN.pkl")
 		eval_knn, model = kNearestNeighbor(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['KNN'] = eval_knn
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_KNN.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_KNN.pkl")
 		summary.write("kNearest Neighbor\n")
 	if config["Classifiers"]["KMeans"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_Kmeans.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_Kmeans.pkl")
 		eval_kmeans, model = KMeans(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['KMeans'] = eval_kmeans
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_Kmeans.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_Kmeans.pkl")
 		summary.write("kMeans \n")
 	if config["Classifiers"]["Bagging"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_bagging.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_bagging.pkl")
 		eval_bagging, model = Bagging(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['Bagging'] = eval_bagging
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_bagging.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_bagging.pkl")
 		summary.write("Bagging \n")
 	if config["Classifiers"]["Boosting"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_boosting.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_boosting.pkl")
 		eval_boosting, model = Boosting(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
 		eval_metrics_per_classifier_dict['Boosting'] = eval_boosting
 		if config["Classification"]["save model"] == "True" and model is not None:
-			joblib.dump(model, "Data_Dump/model_boosting.pkl")
+			joblib.dump(model, "Data_Dump/Models/model_boosting.pkl")
 		summary.write("Boosting \n")
 	if config["Classifiers"]["DNN"] == "True":
 		if config["Classification"]["load model"] == "True":
-			trained_model = joblib.load("Data_Dump/model_DNN.pkl")
+			trained_model = joblib.load("Data_Dump/Models/model_DNN.pkl")
 		eval_dnn = DNN(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
 		eval_metrics_per_classifier_dict['DNN'] = eval_dnn
 		summary.write("DNN \n")

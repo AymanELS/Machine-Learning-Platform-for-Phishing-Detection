@@ -152,6 +152,9 @@ def eval_metrics(clf, y_test, y_predict):
 	#	Balanced_accuracy_score(y_test,y_predict)
 	#	summary.write("Balanced_accuracy_score\n")
 	#	# write results to summary
+	if config["Classification"]["Attack Features"] == "True":
+		logger.debug("Original Labels: {}".format(y_test))
+		logger.debug("New Labels: {}".format(y_predict))
 	return (eval_metrics_dict)
 
 def eval_metrics_cluster(y_test, y_predict):
