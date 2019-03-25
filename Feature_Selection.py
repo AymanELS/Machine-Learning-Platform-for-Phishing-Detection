@@ -47,12 +47,14 @@ def Feature_Ranking(X, y, k):
 		emails=True
 		urls=False
 		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
-		vectorizer_tfidf=joblib.load("Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
+		if config["Feature Selection"]["with Tfidf"]=="True":
+		        vectorizer_tfidf=joblib.load("Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
 	elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 		urls=True
 		emails=False
 		vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
-		vectorizer_tfidf=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
+		if config["Feature Selection"]["with Tfidf"]=="True":
+		        vectorizer_tfidf=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
 	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
 		model = LogisticRegression()
 		rfe = RFE(model, k)
