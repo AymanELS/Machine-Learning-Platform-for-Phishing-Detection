@@ -13,6 +13,8 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.cluster import KMeans
+from sklearn_extensions.extreme_learning_machines.elm import GenELMClassifier
+from sklearn_extensions.extreme_learning_machines.random_layer import RBFRandomLayer, MLPRandomLayer
 from imblearn.datasets import make_imbalance
 from imblearn.under_sampling import RandomUnderSampler,CondensedNearestNeighbour
 from imblearn.under_sampling import EditedNearestNeighbours
@@ -250,6 +252,30 @@ def LogisticRegression(X,y, X_test, y_test, X_train_balanced=None, y_train_balan
 		eval_metrics_SVM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
 		return eval_metrics_SVM, clf
 
+##### ELM
+def ELM(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	if clf is None:
+                if config["Classifiers"]["weighted"] == "True":
+	                logger.warn("kNearestNeighbor does not support weighted classification")
+	                return
+	
+                srhl_tanh = MLPRandomLayer(n_hidden=10, activation_func='tanh')
+                clf = GenELMClassifier(hidden_layer=srhl_tanh)
+                logger.info("ELM >>>>>>>")
+                if config["Evaluation Metrics"]["cross_val_score"]=="True":
+                        score=Evaluation_Metrics.Cross_validation(clf, X, y)
+                        logger.info(score)
+                        return score, None
+                else:
+                        fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+                        y_predict=clf.predict(X_test)
+                        eval_metrics_ELM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+                        return eval_metrics_ELM, clf
+	else:
+		y_predict=clf.predict(X_test)
+		eval_metrics_ELM = Evaluation_Metrics.eval_metrics(clf, y_test, y_predict)
+		return eval_metrics_ELM, clf
+
 ##### k-Nearest Neighbor
 def kNearestNeighbor(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
 	if clf is None:
@@ -482,6 +508,14 @@ def classifiers(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=Non
 		if config["Classification"]["save model"] == "True" and model is not None:
 			joblib.dump(model, "Data_Dump/Models/model_LR.pkl")
 		summary.write("Logistic Regression\n")
+	if config["Classifiers"]["ELM"] == "True":
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/Models/model_ELM.pkl")
+		eval_elm, model = ELM(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
+		eval_metrics_per_classifier_dict['ELM'] = eval_elm
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/Models/model_ELM.pkl")
+		summary.write("ELM\n")
 	if config["Classifiers"]["kNearestNeighbor"] == "True":
 		if config["Classification"]["load model"] == "True":
 			trained_model = joblib.load("Data_Dump/Models/model_KNN.pkl")
