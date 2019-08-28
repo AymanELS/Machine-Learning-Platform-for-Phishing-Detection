@@ -15,10 +15,35 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 	config['Email_Features']={}
 	#C_Features=config['Features']
 	C_Email_Features=config['Email_Features']
+	C_Email_Features["extract header features"]="True"
+	C_Email_Features["extract body features"]="True"
+	C_Email_Features["extract url features"]="True"
+	C_Email_Features["extract external features"]="False"
+
+
+	config['Email_Body_Features']={}
+	C_Email_Features=config['Email_Body_Features']
 	for feature in list_Features:
-		if feature.startswith("Email_"):
-			C_Email_Features[feature.replace('Email_','')]="True"
-		#C_Features[feature]="True"
+		if feature.startswith("Email_Body"):
+			C_Email_Features[feature.replace('Email_Body_','')]="True"
+
+	config['Email_Header_Features']={}
+	C_Email_Features=config['Email_Header_Features']
+	for feature in list_Features:
+		if feature.startswith("Email_Header"):
+			C_Email_Features[feature.replace('Email_Header_','')]="True"
+
+	config['Email_URL_Features']={}
+	C_Email_Features=config['Email_URL_Features']
+	for feature in list_Features:
+		if feature.startswith("Email_URL"):
+			C_Email_Features[feature.replace('Email_URL_','')]="True"
+
+	config['Email_External_Features']={}
+	C_Email_Features=config['Email_External_Features']
+	for feature in list_Features:
+		if feature.startswith("Email_External"):
+			C_Email_Features[feature.replace('Email_External_','')]="False"
 
 	config['HTML_Features']={}
 	C_HTML_Features=config['HTML_Features']
@@ -48,24 +73,57 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 
 	config['Classifiers']={}
 	C_Classifiers=config['Classifiers']
-	for classifier in list_Classifiers:
-		C_Classifiers[classifier]="True"
+	C_Classifiers["weighted"]="False"
+	C_Classifiers["autosklearn"]="False"
+	C_Classifiers["bagging"]="True"
+	C_Classifiers["boosting"]="True"
+	C_Classifiers["dnn"]="True"
+	C_Classifiers["decisiontree"]="True"
+	C_Classifiers["elm"]="True"
+	C_Classifiers["gaussiannaivebayes"]="True"
+	#C_Classifiers["hddt"]="False"
+	C_Classifiers["kmeans"]="False"
+	C_Classifiers["logisticregression"]="True"
+	C_Classifiers["multinomialnaivebayes"]="True"
+	C_Classifiers["randomforest"]="True"
+	C_Classifiers["svm"]="True"
+	C_Classifiers["tpot"]="False"
+	C_Classifiers["knearestneighbor"]="True"
+
 
 	config['Imbalanced Datasets'] = {}
 	C_Imbalanced=config['Imbalanced Datasets']
-	C_Imbalanced["load_imbalanced_dataset"]="False"
 	for imbalanced in list_Imbalanced_dataset:
 		C_Imbalanced[imbalanced]="True"
+	C_Imbalanced["load_imbalanced_dataset"]="False"
 
 	config['Evaluation Metrics']={}
 	C_Metrics=config['Evaluation Metrics']
-	for metric in list_Evaluation_metrics:
-		C_Metrics[metric]="True"
+	C_Metrics["accuracy"]="True"
+	C_Metrics["balanced_accuracy_score"]="True"
+	C_Metrics["completeness"]="False"
+	C_Metrics["confusion_matrix"]="True"
+	C_Metrics["Cross_validation"]="False"
+	C_Metrics["f1_score"]="True"
+	C_Metrics["geomteric_mean_score"]="True"
+	C_Metrics["homogenity"]="False"
+	C_Metrics["matthews_corrcoef"]="True"
+	C_Metrics["precision"]="True"
+	C_Metrics["roc_auc"]="True"
+	C_Metrics["recall"]="True"
+	C_Metrics["v_measure"]="False"
+	C_Metrics["geometric_mean_score"]="True"
+	C_Metrics["parameter_search"]="False"
+
+	
+
+	#for metric in list_Evaluation_metrics:
+	#	C_Metrics[metric]="True"
 
 	config['Preprocessing']={}
 	C_Preprocessing=config['Preprocessing']
 	#C_Preprocessing['mean_scaling']= "True"
-	C_Preprocessing['mix_max_scaling']= "True"
+	C_Preprocessing['min_max_scaling']= "True"
 	#C_Preprocessing['abs_scaler']= "True"
 	#C_Preprocessing['normalize']= "True"
 	
@@ -73,24 +131,27 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 	config["Feature Selection"]={}
 	C_selection=config["Feature Selection"]
 	C_selection["Select Best Features"]="True"
-	C_selection["Number of Best Features"]="80"
 	C_selection["Feature Ranking Only"]="False"
+	C_selection["with Tfidf"]="True"
+	C_selection["Number of Best Features"]="10"
 	C_selection["Recursive Feature Elimination"]="False"
 	C_selection["Information Gain"]="True"
 	C_selection["Gini"]="False"
 	C_selection["Chi-2"]="False"
+	C_selection["LSA"]="False"
+	C_selection["PCA"]="False"
 
 	config['Dataset Path']={}
 	C_Dataset=config['Dataset Path']
-	C_Dataset["path_legitimate_training"]="Dataset_all/Dataset_legit_urls"
-	C_Dataset["path_phishing_training"]="Dataset_all/Dataset_phish_urls"
-	C_Dataset["path_legitimate_testing"]="Dataset_all/Dataset_legit_urls"
-	C_Dataset["path_phishing_testing"]="Dataset_all/Dataset_legit_urls"
+	C_Dataset["path_legitimate_training"]="Training_legit_Emails"
+	C_Dataset["path_phishing_training"]="Training_phish_Emails"
+	C_Dataset["path_legitimate_testing"]="Testing_legit_Emails"
+	C_Dataset["path_phishing_testing"]="Testing_phish_Emails"
 
 	config['Email or URL feature Extraction']={}
 	C_email_url=config['Email or URL feature Extraction']
-	C_email_url["extract_features_emails"]="False"
-	C_email_url["extract_features_urls"]="True"
+	C_email_url["extract_features_emails"]="True"
+	C_email_url["extract_features_urls"]="False"
 
 	config['Extraction']={}
 	C_extraction=config['Extraction']
@@ -100,18 +161,21 @@ def config(list_Features, list_Classifiers, list_Imbalanced_dataset, list_Evalua
 
 	config['Features Format']={}
 	C_features_format=config['Features Format']
-	C_features_format["Pikle"]="True"
-	C_features_format["Svmlight format"]="True"
+	C_features_format["Pikle"]="False"
+	C_features_format["Svmlight format"]="False"
 
 
 	config['Classification']={}
 	C_classification=config['Classification']
 	C_classification["Running the Classifiers"]="True"
-	C_classification["Save Models"]="True"
+	C_classification["Save Model"]="True"
+	C_classification["load model"]="False"
+	C_classification["rank classifiers"]="False"
+	C_classification["rank on metric"]="False"
 
-	config["Summary"]={}
-	C_summary=config["Summary"]
-	C_summary["Path"]="summary.txt"
+	#config["Summary"]={}
+	#C_summary=config["Summary"]
+	#C_summary["Path"]="summary.txt"
 
 	with open('Config_file.ini', 'w') as configfile:
 		config.write(configfile)

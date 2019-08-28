@@ -8,6 +8,7 @@ import Imbalanced_Dataset
 from sklearn.feature_selection import mutual_info_classif
 from sklearn.feature_selection import chi2
 from sklearn.feature_extraction import DictVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectFromModel
 import sys
 import configparser
@@ -21,6 +22,15 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.feature_selection import RFE
 import logging
 import math
+import Features_Support
+from scipy.sparse import hstack
+from sklearn.decomposition import PCA
+from sklearn.decomposition import TruncatedSVD
+from sklearn.model_selection import train_test_split
+from sklearn.svm import LinearSVC
+import logging
+
+
 logger = logging.getLogger('root')
 
 config=configparser.ConfigParser()
@@ -37,225 +47,231 @@ def Feature_Selection(X,y):
 	#sorted_d = sorted(res.items(), key=lambda x: x[1])
 	logger.debug(res)
 	#return X_Best
+	
 
 
-def Feature_Ranking(X, y, k):
+def Feature_Ranking(X, y, k, vectorizer, tfidf_vectorizer):
+	#X=Features_Support.Preprocessing(X)
+	#X_train, X_test, y, y_test = train_test_split(X_train, y, test_size=0.1, random_state=0)
+	if config["Email or URL feature Extraction"]["extract_features_emails"]=="True":
+		path_ranking="Data_Dump/Feature_ranking_emails"
+	if config["Email or URL feature Extraction"]["extract_features_URLs"]=="True":
+		path_ranking="Data_Dump/Feature_ranking_urls"
+	if not os.path.exists(path_ranking):
+		os.makedirs(path_ranking)
+	if config["Feature Selection"]["with Tfidf"] == "True":
+		features_list=(vectorizer.get_feature_names())+(tfidf_vectorizer.get_feature_names())
+	else:
+		features_list=(vectorizer.get_feature_names())
 	#RFE
-	if not os.path.exists("Data_Dump/Feature_Ranking"):
-		os.makedirs("Data_Dump/Feature_Ranking")
-	if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-		emails=True
-		urls=False
-		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
-		if config["Feature Selection"]["with Tfidf"]=="True":
-		        vectorizer_tfidf=joblib.load("Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
-	elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
-		urls=True
-		emails=False
-		vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
-		if config["Feature Selection"]["with Tfidf"]=="True":
-		        vectorizer_tfidf=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
 	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
-		model = LogisticRegression()
-		rfe = RFE(model, k)
-		rfe.fit(X,y)
-		X=rfe.transform(X)
-		if config["Feature Selection"]["with Tfidf"]=="True":
-			features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
-		else:
-			features_list=(vectorizer.get_feature_names())
+		model = LinearSVC()
+		rfe = RFE(model, k, verbose=2, step=0.01)
+		X=rfe.fit_transform(X,y)
+		#X_test=rfe.transform(X_test, y_test)
 		res= dict(zip(features_list,rfe.ranking_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_rfe.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
-		if emails:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
-		if urls:
-			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
+		if config["Feature Selection"]["with Tfidf"] == "True":
+			with open(os.path.join(path_ranking,"Feature_ranking_RFE_TF_{}.txt".format(k)),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_RFE_TF_{}.pkl".format(k)))
+			joblib.dump(rfe, os.path.join(path_ranking,"RFE_TF_{}.pkl".format(k)))
+			#joblib.dump(X_test, "Data_Dump/Emails_training/X_test_processed_TF_FH_RFE_{}.pkl".format(k))
+			print("Printing RFE TFIDF: Done!")
+		else:
+			with open(os.path.join(path_ranking,"Feature_ranking_RFE_{}.txt".format(k)),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_RFE_{}.pkl".format(k)))
+			joblib.dump(rfe, os.path.join(path_ranking,"RFE_{}.pkl".format(k)))
+			#joblib.dump(X_test, "Data_Dump/Emails_training/X_test_processed_FH_RFE_{}.pkl".format(k))
+			print("Printing RFE NTF: Done!")
 		return X, rfe
+	# Information Gain
+	if config["Feature Selection"]["Information Gain"] == "True":
+		logger.debug("####IG###")
+		model= sklearn.feature_selection.SelectFromModel(DecisionTreeClassifier(criterion='entropy'), threshold=-np.inf, max_features=k)
+		logger.debug("model fit ...")
+		model.fit(X, y)
+		logger.debug("model fit done")
+		res= dict(zip(features_list,model.estimator_.feature_importances_))
+		for key, value in res.items():
+			if math.isnan(res[key]):
+				res[key]=0
+		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		logger.debug("model transform ...")
+		X=model.transform(X)
+#		X_test=model.transform(X_test)
+		logger.debug("model transform done")
+		if config["Feature Selection"]["with Tfidf"] == "True":
+			with open(os.path.join(path_ranking,"Feature_ranking_IG_TF_{}.txt".format(k)),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_IG_TF_{}.pkl".format(k)))
+			joblib.dump(model, os.path.join(path_ranking,"IG_TF_{}.pkl".format(k)))
+#			joblib.dump(X_test, "Data_Dump/Emails_Training/X_test_processed_TF_FH_IG_{}.pkl".format(k))
+			logger.debug("IG TF Done")
+		else:
+			with open(os.path.join(path_ranking,"Feature_ranking_IG_{}.txt".format(k)),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_IG_{}.pkl".format(k)))
+			joblib.dump(model, os.path.join(path_ranking,"IG_{}.pkl".format(k)))
+#			joblib.dump(X_test, "Data_Dump/Emails_Training/X_test_processed_FH_IG_{}.pkl".format(k))			
+			logger.debug("IG NTF Done")
+		return X, model
 
 	#Chi-2
-	elif config["Feature Selection"]["Chi-2"] == "True":
-		model= sklearn.feature_selection.SelectKBest(chi2, k)
+	if config["Feature Selection"]["Chi-2"] == "True":
+		logger.debug("####Chi2###")
+		model= sklearn.feature_selection.SelectKBest(chi2, k=k)
 		model.fit(X, y)
-		if config["Feature Selection"]["with Tfidf"]=="True":
-			features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
-		else:
-			features_list=(vectorizer.get_feature_names())
 		res= dict(zip(features_list,model.scores_))
 		for key, value in res.items():
 			if math.isnan(res[key]):
 				res[key]=0
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_chi2.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
 		X=model.transform(X)
-		if emails:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
-		if urls:
-			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
+#		X_test=model.transform(X_test)
+		if config["Feature Selection"]["with Tfidf"] == "True":
+			with open(os.path.join(path_ranking,"Feature_ranking_Chi2_TF_{}.txt".format(k)),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_Chi2_TF_{}.pkl".format(k)))
+			joblib.dump(model, os.path.join(path_ranking,"Chi2_TF_{}.pkl".format(k)))
+#			joblib.dump(X_test, "Data_Dump/Emails_Training/X_test_processed_TF_Chi2_{}.pkl".format(k))
+			logger.debug("Chi2 TF Done")
+		else:
+			with open(os.path.join(path_ranking,"Feature_ranking_Chi2_{}.txt".format(k)),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_Chi2_{}.pkl".format(k)))
+			joblib.dump(model, os.path.join(path_ranking,"Chi2_{}.pkl".format(k)))
+#			joblib.dump(X_test, "Data_Dump/Emails_Training/X_test_processed_Chi2_{}.pkl".format(k))			
+			logger.debug("Chi2 NTF Done")
 		return X, model
 
-	# Information Gain
-	elif config["Feature Selection"]["Information Gain"] == "True":
-		model= sklearn.feature_selection.SelectFromModel(DecisionTreeClassifier(criterion='entropy'), threshold=-np.inf, max_features=k)
-		model.fit(X,y)
-		# dump Feature Selection in a file
-		if config["Feature Selection"]["with Tfidf"]=="True":
-			features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
-		else:
-			features_list=(vectorizer.get_feature_names())
-		res= dict(zip(features_list,model.estimator_.feature_importances_))
-		for key, value in res.items():
-			if math.isnan(res[key]):
-				res[key]=0
-		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_IG.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
-		# create new model with the best k features
-		X=model.transform(X)
-		if emails:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
-		if urls:
-			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
-		return X, vectorizer
-
 	#Gini
-	elif config["Feature Selection"]["Gini"] == "True":
+	if config["Feature Selection"]["Gini"] == "True":
 		model= sklearn.feature_selection.SelectFromModel(DecisionTreeClassifier(criterion='gini'), threshold=-np.inf, max_features=k)
-		model.fit(X,y)
-		if config["Feature Selection"]["with Tfidf"]=="True":
-			features_list=(vectorizer.get_feature_names())+(vectorizer_tfidf.get_feature_names())
-		else:
-			features_list=(vectorizer.get_feature_names())
+		logger.debug("model fit ...")
+		model.fit(X, y)
+		logger.debug("model fit done")
 		res= dict(zip(features_list,model.estimator_.feature_importances_))
-		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
 		for key, value in res.items():
 			if math.isnan(res[key]):
 				res[key]=0
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_Gini.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
-		# create new model with the best k features
 		X=model.transform(X)
-		if emails:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
-		if urls:
-			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
-		return X, vectorizer
-	
+#		X_test=model.transform(X_test)
+		if config["Feature Selection"]["with Tfidf"] == "True":
+			with open(os.path.join(path_ranking,"Feature_ranking_Gini_TF_{}.txt".format(k)),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_Gini_TF_{}.pkl".format(k)))
+			joblib.dump(model, os.path.join(path_ranking,"Gini_TF_{}.pkl".format(k)))
+#			joblib.dump(X_test, "Data_Dump/Emails_training/X_test_processed_TF_Gini_{}.pkl".format(k))
+			logger.debug("Gini TF Done")
+		else:
+			with open(os.path.join(path_ranking,"Feature_ranking_Gini_{}.txt".format(k)),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_Gini_{}.pkl".format(k)))
+			joblib.dump(model, os.path.join(path_ranking,"Gini_{}.pkl".format(k)))
+#			joblib.dump(X_test, "Data_Dump/Emails_training/X_test_processed_Gini_{}.pkl".format(k))			
+			logger.debug("Gini NTF Done")
+		return X, model
+	#LSA
+	if config["Feature Selection"]["LSA"] == "True":
+		logger.debug("####LSA###")	
+		svd = TruncatedSVD(n_components=k, n_iter=7, random_state=42)
+		svd.fit(X, y)
+		#res= dict(zip(features_list,svd.score_samples(X)))
+		#for key, value in res.items():
+		#	if math.isnan(res[key]):
+		#		res[key]=0
+		#sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		X=svd.transform(X)
+		#X_test=svd.transform(X_test)
+		if config["Feature Selection"]["with Tfidf"] == "True":	
+			#with open(os.path.join(path_ranking,"Feature_Selection_LSA_TF_{}.txt".format(k)),'w') as f:
+			#	for (key, value) in sorted_d:
+			#		f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_LSA_TF_{}.pkl".format(k)))
+			joblib.dump(svd, os.path.join(path_ranking,"LSA_TF_{}.pkl".format(k)))
+		else:
+			#with open(os.path.join(path_ranking,"Feature_Selection_LSA_{}.txt".format(k)),'w') as f:
+			#	for (key, value) in sorted_d:
+			#		f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_LSA_{}.pkl".format(k)))
+			joblib.dump(svd, os.path.join(path_ranking,"LSA_{}.pkl".format(k)))
+			#joblib.dump(X_test, "Data_Dump/Emails_Training/X_test_processed_TF_LSA_{}.pkl".format(k))
+		return X, svd
 
-def Select_Best_Features_Training(X, y, k):
-	selection= sklearn.feature_selection.SelectKBest(chi2, k)
-	selection.fit(X, y)
-	X=selection.transform(X)
-	# Print out the list of best features
-	return X, selection
+	#PCA
+	if config["Feature Selection"]["PCA"] == "True":
+		logger.debug("####PCA###")	
+		pca = PCA(n_components=k, svd_solver='auto')
+		X=X.toarray()
+		#X_test=X_test.toarray()
+		pca.fit(X, y)
+		#res= dict(zip(features_list,pca.score_samples(X)))
+		#for key, value in res.items():
+		#	if math.isnan(res[key]):
+		#		res[key]=0
+		#sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		X=pca.transform(X)
+		#X_test=pca.transform(X_test)
+		if config["Feature Selection"]["with Tfidf"] == "True":	
+			#with open(os.path.join(path_ranking,"Feature_Selection_PCA_TF_{}.txt".format(k)),'w') as f:
+			#	for (key, value) in sorted_d:
+			#		f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_PCA_TF_{}.pkl".format(k)))
+			joblib.dump(pca, os.path.join(path_ranking,"PCA_TF_{}.pkl".format(k)))
+			#joblib.dump(X_test, "Data_Dump/Emails_Training/X_test_processed_TF_PCA_{}.pkl".format(k))
+		else:
+			#with open(os.path.join(path_ranking,"Feature_Selection_PCA_{}.txt".format(k)),'w') as f:
+			#	for (key, value) in sorted_d:
+			#		f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, os.path.join(path_ranking,"X_train_processed_PCA_{}.pkl".format(k)))
+			joblib.dump(pca, os.path.join(path_ranking,"PCA_{}.pkl".format(k)))
+			#joblib.dump(X_test, "Data_Dump/Emails_Training/X_test_processed_TF_PCA_{}.pkl".format(k))
+		return X, pca
+
+def Select_Best_Features_Testing(X_test, selection):
+	if config["Feature Selection"]["PCA"] == "True":
+		X_test=X_test.toarray()
+	X_test=selection.transform(X_test)
+	return X_test
 
 
-
-#<<<<<<< HEAD
-def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
+def Feature_Ranking_tfidf(tfidf, y, k, tfidf_vectorizer):
+	X=Features_Support.Preprocessing(tfidf)
+	features_list=tfidf_vectorizer.get_feature_names()
+	if not os.path.exists("Data_Dump/Feature_Ranking"):
+		os.makedirs("Data_Dump/Feature_Ranking")
 	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
-		X = selection.transform(X)
-		logger.info("X_Shape: {}".format(X.shape))
-		return X
-	elif config["Feature Selection"]["Chi-2"] == "True":
-		X = selection.transform(X)
-		logger.info("X_Shape: {}".format(X.shape))
-		return X
-	elif config["Feature Selection"]["Information Gain"] == "True":
-		best_features=[]
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_IG.txt", 'r') as f:
-			for line in f.readlines():
-				best_features.append(line.split(':')[0])
-		new_list_dict_features=[]
-		for i in range(k):
-			key=best_features[i]
-			if "=" in key:
-				key=key.split("=")[0]
-			if i==0:
-				for j in range(len(feature_list_dict_test)):
-					new_list_dict_features.append({key: feature_list_dict_test[j][key]})
-			else:
-				for j in range(len(feature_list_dict_test)):
-					new_list_dict_features[j][key]=feature_list_dict_test[j][key]
-		X=selection.transform(new_list_dict_features)
-		logger.info("X_Shape: {}".format(X.shape))
-		return X
-	elif config["Feature Selection"]["Gini"] == "True":
-		best_features=[]
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_Gini.txt", 'r') as f:
-			for line in f.readlines():
-				best_features.append(line.split(':')[0])
-		new_list_dict_features=[]
-		for i in range(k):
-			key=best_features[i]
-			#logger.info("key: {}".format(key))
-			if "=" in key:
-				key=key.split("=")[0]
-			if i==0:
-				for j in range(len(feature_list_dict_test)):
-					new_list_dict_features.append({key: feature_list_dict_test[j][key]})
-			else:
-				for j in range(len(feature_list_dict_test)):
-					new_list_dict_features[j][key]=feature_list_dict_test[j][key]
-		logger.info(new_list_dict_features)
-		logger.info("new_list_dict_features shape: {}".format(len(new_list_dict_features[0])))
-		X=selection.transform(new_list_dict_features)
-		return X
-
-	
-#=======
-#def Select_Best_Features_Testing(X, selection):
-#	print (selection)
-#	try:
-#		X = selection.transform(X)
-#	# Print out the list of best features
-#	except AttributeError as e:
-#		print (e)
-#	return X
-#>>>>>>> b62393cd258add9238fd4d2d3d8dc626851086d7
-
-def load_dataset():
-	email_training_regex=re.compile(r"email_features_training_?\d?.txt")
-	#email_testing_regex=re.compile(r"email_features_training_?\d?.txt")
-	link_training_regex=re.compile(r"link_features_training_?\d?.txt")
-	#link_testing_regex=re.compile(r"link_features_training_?\d?.txt")
-	try:
-		if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
-			file_feature_training=re.findall(email_training_regex,''.join(os.listdir('.')))[-1]
-			logger.debug("file_feature_training: {}".format(file_feature_training))
-			#file_feature_testing=re.findall(email_testing_regex,''.join(os.listdir('.')))[-1]
-
-		if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
-			file_feature_training=re.findall(link_training_regex,''.join(os.listdir('.')))[-1]
-			#file_feature_testing=re.findall(link_testing_regex,''.join(os.listdir('.')))[-1]
-	except Exception as e:
-		logger.warning("exception: " + str(e))
-
-	if config["Imbalanced Datasets"]["Load_imbalanced_dataset"] == "True":
-		X, y = Imbalanced_Dataset.load_imbalanced_dataset(file_feature_training)
-		#X_test, y_test=Imbalanced_Dataset.load_imbalanced_dataset(file_feature_testing)
-	else:
-		logger.debug("Imbalanced_Dataset not activated")
-		X, y = load_svmlight_file(file_feature_training)
-		#X_test, y_test = load_svmlight_file(file_feature_testing)
-	return X, y#, X_test, y_test
-
-def main():
-	X, y = Imbalanced_Dataset.load_imbalanced_dataset("email_features_training_3.txt")
-	Feature_Selection(X,y)
-
-
-if __name__ == '__main__':
-	config=configparser.ConfigParser()
-	config.read('Config_file.ini')
-	original = sys.stdout
-	sys.stdout= open("log.txt",'w')
-	main()
-	sys.stdout=original
+		model = LinearSVC()
+		rfe = RFE(model, k, verbose=2, step=0.01)
+		X=rfe.fit_transform(X,y)
+		#X=rfe.fit_transform(X_train,y)
+		#X=rfe.transform(X)
+		#features_list=(vectorizer.get_feature_names())#+(tfidf_vectorizer.get_feature_names())
+		#features_list=(vectorizer.get_feature_names())
+		res= dict(zip(features_list,rfe.ranking_))
+		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
+		if config["Feature Selection"]["with Tfidf"] == "True":
+			with open("Data_Dump/Feature_Ranking/Feature_ranking_rfe_TF_FH_{}.txt".format(k),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			#joblib.dump(X, "Data_Dump/Emails_training/X_train_processed_TF_FH_RFE_{}.pkl".format(k))
+			#joblib.dump(X_test, "Data_Dump/Emails_training/X_test_processed_TF_FH_RFE_{}.pkl".format(k))
+			print("Printing RFE TFIDF: Done!")
+		else:
+			with open("Data_Dump/Feature_Ranking/Feature_ranking_rfe_FH_{}.txt".format(k),'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+			joblib.dump(X, "Data_Dump/Emails_training/X_train_processed_FH_RFE_{}.pkl".format(k))
+			joblib.dump(X_test, "Data_Dump/Emails_training/X_test_processed_FH_RFE_{}.pkl".format(k))
+			print("Printing RFE NTF: Done!")

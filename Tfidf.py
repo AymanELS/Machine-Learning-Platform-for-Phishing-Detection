@@ -31,12 +31,12 @@ def build_corpus():
 
 
 def tfidf_training(corpus):
-	tf= TfidfVectorizer(analyzer='word', ngram_range=(1,1),
-                     min_df = 0, stop_words = 'english', sublinear_tf=True)		
+	#tf= TfidfVectorizer(analyzer='word', ngram_range=(1,1), min_df = 5, stop_words = 'english', sublinear_tf=True)
+	tf=TfidfVectorizer(analyzer='word', ngram_range=(1,1), min_df = 5, stop_words = 'english')
 	tfidf_matrix = tf.fit_transform(corpus)
 	return tfidf_matrix, tf
 
-def tfidf_testing(corpus):
+def tfidf_testing(corpus, tf):
 	tfidf_matrix = tf.transform(corpus)
 	return tfidf_matrix
 
