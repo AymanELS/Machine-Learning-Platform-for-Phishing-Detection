@@ -4,6 +4,7 @@ import sys
 import os, os.path
 from itertools import groupby
 import nltk
+from lxml import html as lxml_html
 from textstat.textstat import textstat
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk import word_tokenize
@@ -2145,7 +2146,7 @@ def HTML_Is_Login(html, url, list_features, list_time):
         start=time.time()
         userfield = passfield = emailfield = None
         _is_login = False
-        doc = html.document_fromstring(body, base_url=url)
+        doc = lxml_html.document_fromstring(html, base_url=url)
         try:
             form_element = doc.xpath('//form')
             if form_element:

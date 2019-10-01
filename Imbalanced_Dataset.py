@@ -72,8 +72,7 @@ def RepeatedEditedNearestNeighbour(X,y):
 
 def AllKNN(X,y):
 	#X, y = load_svmlight_file(file)
-	allknn=imblearn.under_sampling.AllKNN(ratio='auto', return_indices=False, random_state=None, size_ngh=None, n_neighbors=3,
-	 kind_sel='all', allow_minority=False, n_jobs=8)
+	allknn=imblearn.under_sampling.AllKNN(sampling_strategy='auto', return_indices=False, random_state=None, n_neighbors=3, kind_sel='all', allow_minority=False, n_jobs=8, ratio=None)
 	X_res, y_res = allknn.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -141,7 +140,13 @@ def RandomOverSampler(X,y):
 
 def SMOTE(X,y):
 	#X, y = load_svmlight_file(file)
-	smote=imblearn.over_sampling.SMOTE(ratio='auto', random_state=None, k=None, k_neighbors=5, m=None, m_neighbors=10, out_step=0.5, kind='regular', svm_estimator=None, n_jobs=-1)
+	smote=imblearn.over_sampling.SMOTE(ratio='auto', random_state=None, k_neighbors=5, n_jobs=8)
+	X_res, y_res = smote.fit_sample(X,y)
+	#print('Resampled dataset shape {}'.format(Counter(y_res)))
+	return X_res, y_res
+
+def SMOTEBORDER(X,y):
+	smote=imblearn.over_sampling.BorderlineSMOTE(sampling_strategy='auto', random_state=None, k_neighbors=5, n_jobs=8)
 	X_res, y_res = smote.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
 	return X_res, y_res
@@ -151,6 +156,11 @@ def SMOTENC(X,y):
 	smote=imblearn.over_sampling.SMOTENC(n_jobs=-1)
 	X_res, y_res = smote.fit_sample(X,y)
 	#print('Resampled dataset shape {}'.format(Counter(y_res)))
+	return X_res, y_res
+
+def SMOTEENN(X,y):
+	smote=imblearn.combine.SMOTEENN(n_jobs=8)
+	X_res, y_res = smote.fit_sample(X,y)
 	return X_res, y_res
 
 #### 
@@ -214,6 +224,10 @@ def Make_Imbalanced_Dataset(X,y):
 		X_res, y_res = RandomOverSampler(X,y)
 	elif config['Imbalanced Datasets']['SMOTE'] == "True":
 		X_res, y_res = SMOTE(X,y)
+	elif config['Imbalanced Datasets']['SMOTEENN'] == "True":
+		X_res, y_res = SMOTEENN(X,y)
+	elif config['Imbalanced Datasets']['SMOTEBORDERLINE'] == "True":
+		X_res, y_res = SMOTEBORDER(X,y)
 	elif config['Imbalanced Datasets']['SMOTENC'] == "True":
 		X_res, y_res = SMOTENC(X,y)
 	return X_res, y_res

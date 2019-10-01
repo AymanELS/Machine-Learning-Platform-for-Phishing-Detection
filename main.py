@@ -153,9 +153,9 @@ def load_dataset(load_train=True, load_test=False):
                     X_test=vectorizer_test.fit_transform(dict_test)
                     y_test=joblib.load(os.path.join(url_train_dir, "y_test.pkl"))
                 else:
-                    vectorizer_test= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
                     X_test=joblib.load(os.path.join(url_test_dir, "X_test.pkl"))
                     y_test=joblib.load(os.path.join(url_test_dir, "y_test.pkl"))
+                    vectorizer_test= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
         except FileNotFoundError as ex:
             logger.warn("Test files not found {}".format(ex))
 
@@ -262,8 +262,8 @@ def main():
             if config["Extraction"]["Testing Dataset"] == "True":
                 # if training was done in another instance of the plaform then load the necessary files
                 if flag_training==False:
-                    X_train=joblib.load(os.path.join(email_train_dir, "X_train.pkl"))
-                    y_train=joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
+                    #X_train=joblib.load(os.path.join(email_train_dir, "X_train.pkl"))
+                    #y_train=joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
                     vectorizer=joblib.load(os.path.join(email_train_dir, "vectorizer.pkl"))
                     
                 # Extract features in a dictionnary for each email. return a list of dictionaries
@@ -415,6 +415,7 @@ def main():
                 X_train, y_train, X_test, y_test, vectorizer_train, vectorizer_test = load_dataset(load_train=True, load_test=True)
             if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
                 if config["Classification"]["load model"] == "False":
+                    """
                     features_extracted=vectorizer_train.get_feature_names()
                     #logger.info(features_extracted)
                     import numpy as np
@@ -458,6 +459,8 @@ def main():
                     if X_test is not None:
                         joblib.dump(X_test, os.path.join(url_classification_dir, "X_test_restricted.pkl"))
                     logger.info(len(vectorizer_train.get_feature_names()))
+                    """
+                    #exit()
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
                 if config["Classification"]["load model"] == "False":
                     features_extracted = vectorizer_train.get_feature_names()

@@ -57,7 +57,9 @@ def Feature_Ranking(X, y, k):
 		        vectorizer_tfidf=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
 	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
 		model = LogisticRegression()
-		rfe = RFE(model, k)
+		from sklearn.svm import LinearSVC
+		model = LinearSVC()
+		rfe = RFE(model, k, verbose=2, step=0.005)
 		rfe.fit(X,y)
 		X=rfe.transform(X)
 		if config["Feature Selection"]["with Tfidf"]=="True":

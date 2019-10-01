@@ -86,7 +86,7 @@ def fp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 1]
 def Cross_validation(clf, X, y):
 		scoring = {'tp' : make_scorer(tp), 'tn' : make_scorer(tn),
 		           'fp' : make_scorer(fp), 'fn' : make_scorer(fn)}
-		cv_results = cross_validate(clf, X, y, cv=10, scoring=scoring, verbose=1, n_jobs=-1, return_train_score=False)
+		cv_results = cross_validate(clf, X, y, cv=10, scoring=scoring, verbose=1, n_jobs=1, return_train_score=False)
 		#scores = cross_validate(clf, X, y, cv=10, verbose=1, n_jobs=-1,)
 		#conf_mat = confusion_matrix(y, y_predict)
 		logger.info("10 fold Cross_Validation: {}".format(cv_results))
@@ -111,6 +111,7 @@ def Geomteric_mean_score(y_test,y_predict):
 def Balanced_accuracy_score(y_test,y_predict):
 		b_accuracy=sklearn.metrics.balanced_accuracy_score(y_test,y_predict)
 		logger.info("Balanced_accuracy_score: {}".format(b_accuracy))
+		return b_accuracy
 
 def eval_metrics(clf, y_test, y_predict):
 	summary=Features.summary
@@ -148,9 +149,10 @@ def eval_metrics(clf, y_test, y_predict):
 		gmean = Geomteric_mean_score(y_test,y_predict)
 		eval_metrics_dict['Gmean'] = gmean
 		summary.write("Geomteric_mean_score\n")
-	#if config["Evaluation Metrics"]["Balanced_accuracy_score"] == "True":
-	#	Balanced_accuracy_score(y_test,y_predict)
-	#	summary.write("Balanced_accuracy_score\n")
+	if config["Evaluation Metrics"]["Balanced_accuracy_score"] == "True":
+		accuracy = Balanced_accuracy_score(y_test,y_predict)
+		eval_metrics_dict['accuracy'] = accuracy
+		summary.write("Balanced_accuracy_score\n")
 	#	# write results to summary
 	if config["Classification"]["Attack Features"] == "True":
 		logger.debug("Original Labels: {}".format(y_test))

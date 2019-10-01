@@ -993,7 +993,7 @@ def single_html_features(soup, html, url, list_features, list_time):
         Features.HTML_URL_Is_Redirect(html, url, list_features, list_time)
         logger.debug("URL_Is_Redirect")
 
-        Features.HTML_Is_Login(html, url, list_features, list_time)
+        Features.HTML_Is_Login(html.html, url, list_features, list_time)
         logger.debug("HTML_Is_Login")
 
 
@@ -1235,12 +1235,12 @@ def url_features(filepath, list_features, list_dict, list_time, time_dict, corpu
                     html, content, Error = Download_url.download_url(rawurl, list_time)
                     IPs, ipwhois, whois_output, domain = Download_url.extract_whois(html.url, list_time)
                     dns_lookup = Download_url.extract_dns_info(html.url, list_time)
-                    times.append(time.time() - t0)
                     if Error == 1:
                         logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                         Bad_URLs_List.append(rawurl)
                     else:
                         logger.debug("download_url >>>>>>>>> complete")
+                        times.append(time.time() - t0)
                         # include https or http
                         url = rawurl.strip().rstrip('\n')
                         if content=='':
@@ -1267,7 +1267,8 @@ def url_features(filepath, list_features, list_dict, list_time, time_dict, corpu
                         #    pickle.dump(str(soup),feature_tracking)
                         corpus.append(str(soup))
                 except Exception as e:
-                    logger.debug(traceback.format_exc())
+                    logger.warning(traceback.format_exc())
+                    logger.warning(e)
                     logger.warning("This URL has trouble being extracted and will not be considered for further processing:{}".format(rawurl))
                     Bad_URLs_List.append(rawurl)
                
