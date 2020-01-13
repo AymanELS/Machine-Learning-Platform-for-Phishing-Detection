@@ -113,16 +113,32 @@ def extract_header_fields(email):
     email_address_regex=re.compile(r"<.*@[a-zA-Z0-9.\-_]*", flags=re.MULTILINE|re.IGNORECASE)
     email_address_name_regex=re.compile(r'"?.*"? <?', flags=re.MULTILINE|re.IGNORECASE)
     email_address_domain_regex=re.compile(r"@.*", flags=re.MULTILINE|re.IGNORECASE)
+    #get all the headers
+    header=''
+    
+    
 
     try:
         msg = em.message_from_string(email)
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
+    
+    parser = em.parser.HeaderParser()
+    headers = parser.parsestr(msg.as_string())
+    for k,i in headers.items():
+        header=header+str(k)+": "+str(i)+"\n"
+    #print(header)
+    
+    try:
+        priority=msg['X-Priority']
+    except Exception as e:
+        print("exception: " + str(e))
+        priority="None"
 
     try:
         subject=msg['Subject']
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         subject="None"
 
     try:
@@ -132,13 +148,24 @@ def extract_header_fields(email):
         else:
             return_addr=0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         return_addr="None"
+
+    try:
+        if msg['Reply-To'] != None:
+            #return_addr=msg['Return-Path'].strip('>').strip('<')
+            reply_to=1
+        else:
+            reply_to=0
+    except Exception as e:
+        print("exception: " + str(e))
+        reply_to="None"
+
 
     try:
         sender_full=msg['From']
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         sender_full="None"
 
     try:
@@ -147,7 +174,7 @@ def extract_header_fields(email):
         else:
             sender_name="None"
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         sender_name="None"
     #print(sender_name)
 
@@ -157,7 +184,7 @@ def extract_header_fields(email):
         else:
             sender_full_address="None"
     except  Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         sender_full_address="None"
 
     try:
@@ -166,7 +193,7 @@ def extract_header_fields(email):
         else:
             sender_domain="None"
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         sender_domain="None"
 
     try:
@@ -179,7 +206,7 @@ def extract_header_fields(email):
             else:
                 recipient_full="None"
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         recipient_full="None"
 
     try:
@@ -191,7 +218,7 @@ def extract_header_fields(email):
         else:
             recipient_name="None"
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         recipient_name="None"
 
     try:
@@ -212,7 +239,7 @@ def extract_header_fields(email):
             #if "undisclosed-recipients" in recipient_full:
              #   recipient_name='undisclosed-recipients'
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         recipient_full_address="None"
         recipient_domain="None"
 
@@ -238,7 +265,7 @@ def extract_header_fields(email):
         else:
             message_id="None"
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         message_id="None"
 
     try:
@@ -248,7 +275,7 @@ def extract_header_fields(email):
         else:
             x_mailer=0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         x_mailer="None"
 
     try:
@@ -258,7 +285,7 @@ def extract_header_fields(email):
         else:
             x_originating_hostname = 0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         x_originating_hostname="None"
 
     try:
@@ -267,7 +294,7 @@ def extract_header_fields(email):
         else:
             x_originating_ip= 0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         x_originating_ip="None"
 
     try:
@@ -276,7 +303,7 @@ def extract_header_fields(email):
         else:
             x_spam_flag= 0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         x_spam_flag="None"
 
     try:
@@ -285,7 +312,7 @@ def extract_header_fields(email):
         else:
             x_virus_scanned= 0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         x_virus_scanned="None"
 
     try:
@@ -295,7 +322,7 @@ def extract_header_fields(email):
         else:
             dkim_signature=0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         dkim_signature = 0
 
     try:
@@ -306,7 +333,7 @@ def extract_header_fields(email):
             #received_spf="None"
             received_spf=0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         received_spf=0
 
     try:
@@ -316,7 +343,7 @@ def extract_header_fields(email):
         else:
             x_original_authentication_results =0
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         x_original_authentication_results="None"
 
     try:
@@ -325,7 +352,7 @@ def extract_header_fields(email):
         else:
             authentication_results = "None"
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         authentication_results="None"
 
     try:
@@ -335,7 +362,7 @@ def extract_header_fields(email):
         else:
             received="None"
     except Exception as e:
-        logger.warning("exception: " + str(e))
+        print("exception: " + str(e))
         received="None"
 
     try:
@@ -344,7 +371,7 @@ def extract_header_fields(email):
         else:
             Cc="None"
     except Exception as e:
-        logger.warning("exception: "+ str(e))
+        print("exception: "+ str(e))
         Cc="None"
 
     try:
@@ -353,7 +380,7 @@ def extract_header_fields(email):
         else:
             Bcc="None"
     except Exception as e:
-        logger.warning("exception: "+ str(e))
+        print("exception: "+ str(e))
         Bcc="None"
 
     try:
@@ -362,23 +389,24 @@ def extract_header_fields(email):
         else:
             To="None"
     except Exception as e:
-        logger.warning("exception: "+ str(e))
+        print("exception: "+ str(e))
         To="None"
 
     try:
         if msg['MIME-Version'] != []:
-            MIME_version=re.findall(r'\d.\d',msg['MIME-Version'])[0]
+            MIME_version=re.findall(r'\d\.\d',str(msg['MIME-Version']))[0]
         else:
             MIME_version=0
     except Exception as e:
-        logger.warning("exception: "+ str(e))
+        logger.debug("exception: "+ str(e))
+        logger.debug("Exception handled")
         MIME_version="None"
-
     #print(message_id)
     return subject, sender_full, recipient_full, recipient_name, recipient_full_address, recipient_domain,message_id,\
-    sender_name,sender_full_address,sender_domain,return_addr,x_virus_scanned,x_spam_flag,x_originating_ip, x_mailer,\
+    sender_name,sender_full_address,sender_domain,return_addr, reply_to, x_virus_scanned,x_spam_flag,x_originating_ip, x_mailer,\
      x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results,\
-      received, Cc, Bcc, To, MIME_version
+      received, Cc, Bcc, To, MIME_version, header, priority
+
 
 
 ############################
@@ -393,6 +421,8 @@ def extract_body(email):
      #   email=f.read()
     hex_regex=re.compile(r"0x[0-9]*,?",flags=re.IGNORECASE|re.MULTILINE)
     css_regex=re.compile(r'(<style type="text/css">.*</style>)|(<style>.*</style>)',flags=re.IGNORECASE|re.MULTILINE|re.DOTALL)
+    javascript_regex=re.compile(r"<script>.*</script>", flags=re.DOTALL)
+    underscore_regex=re.compile(r"_+",flags=re.IGNORECASE|re.MULTILINE|re.DOTALL)
     msg = em.message_from_string(str(email))
     #The reason for encoding is that, in Python 3, some single-character strings will require multiple bytes to be represented. For instance: len('你'.encode('utf-8'))
     size_in_Bytes=sys.getsizeof(email.encode("utf-8"))
@@ -403,6 +433,7 @@ def extract_body(email):
     text_Html=0
     body_text=''
     body_html=''
+    soup=BeautifulSoup('','html.parser')
     content_type_list=[]
     content_disposition_list=[]
     num_attachment=0
@@ -434,52 +465,52 @@ def extract_body(email):
         #print(filepath + '_ ATTACHMENT :' +str(test_attachment))
         # skip any text/plain (txt) attachments
         ctransfer=str(part.get('Content-Transfer-Encoding'))
-        Content_Transfer_Encoding_list.append(ctransfer)
-        #print("Content-Transfer-Encoding list: {}".format(Content_Transfer_Encoding_list))
-        if ctype == 'text/plain':
-            #print("text/plain loop")
-            #print("Charset: {}".format(part.get_content_charset()))
-            try:
-                body_text = part.get_payload(decode=True).decode(part.get_content_charset())
-            except Exception as e:
-                logger.warning('Exception: {}'.format(e))
-                body_text=part.get_payload(decode=False)  # decode
-            #body_text = part.get_payload(decode=False)
-            #print("\n\n\n")
-            #print("body_text_______________")
-            #print(body_text)
-            #print("\n\n\n")
-            test_text=1
+        Content_Transfer_Encoding_list.append(ctransfer)    
         if ctype == 'text/html':
+            loop='text_html'
             #print("text/html loop")
             #print("Charset: {}".format(part.get_content_charset()))
             try:
                 html=part.get_payload(decode=True).decode(part.get_content_charset())
             except Exception as e:
-                logger.warning('Exception: {}'.format(e))
+                #print('Exception: {}'.format(e))
+                #print('Exception Handled')
                 html=part.get_payload(decode=False)
-            #html=part.get_payload(decode=False)
             html=css_regex.sub('',str(html))
+            html=re.sub(javascript_regex,'',html)
             soup=BeautifulSoup(html,'html.parser')
-            if body_text=='':
-                #print("\n\n\n")
-                body_text=soup.text
+            if not body_text:
+                body_text=str(soup.text)
                 body_text=hex_regex.sub('',body_text)
-                #print("body_text_______________")
-                #print("\n\n\n")
-                #body_text=body_text.decode()
-            #print("\n\n\n")
-            #print("body_HTML_______________")
+                body_text=underscore_regex.sub('',body_text)
             body_html=str(soup)
-            #print(body_html)
-            #print("\n\n\n")
-            #if hex_regex.search(body):
-            #   hex_log.write(filepath+"\n")
             text_Html=1
+        if ctype == 'text/plain':
+            loop='text_plain'
+            #print("Charset: {}".format(part.get_content_charset()))
+            try:
+                body_text = part.get_payload(decode=True).decode(part.get_content_charset())
+                body_text=underscore_regex.sub('',body_text) 
+            except Exception as e:
+                #print('Exception: {}'.format(e))
+                #print('Exception Handled')
+                body_text=part.get_payload(decode=False)
+                body_text=underscore_regex.sub('',body_text) # decode
+            test_text=1
         else:
-            body_text=part.get_payload(decode=True).decode("utf-8")
+            if not body_text:
+                loop='text_loop'
+                #body_text=part.get_payload(decode=True).decode("utf-8")
+                html=str(part.get_payload(decode=False))
+                html=css_regex.sub('',str(html))
+                html=re.sub(javascript_regex,'',html)
+                soup=BeautifulSoup(html,'html.parser')
+                body_text=str(soup.text)
+                body_text=hex_regex.sub('',body_text)
+                body_text=underscore_regex.sub('',body_text)
+                body_html=str(soup)
 
-    return body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes
+    return body_text, body_html, soup, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes
 
 
 ############################
@@ -686,19 +717,19 @@ def Preprocessing(X):
         logger.info("Preprocessing: min_max_scaling")
         return X
         # use abs value to scale
-    #elif config["Preprocessing"]["abs_scaler"] == "True":
-    #    X_train=abs_scaler(X_train)
-    #    X_test=abs_scaler(X_test)
-    #    summary.write("\n Scaling using the absolute value.\n")
-    #    print("Preprocessing: abs_scaler")
-    #    return X_train, X_test
-    #    #normalize the data???
-    #elif config["Preprocessing"]["normalize"] == "True":
-    #    X_train = normalizer(X_train)
-    #    X_test = normalizer(X_test)
-    #    summary.write("\n Normalizing.\n")
-    #    print("Preprocessing: Normalizing")
-    #    return X_train, X_test
+    elif config["Preprocessing"]["abs_scaler"] == "True":
+       X_train=abs_scaler(X_train)
+       X_test=abs_scaler(X_test)
+       summary.write("\n Scaling using the absolute value.\n")
+       print("Preprocessing: abs_scaler")
+       return X_train, X_test
+       #normalize the data???
+    elif config["Preprocessing"]["normalize"] == "True":
+       X_train = normalizer(X_train)
+       X_test = normalizer(X_test)
+       summary.write("\n Normalizing.\n")
+       print("Preprocessing: Normalizing")
+       return X_train, X_test
     else:
         return X
     #return scaler, scaled_Array_Features, mean_Array_Features, min_Array_Features #, max_Array_Features
@@ -997,12 +1028,44 @@ def single_html_features(soup, html, url, list_features, list_time):
         logger.debug("HTML_Is_Login")
 
 
-def single_email_features(body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
+def single_email_features(body_text, body_html, soup, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
                 , Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes, subject, sender_full, recipient_full, recipient_name, recipient_full_address, recipient_domain,message_id
-                , sender_name,sender_full_address,sender_domain,return_addr,x_virus_scanned,x_spam_flag,x_originating_ip, x_mailer
+                , sender_name,sender_full_address,sender_domain,return_addr, reply_to, x_virus_scanned,x_spam_flag,x_originating_ip, x_mailer
                 , x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results
-                , received, Cc, Bcc, To, MIME_version, list_features, list_time):
+                , received, Cc, Bcc, To, MIME_version, header, priority, list_features, list_time):
     if config["Email_Features"]["extract header features"]=="True":
+        #186
+        Features.Email_Header_3_or_More_Repeated_Characters(subject, list_features, list_time)
+        logger.debug("3_or_More_Repeated_Characters")
+        Features.Email_Header_Number_Of_Words_Uppercase(subject, list_features, list_time)
+        logger.debug("Number_Of_Words_Uppercase")
+        Features.Email_Header_Number_Of_Words_fifteen_characters_Header(subject, list_features, list_time)
+        logger.debug("Number_Of_Words_fifteen_characters_header")
+        Features.Email_Header_Number_Of_Words_2_JKQXZ(subject, list_features, list_time)
+        logger.debug("Number_Of_Words_2_JKQXZ")
+        Features.Email_Header_Number_Of_Words_No_Vowels(subject, list_features, list_time)
+        logger.debug("Number_Of_Words_No_Vowels")
+        Features.Email_Header_Number_Of_Words_No_English_Characters(subject, list_features, list_time)
+        logger.debug("Number_Of_Words_No_English_Characters")
+        Features.Email_Header_X_Priority(priority, list_features, list_time)
+        logger.debug("X_Priority")
+        Features.Email_Header_Num_Content_Type_text_html_binary(content_type_list, list_features, list_time)
+        logger.debug("Num_Content_Type_text_html_binary")
+        
+        #184
+        #Features.Email_Header_Num_Attachment(num_attachment, list_features, list_time)
+        #logger.debug("Email_Header_Num_Attachment")
+
+        #162
+        Features.Email_Header_binary_re(subject, list_features, list_time)
+        logger.debug("binary_re")
+        Features.Email_Header_Binary_Blacklisted_Words_subject(subject, list_features, list_time)
+        logger.debug("Binary_Blacklisted_Words_subject")
+        Features.Email_Header_compare_sender_reply(sender_full_address, reply_to, list_features, list_time)
+        logger.debug("compare_sender_reply")
+
+
+        ##
         Features.Email_Header_return_path(return_addr, list_features, list_time)
         logger.debug("return_path")
         Features.Email_Header_X_mailer(x_mailer,list_features, list_time)
@@ -1058,14 +1121,8 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
         logger.debug("Email_Header_Num_Content_Disposition")
         Features.Email_Header_Num_Content_Type_text_plain(content_type_list, list_features, list_time)
         logger.debug("Email_Header_Num_Content_Type_text_plain")
-        Features.Email_Header_Num_Content_Type_text_html(content_type_list, list_features, list_time)
-        logger.debug("Email_Header_Num_Content_Type_text_html")
-        Features.Email_Header_Num_Content_Disposition(content_disposition_list, list_features, list_time)
-        logger.debug("Email_Header_Num_Content_Disposition")
-        Features.Email_Header_Num_Content_Type_text_plain(content_type_list, list_features, list_time)
-        logger.debug("Email_Header_Num_Content_Type_text_plain")
-        Features.Email_Header_Num_Content_Type_text_html(content_type_list, list_features, list_time)
-        logger.debug("Email_Header_Num_Content_Type_text_html")
+        #Features.Email_Header_Num_Content_Type_text_html(content_type_list, list_features, list_time)
+        #logger.debug("Email_Header_Num_Content_Type_text_html")
         Features.Email_Header_Num_Content_Type_Multipart_Encrypted(content_type_list, list_features, list_time)
         logger.debug("Email_Header_Num_Content_Type_Multipart_Encrypted")
         Features.Email_Header_Num_Content_Type_Multipart_Mixed(content_type_list, list_features, list_time)
@@ -1116,8 +1173,6 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
         logger.debug("Email_Header_Num_Content_Transfer_Encoding_binary")
         Features.Email_Header_Num_Content_Transfer_Encoding_quoted_printable(Content_Transfer_Encoding_list, list_features, list_time)
         logger.debug("Email_Header_Num_Content_Transfer_Encoding_quoted_printable")
-        Features.Email_Header_Num_Unique_Attachment_types(file_extension_list, list_features, list_time)
-        logger.debug("Email_Header_Num_Unique_Attachment_types")
         Features.Email_Header_size_in_Bytes(size_in_Bytes ,list_features, list_time)
         logger.debug("Email_Header_size_in_Bytes")
         Features.Email_Header_Received_count(received, list_features, list_time)
@@ -1126,14 +1181,99 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
         logger.debug("Authentication_Results_SPF_Pass")
         Features.Email_Header_Authentication_Results_DKIM_Pass(authentication_results, list_features, list_time)
         logger.debug("Authentication_Results_DKIM_Pass")
-        Features.Email_Header_Test_Html(text_Html, list_features, list_time)
-        logger.debug("Test_Html")
+        #Features.Email_Header_Test_Html(text_Html, list_features, list_time)
+        #logger.debug("Test_Html")
         Features.Email_Header_Test_Text(test_text, list_features, list_time)
         logger.debug("test_text")
         Features.Email_Header_blacklisted_words_subject(subject, list_features, list_time)
         logger.debug("Email_blacklisted_words_subject")
 
     if config["Email_Features"]["extract body features"]=="True":
+        #186        
+        Features.Email_Body_Proportion_Words_No_Vowels_Body(body_html, list_features, list_time)
+        logger.debug("Proportion_Words_No_Vowels_Body")
+        Features.Email_Body_Number_Of_Words_fifteen_characters_Body(body_html, list_features, list_time)
+        logger.debug("Number_Of_Words_fifteen_characters_Body")
+        Features.Email_Body_Number_Of_Words_2_JKQXZ_Body(body_html, list_features, list_time)
+        logger.debug("Number_Of_Words_2_JKQXZ_Body")
+        Features.Email_Body_From_To_Strings_in_Body(body_html, list_features, list_time)
+        logger.debug("From_To_Strings_in_Body")
+        Features.Email_Body_number_of_html_comment_tags_body(body_html, list_features, list_time)
+        logger.debug("number_of_html_comment_tags_body")
+        Features.Email_Body_number_of_html_href(body_html, list_features, list_time)
+        logger.debug("number_of_html_href")
+        Features.Email_Body_number_of_color(body_html, list_features, list_time)
+        logger.debug("number_of_color")
+        Features.Email_Body_Binary_Scripts(body_html, list_features, list_time)
+        logger.debug("Binary_Scripts")
+        Features.Email_Body_Binary_CSS(body_html, list_features, list_time)
+        logger.debug("Binary_CSS")
+        Features.Email_Body_Binary_table_tag(body_html, list_features, list_time)
+        logger.debug("Binary_table_tag")
+        Features.Email_Body_Number_Of_Img_Links(body_html, list_features, list_time)
+        logger.debug("Email_Body_Number_Of_Img_Links")
+        Features.Email_Body_hidden_text(body_html, list_features, list_time)
+        logger.debug("Hidden_Text")
+
+        #162
+        Features.Email_Body_Binary_Content_Type_Multipart_Alternative(content_type_list, list_features, list_time)
+        logger.debug("Binary_Content_Type_Multipart_Alternative")
+        Features.Email_Body_Binary_Onclick_Event(body_html, list_features, list_time)
+        logger.debug("Binary_Onclick_Event")
+        #Features.Email_Body_Binary_Scripts(body_html, list_features, list_time)
+        #logger.debug("Binary_Scripts")
+        Features.Email_Body_Binary_Popup(body_html, list_features, list_time)
+        logger.debug("Binary_Popup")
+        Features.Email_Body_Window_Status(body_html, list_features, list_time)
+        logger.debug("Window_Status")
+        Features.Email_Body_Binary_HTML_content(content_type_list, list_features, list_time)
+        logger.debug("Binary_HTML_content")
+        Features.Email_Body_Binary_Differ_Displayed_Link(body_html, list_features, list_time)
+        logger.debug("Binary_Differ_Displayed_Link")
+        Features.Email_Body_Binary_Img_Links(body_html, list_features, list_time)
+        logger.debug("Binary_Img_Links")
+        Features.Email_Body_blacklisted_words_body(body_text, list_features, list_time)
+        logger.debug("Email_Body_blacklisted_words_body")
+        Features.Email_Body_Binary_URL_BagofWords(body_html, list_features, list_time)
+        logger.debug("Binary_URL_BagofWords")
+        #178
+        #Features.Email_Body_Number_Of_Img_Links(body_html, list_features, list_time)
+        #logger.debug("Email_Body_Number_Of_Img_Links")
+        Features.Email_Body_number_of_characters_body(body_text, list_features, list_time)
+        logger.debug("number_of_characters_body")
+        Features.Email_Body_Html_Size(body_html, text_Html, list_features, list_time)
+        logger.debug("Html_size")
+        Features.Email_Body_Body_Size(body_text, test_text, list_features, list_time)
+        logger.debug("Body_size")
+        Features.Email_Body_greetings_body(body_text, list_features, list_time)
+        logger.debug("Greetings_body")
+        Features.Email_Body_table_tag_count(body_html, list_features, list_time)
+        logger.debug("table_tag_count")
+        #Features.Email_Body_number_of_html_href(body_html, list_features, list_time)
+        #logger.debug("number_of_html_href")
+        Features.Email_Body_form_tag_count(body_html, list_features, list_time)
+        logger.debug("form_tag_count")
+        #Features.Email_Body_hidden_text(body_html, list_features, list_time)
+        #logger.debug("Hidden_Text")
+        Features.Email_Body_Anchor_differ_Displayed_Link(body_html, list_features, list_time)
+        logger.debug('config["Email_Body_Features"]["Anchor_differ_Displayed_Link"] == {}'.format(config["Email_Body_Features"]["Anchor_differ_Displayed_Link"]))
+        logger.debug("Anchor_differ_Displayed_Link")
+        Features.Email_Body_Number_Of_Scripts(body_html, list_features, list_time)
+        logger.debug("Number_Of_Scripts")
+        #184
+        #Features.Email_Body_number_of_html_tags_body(body_html, list_features, list_time)
+        #logger.debug("number_of_html_tags_body")
+        #Features.Email_Body_number_of_html_href(body_html, list_features, list_time)
+        #logger.debug("number_of_html_href")
+        #Features.Email_Body_Anchor_differ_Displayed_Link(body_html, list_features, list_time)
+        #logger.debug("Anchor_differ_Displayed_Link")
+        #Features.Email_Body_Number_Of_Scripts(body_html, list_features, list_time)
+        #logger.debug("Number_Of_Scripts")
+        #Features.Email_Body_table_tag_count(body_html, list_features, list_time)
+        #logger.debug("table_tag_count")
+        #Features.Email_Body_Number_Of_Img_Links(body_html, list_features, list_time)
+        #logger.debug("Email_Body_Number_Of_Img_Links")
+                        
         Features.Email_Body_flesh_read_score(body_text, list_features, list_time)
         logger.debug("flesh_read_score")
         Features.Email_Body_smog_index(body_text, list_features, list_time)
@@ -1153,19 +1293,19 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
         Features.Email_Body_gunning_fog(body_text, list_features, list_time)
         logger.debug("gunning_fog")
         #Features.html_in_body(body, list_features, list_time)
-        #print("html_in_body")
+        #logger.debug("html_in_body")
         Features.Email_Body_number_of_words_body(body_text, list_features, list_time)
         logger.debug("number_of_words_body")
-        Features.Email_Body_number_of_characters_body(body_text, list_features, list_time)
-        logger.debug("number_of_characters_body")
+        #Features.Email_Body_number_of_characters_body(body_text, list_features, list_time)
+        #logger.debug("number_of_characters_body")
         Features.Email_Body_number_of_special_characters_body(body_text, list_features, list_time)
         logger.debug("number_of_special_characters_body")
         Features.Email_Body_vocab_richness_body(body_text, list_features, list_time)
         logger.debug("vocab_richness_body")
-        Features.Email_Body_number_of_html_tags_body(body_html, list_features, list_time)
-        logger.debug("number_of_html_tags_body")
+        #Features.Email_Body_number_of_html_tags_body(body_html, list_features, list_time)
+        #logger.debug("number_of_html_tags_body")
         Features.Email_Body_number_of_unique_words_body(body_text, list_features, list_time)
-        logger.debug("number_unique_words_body")
+        logger.debug("number_of_unique_words_body")
         Features.Email_Body_number_unique_chars_body(body_text, list_features, list_time)
         logger.debug("number_unique_chars_body")
         Features.Email_Body_end_tag_count(body_html, list_features, list_time)
@@ -1180,36 +1320,68 @@ def single_email_features(body_text, body_html, text_Html, test_text, num_attach
         logger.debug("count_href_tag")
         Features.Email_Body_Function_Words_Count(body_text, list_features, list_time)
         logger.debug("Email_Body_Function_Words_Count")
-        Features.Email_Body_Number_Of_Img_Links(body_html, list_features, list_time)
-        logger.debug("Email_Body_Number_Of_Img_Links")
-        Features.Email_Body_blacklisted_words_body(body_text, list_features, list_time)
-        logger.debug("Email_Body_blacklisted_words_body")
-        Features.Email_Body_Number_Of_Scripts(body_html, list_features, list_time)
-        logger.debug("Email_Number_Of_Scripts")
+        Features.Email_Body_text_standard(body_text, list_features, list_time)
+        logger.debug("text_standard")
 
 
 
-def email_url_features(url_All, sender_domain, list_features, list_time):
-    if config["Email_Features"]["extract body features"]=="True":
+def email_url_features(url_All, sender_domain,body_html, list_features, list_time):
+    if config["Email_Features"]["extract url features"]=="True":
+        #162
+        Features.Email_URL_Binary_HTML_Links(body_html, list_features, list_time)
+        logger.debug("Binary_HTML_Links")
+        Features.Email_URL_Binary_3_Dots(url_All, list_features, list_time)
+        logger.debug("Binary_3_Dots")
+        Features.Email_URL_IP_Address_binary(url_All, list_features, list_time)
+        logger.debug("IP_Address_binary")
+        #Features.Email_URL_TLD_in_URL_More_Than_Once(url_All, list_features, list_time)
+        #logger.debug("TLD_in_URL_More_Than_Once")
+        Features.Email_URL_Non_Standard_port(url_All, list_features, list_time)
+        logger.debug("Non_Standard_port")
+        Features.Email_URL_binary_Hex_Characters(url_All, list_features, list_time)
+        logger.debug("Binary_Hex_Characters")
+        Features.Email_URL_Sender_Links_Domain(url_All, sender_domain, list_features, list_time)
+        logger.debug("Sender_Links_Domain")
         Features.Email_URL_Number_Url(url_All, list_features, list_time)
         logger.debug("Number_Url")
         Features.Email_URL_Number_Diff_Domain(url_All, list_features, list_time)
         logger.debug("Number_Diff_Domain")
-        Features.Email_URL_Number_link_at(url_All, list_features, list_time)
-        logger.debug("Number_link_at")
+        Features.Email_URL_Number_Diff_Subdomain(url_All, list_features, list_time)
+        logger.debug("Number_Diff_SubDomain")
+        
         Features.Email_URL_Number_link_sec_port(url_All, list_features, list_time)
         logger.debug("Number_link_sec_port")
-    #
-    #Features.Number_link_IP(url_All, list_features, list_time)
-    #logger.debug(Number_link_IP)
-    #Features.Number_link_HTTPS(url_All, list_features, list_time)
-    #logger.debug(Number_link_HTTPS)
-    #Features.Number_Domain_Diff_Sender(url_All, sender_domain, list_features, list_time)
-    #print(Number_Domain_Diff_Sender)
-    #Features.Number_Link_Text(url_All, list_features, list_time)
-    #print(Number_Link_Text)
-    #Features.Number_link_port_diff_8080(url_All, list_features, list_time)
-    #print(Number_link_port_diff_8080)
+    
+    #186
+        Features.Email_URL_Number_link_at(url_All, list_features, list_time)
+        logger.debug("Number_link_at")
+    #178
+        Features.Email_URL_DNS_Info_Exists_Binary(url_All, list_features, list_time)
+        logger.debug("DNS_Info_Exists")
+        Features.Email_URL_double_slashes_average_count(url_All, list_features, list_time)
+        logger.debug("double_slashes_average_count")    
+        Features.Email_URL_number_of_dots_average(url_All, list_features, list_time)
+        logger.debug("number_of_dots_average")
+        Features.Email_URL_Domain_in_URL_Path_Binary(url_All, list_features, list_time)
+        logger.debug("Domain_in_URL_Path")
+        Features.Email_URL_TLD_in_URL_More_Than_Once_Binary(url_All, list_features, list_time)
+        logger.debug("TLD_in_URL_More_Than_Once")
+        Features.Email_URL_Added_Suffix_Prefix_Binary(url_All, list_features, list_time)
+        logger.debug("Added_Suffix_Prefix_Binary")
+        Features.Email_URL_Average_Age(url_All, list_features, list_time)
+        logger.debug("Average_Age")
+        Features.Email_URL_Protocol_Port_Match_Binary(url_All, list_features, list_time)
+        logger.debug("Protocol_Port_Match_Binary")
+        Features.Email_URL_With_Hex_Count(url_All, list_features, list_time)
+        logger.debug("With_Hex_Count")
+        Features.Email_URL_Max_Diff_Subdomain(url_All, list_features, list_time)
+        logger.debug("Max_Diff_Subdomain")
+        Features.Email_URL_Unicode_Binary(url_All, list_features, list_time)
+        logger.debug("Unicode")
+        Features.Email_URL_link_port_diff_8080_count(url_All, list_features, list_time)
+        logger.debug("link_port_diff_8080_count")
+        Features.Email_URL_IP_Address_Count(url_All, list_features, list_time)
+        logger.debug("IP_Address_Count")
 
 
 
@@ -1289,33 +1461,28 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
             logger.debug("extract urls from body >>>> Done")
 
             (subject, sender_full, recipient_full, recipient_name, recipient_full_address, recipient_domain,message_id
-                , sender_name,sender_full_address, sender_domain, return_addr, x_virus_scanned, x_spam_flag, x_originating_ip, x_mailer
+                , sender_name,sender_full_address, sender_domain, return_addr, reply_to,x_virus_scanned, x_spam_flag, x_originating_ip, x_mailer
                 , x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results
-                   , received, Cc, Bcc, To , MIME_version )= extract_header_fields(email)
+                   , received, Cc, Bcc, To , MIME_version, header, priority )= extract_header_fields(email)
 
             logger.debug("extract_header_fields >>>> Done")
-            #header=extract_header(email)
-            single_email_features(body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
+            single_email_features(body_text, body_html, soup, text_Html, test_text, num_attachment, content_disposition_list, content_type_list
                 , Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes, subject, sender_full, recipient_full, str(recipient_name), recipient_full_address, recipient_domain,message_id
-                , sender_name,sender_full_address,sender_domain,return_addr,x_virus_scanned,x_spam_flag,x_originating_ip, x_mailer
+                , sender_name,sender_full_address,sender_domain,return_addr, reply_to, x_virus_scanned,x_spam_flag,x_originating_ip, x_mailer
                 , x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results
-                , received, Cc, Bcc, To, MIME_version, list_features, list_time)
-            logger.debug("Email features >>>>>>>>>>> Done")
-
-            #email_url_features(url_All,sender_domain, list_features, list_time)
-            #print("Email Url Features extracted")
-            #print(list_features)
-            corpus.append(body_text)
-            '''
-            if url==[]:
-                link=''
-                single_url_feature(link, list_features, list_time)
+                , received, Cc, Bcc, To, MIME_version, header, priority, list_features, list_time)
+            email_url_features(url_All, sender_domain,body_html, list_features, list_time)
+            single_html_features(soup, body_html, url_All, list_features, list_time)
+            if config["Email_Features"]["extract external features"]=="True": 
+                Features.Email_External_Spamassassin_Feature(email, list_features, list_time)
+                logger.info("SpamAssassin feature extracted\n")
+            logger.info("Email features >>>>>>>>>>> Done")
+            logger.debug(list_features)
+            if config["Email_Features"]["extract header features"]=="True":
+                corpus.append(header+'\n'+str(body_text))
             else:
-                for link in url:
-                    print(link)
-                    single_url_feature(link, list_features, list_time)
-            print("URL features extracted")
-            '''
+                corpus.append(str(body_text))
+
             dump_features_emails(filepath, list_features, features_output, list_dict, list_time, time_dict)
 
 
