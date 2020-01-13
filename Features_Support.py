@@ -745,6 +745,7 @@ def Cleaning(dict1):
                 item[key]= -1
                 count+=1
                 logger.debug("Value of {} changed from {} to {}".format(key,original,item[key]))
+    return dict1
 
 
 #list_id=list(range(1,len(list_features)+1))

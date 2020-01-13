@@ -217,6 +217,7 @@ def main():
                     os.makedirs(email_train_dir)
                 # Extract features in a dictionnary for each email. return a list of dictionaries
                 (feature_list_dict_train, y_train, corpus_train)=Features.Extract_Features_Emails_Training()
+                feature_list_dict_train = Features_Support.Cleaning(feature_list_dict_train)
                 # Tranform the list of dictionaries into a sparse matrix
                 X_train, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
                 # Save model for vectorization
