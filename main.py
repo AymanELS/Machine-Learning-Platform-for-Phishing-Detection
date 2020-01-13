@@ -1,7 +1,7 @@
 import os
 import sys
 from Classifiers import classifiers
-from Classifiers import fit_MNB
+#from Classifiers import fit_MNB
 import Features
 import Features_Support
 import Feature_Selection
