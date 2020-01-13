@@ -207,7 +207,7 @@ def main():
             joblib.dump(selection, os.path.join(email_train_dir, "selection.pkl"))
         elif config["Email or URL feature Extraction"]["extract_features_URLs"] == "True":
             joblib.dump(selection, os.path.join(url_train_dir, "selection.pkl"))
-### Email FEature Extraction
+### Email Feature Extraction
     elif config["Extraction"]["Feature Extraction"]=='True':
         Feature_extraction=True
         if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
@@ -221,6 +221,8 @@ def main():
                 X_train, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
                 # Save model for vectorization
                 joblib.dump(vectorizer, os.path.join(email_train_dir, "vectorizer.pkl"))
+				joblib.dump(X_train,os.path.join(email_train_dir,"X_train_unprocessed.pkl"))
+				#joblib.dump(y_train,os.path.join(email_train_dir,"y_train.pkl"))
                 # Add tfidf if the user marked it as True
                 if config["Email_Features"]["tfidf_emails"] == "True":
                     logger.info("tfidf_emails_train ######")
@@ -228,9 +230,15 @@ def main():
                     X_train=hstack([X_train, Tfidf_train])
                     # Save tfidf model
                     joblib.dump(tfidf_vectorizer, os.path.join(email_train_dir, "tfidf_vectorizer.pkl"))
-                
+                    joblib.dump(tfidf_train, os.path.join(email_train_dir, "tfidf_matrix.pkl"))
+                    joblib.dump(X_train, os.path.join(email_train_dir, "X_train_unprocessed_with_tfidf.pkl"))
+                    X_train=Features_Support.Preprocessing(X_train)
+                    joblib.dump(X_train, os.path.join(email_train_dir, "X_train_processed_with_tfidf.pkl"))
                 # Use Min_Max_scaling for prepocessing the feature matrix
-                X_train=Features_Support.Preprocessing(X_train)
+                
+                if config["Email_Features"]["tfidf_emails"] == "False"::
+                    X_train=Features_Support.Preprocessing(X_train)
+                    joblib.dump(X_train, os.path.join(email_train_dir, "X_train_processed.pkl"))
 
                 # feature ranking
                 if config["Feature Selection"]["select best features"]=="True":
@@ -241,65 +249,87 @@ def main():
                     X_train, selection = Feature_Selection.Feature_Ranking(X_train, y_train,k)
                     # dump selection model
                     joblib.dump(selection, os.path.join(email_train_dir, "selection.pkl"))
+                    joblib.dump(X_train, os.path.join(email_train_dir, "X_train_processed_best_features.pkl"))
                     logger.info("### Feature Ranking and Selection for Training Done!")
                 
                 
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_train, y_train=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_train, y_train)
+                    joblib.dump(X_train, os.path.join(email_train_dir, "X_train_imbalanced.pkl"))
+                    joblib.dump(y_train, os.path.join(email_train_dir, "y_train_imbalanced.pkl"))
 
-                # Fit classifier MNB
-                #fit_MNB(X_train, y_train)
                 # Save features for training dataset
-                #dump_svmlight_file(X_train,y_train,"Data_Dump/Emails_Training/Feature_Matrix.txt")
-                joblib.dump(X_train, os.path.join(email_train_dir, "X_train.pkl"))
+                joblib.dump(X_train, os.path.join(email_train_dir, "X_train_final.pkl"))
                 joblib.dump(y_train, os.path.join(email_train_dir, "y_train.pkl"))
+
+                #dump features in txt format
+                if config["Extraction"]["Dump Features txt"] == "True":
+                    joblib.dump(feature_list_dict_train,os.path.join(url_train_dir, "Features_training.txt"))
 
                 # flag to mark if training was done
                 flag_training=True
                 logger.info("Feature Extraction for training dataset: Done!")
 
+
+            #TESTING
             if config["Extraction"]["Testing Dataset"] == "True":
+            	# Create Data Dump directory if doesn't exist
+                if not os.path.exists(email_test_dir):
+                    os.makedirs(email_test_dir)
                 # if training was done in another instance of the plaform then load the necessary files
                 if flag_training==False:
-                    #X_train=joblib.load(os.path.join(email_train_dir, "X_train.pkl"))
-                    #y_train=joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
+                    X_train=joblib.load(os.path.join(email_train_dir, "X_train_final.pkl"))
+                    y_train=joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
                     vectorizer=joblib.load(os.path.join(email_train_dir, "vectorizer.pkl"))
                     
                 # Extract features in a dictionnary for each email. return a list of dictionaries
                 (feature_list_dict_test, y_test, corpus_test)=Features.Extract_Features_Emails_Testing()
                 # Tranform the list of dictionaries into a sparse matrix
                 X_test=Features_Support.Vectorization_Testing(feature_list_dict_test, vectorizer)
-                
+                joblib.dump(X_test, os.path.join(email_test_dir, "X_test_unprocessed.pkl"))
+                #joblib.dump(X_test, os.path.join(email_test_dir, "y_test.pkl"))
+
                 # Add tfidf if the user marked it as True
                 if config["Email_Features"]["tfidf_emails"] == "True":
                     tfidf_vectorizer=joblib.load(os.path.join(email_train_dir, "tfidf_vectorizer.pkl"))
                     logger.info("tfidf_emails_train ######")
                     Tfidf_test=Tfidf.tfidf_testing(corpus_test, tfidf_vectorizer)
                     X_test=hstack([X_test, Tfidf_test])
+                    joblib.dump(Tfidf_test, os.path.join(email_test_dir, "tfidf.pkl"))
+                    joblib.dump(Tfidf_test, os.path.join(email_test_dir, "X_test_unprocessed_with_tfidf.pkl"))                    
+                    X_test=Features_Support.Preprocessing(X_test)
+                    joblib.dump(X_test, os.path.join(email_test_dir, "X_test_processed_with_tfidf.pkl"))
                 
+
                 # Use Min_Max_scaling for prepocessing the feature matrix
-                X_test=Features_Support.Preprocessing(X_test)
+               
+                if config["Email_Features"]["tfidf_emails"] == "False":
+                    X_test=Features_Support.Preprocessing(X_test)
+                    joblib.dump(X_test, os.path.join(email_test_dir, "X_test_processed.pkl"))
 
                 # feature ranking
                 if config["Feature Selection"]["select best features"]=="True":
                     #k: Number of Best features
                     selection=joblib.load(os.path.join(email_train_dir, "selection.pkl"))
-                    k = int(config["Feature Selection"]["number of best features"])
-                    X_test = Feature_Selection.Select_Best_Features_Testing(X_test, selection, k, feature_list_dict_test)
+                    X_test = Feature_Selection.Select_Best_Features_Testing(X_test, selection)
                     logger.info("### Feature Ranking and Selection for Training Done!")
-                
+                	joblib.dump(X_test, os.path.join(email_test_dir, "X_test_processed_best_features.pkl"))
+
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_test, y_test=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_test, y_test)
-
+                    joblib.dump(X_test, os.path.join(email_test_dir, "X_test_imbalanced.pkl"))
+                    joblib.dump(y_test, os.path.join(email_test_dir, "y_test_imbalanced.pkl"))
+                
                 #Dump Testing feature matrix with labels
                 if not os.path.exists(email_test_dir):
                     os.makedirs(email_test_dir)
-                joblib.dump(X_test, os.path.join(email_test_dir, "X_test.pkl"))
+                joblib.dump(X_test, os.path.join(email_test_dir, "X_test_final.pkl"))
                 joblib.dump(y_test, os.path.join(email_test_dir, "y_test.pkl"))
+                
                 if config["Extraction"]["Dump Features txt"] == "True":
-                    joblib.dump(feature_list_dict_train,os.path.join(url_train_dir, "Features.txt"))
+                    joblib.dump(feature_list_dict_test,os.path.join(url_test_dir, "Features_testing.txt"))
                 logger.info("Feature Extraction for testing dataset: Done!")
             else:
                 X_test = None
@@ -328,11 +358,14 @@ def main():
                     X_train=hstack([X_train, Tfidf_train])
                     #dump tfidf vectorizer
                     joblib.dump(tfidf_vectorizer, os.path.join(url_train_dir, "tfidf_vectorizer.pkl"))
-                
-                joblib.dump(X_train, os.path.join(url_train_dir, "X_train_unprocessed_with_tfidf.pkl"))
-                # Use Min_Max_scaling for prepocessing the feature matrix
-                X_train=Features_Support.Preprocessing(X_train)
-                joblib.dump(X_train, os.path.join(url_train_dir, "X_train_processed.pkl"))
+                    joblib.dump(X_train, os.path.join(url_train_dir, "X_train_unprocessed_with_tfidf.pkl"))
+                    X_train=Features_Support.Preprocessing(X_train)
+                    joblib.dump(X_train, os.path.join(url_train_dir, "X_train_processed_with_tfidf.pkl"))
+
+                if config["HTML_Features"]["tfidf_websites"] == "False":
+                    # Use Min_Max_scaling for prepocessing the feature matrix
+                    X_train=Features_Support.Preprocessing(X_train)
+                    joblib.dump(X_train, os.path.join(url_train_dir, "X_train_processed.pkl"))
 
                 # Feature Selection
                 if config["Feature Selection"]["select best features"]=="True":
@@ -342,24 +375,33 @@ def main():
                     #Dump model
                     joblib.dump(selection, os.path.join(url_train_dir, "selection.pkl"))
                     joblib.dump(X_train, os.path.join(url_train_dir, "X_train_processed_best_features.pkl"))
+                    logger.info("### Feature Ranking and Selection for Training Done!")
+
 
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_train, y_train=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_train, y_train)
+                	joblib.dump(X_train, os.path.join(url_train_dir, "X_train_imbalanced.pkl"))
+                    joblib.dump(y_train, os.path.join(url_train_dir, "y_train_imbalanced.pkl"))
+
                 # dump features and labels and vectorizers
 
-                joblib.dump(X_train, os.path.join(url_train_dir, "X_train.pkl"))
+                joblib.dump(X_train, os.path.join(url_train_dir, "X_train_final.pkl"))
                 joblib.dump(y_train, os.path.join(url_train_dir, "y_train.pkl"))
                 if config["Extraction"]["Dump Features txt"] == "True":
-                    joblib.dump(feature_list_dict_train,os.path.join(url_train_dir, "Features.txt"))
+                    joblib.dump(feature_list_dict_train,os.path.join(url_train_dir, "Features_training.txt"))
+                
                 # flag to mark if training was done
                 flag_training=True
                 logger.info("Feature Extraction for training dataset: Done!")
 
             if config["Extraction"]["Testing Dataset"] == "True":
+            	# Create directory to store dada
+                if not os.path.exists(url_test_dir):
+                    os.makedirs(url_test_dir)
                 # if training was done in another instance of the plaform then load the necessary files
                 if flag_training==False:
-                    X_train=joblib.load(os.path.join(url_train_dir, "X_train.pkl"))
+                    X_train=joblib.load(os.path.join(url_train_dir, "X_train_final.pkl"))
                     y_train=joblib.load(os.path.join(url_train_dir, "y_train.pkl"))
                     vectorizer=joblib.load(os.path.join(url_train_dir, "vectorizer.pkl"))
                     
@@ -368,6 +410,8 @@ def main():
                 # Tranform the list of dictionaries into a sparse matrix
                 X_test=Features_Support.Vectorization_Testing(feature_list_dict_test, vectorizer)
                 joblib.dump(X_test, os.path.join(url_test_dir, "X_test_unprocessed.pkl"))
+
+                
                 # TFIDF
                 if config["HTML_Features"]["tfidf_websites"] == "True":
                     if flag_training==False:
@@ -395,10 +439,12 @@ def main():
                 # Test on imbalanced datasets
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_test, y_test=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_test, y_test)
+                    joblib.dump(X_test, os.path.join(url_test_dir, "X_test_imbalanced.pkl"))
+                    joblib.dump(y_test, os.path.join(url_test_dir, "y_test_imbalanced.pkl"))
                 #Dump Testing feature matrix with labels
                 if not os.path.exists(url_test_dir):
                     os.makedirs(url_test_dir)
-                joblib.dump(X_test, os.path.join(url_test_dir, "X_test.pkl"))
+                joblib.dump(X_test, os.path.join(url_test_dir, "X_test_final.pkl"))
                 joblib.dump(y_test, os.path.join(url_test_dir, "y_test.pkl"))
                 logger.info("Feature Extraction for testing dataset: Done!")
             else:
@@ -462,31 +508,39 @@ def main():
                     """
                     #exit()
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
+                if config["Classification"]["load model"] == "True":
+                	X_train=None
+                    y_train=None
                 if config["Classification"]["load model"] == "False":
-                    features_extracted = vectorizer_train.get_feature_names()
-                    logger.info(len(features_extracted))
-                    mask= []
-                    for feature_name in features_extracted:
-                        if "=" in feature_name:
-                            feature_name=feature_name.split("=")[0]
-                        if "count_in_body" in feature_name:
-                            if config["Email_Features"]["blacklisted_words_body"] == "True":
-                                mask.append(1)
-                            else:
-                                mask.append(0)
-                        elif "count_in_subject" in feature_name:
-                            if config["Email_Features"]["blacklisted_words_subject"] == "True":
-                                mask.append(1)
-                            else:
-                                mask.append(0)
-                        else:
-                            if config["Email_Features"][feature_name]=="True":
-                                mask.append(1)
-                            else:
-                                mask.append(0)
-                    logger.info(mask)
-                    vectorizer=vectorizer_train.restrict(mask)
-                    logger.info(len(vectorizer.get_feature_names()))
+                	X_train = joblib.load(os.path.join(email_train_dir, "X_train_final.pkl"))
+                    y_train = joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
+                X_test = joblib.load(os.path.join(email_test_dir, "X_test_final.pkl"))
+                y_test = joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
+                #if config["Classification"]["load model"] == "False":
+                #    features_extracted = vectorizer_train.get_feature_names()
+                #    logger.info(len(features_extracted))
+                #    mask= []
+                #    for feature_name in features_extracted:
+                #        if "=" in feature_name:
+                #            feature_name=feature_name.split("=")[0]
+                #        if "count_in_body" in feature_name:
+                #            if config["Email_Features"]["blacklisted_words_body"] == "True":
+                #                mask.append(1)
+                #            else:
+                #                mask.append(0)
+                #        elif "count_in_subject" in feature_name:
+                #            if config["Email_Features"]["blacklisted_words_subject"] == "True":
+                #                mask.append(1)
+                #            else:
+                #                mask.append(0)
+                #        else:
+                #            if config["Email_Features"][feature_name]=="True":
+                #                mask.append(1)
+                #            else:
+                #                mask.append(0)
+                #    logger.info(mask)
+                #    vectorizer=vectorizer_train.restrict(mask)
+                #    logger.info(len(vectorizer.get_feature_names()))
                 #X_train=vectorizer.transform(X_train)
 
         logger.info("Running the Classifiers....")
