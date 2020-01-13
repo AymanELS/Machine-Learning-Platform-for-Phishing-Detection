@@ -105,6 +105,61 @@ def fit_classifier(clf, X, y, X_train_balanced=None, y_train_balanced=None):
 	logger.info("Training Time = " + str(time.time()-start_time) + "s")
 
 
+def Autosklearn(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	logger.info("AutoSklearn >>>>>>>")
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+			clf = autosklearn.classification.AutoSklearnClassifier(ensemble_size=50)
+		else:
+			clf = autosklearn.classification.AutoSklearnClassifier(ensemble_size=50,ml_memory_limit=16000)
+		logger.info("AutoSklearn >>>>>>>")
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score, None
+		if config["Evaluation Metrics"]["parameter_search"]=="True":
+			clf = RandomizedSearchCV(clf, param_distributions, n_iter=10, scoring=None, fit_params=None, n_jobs=None, iid='warn', refit=True, cv=10, verbose=3, pre_dispatch='2*n_jobs', random_state=None, error_score='raise-deprecating', return_train_score='warn')
+			best_model = clf.fit(X, y)
+			return None, None
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)
+			eval_metrics_AutoSklearn = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+			return eval_metrics_AutoSklearn, clf
+	else:
+		#y_predict=clf.predict(X_test)
+		#eval_metrics_AutoSklearn = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		# random_state = RandomState(seed=0)
+		# for iteration in range(1000):
+		# 	X_test_i, y_test_i = resample(X_test, y_test, random_state=random_state)
+		# 	y_predict_i=clf.predict(X_test_i)
+		y_predict=clf.predict(X_test)
+		eval_metrics_AutoSklearn = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return eval_metrics_AutoSklearn, clf
+
+def Tpot(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
+	from tpot import TPOTClassifier
+	logger.info("TPOT >>>>>>>")
+	if clf is None:
+		if config["Classifiers"]["weighted"] == "True":
+			clf = TPOTClassifier(verbosity=2, max_time_mins=20, population_size=50, config_dict='TPOT sparse')
+		else:
+			clf = TPOTClassifier(verbosity=2, max_time_mins=20, population_size=50, config_dict='TPOT sparse')
+		
+		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+			score=Evaluation_Metrics.Cross_validation(clf, X, y)
+			logger.info(score)
+			return score, None
+		else:
+			fit_classifier(clf, X, y, X_train_balanced, y_train_balanced)
+			y_predict=clf.predict(X_test)
+			eval_metrics_Tpot = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+			return eval_metrics_Tpot, clf	
+	else:
+		y_predict=clf.predict(X_test)
+		eval_metrics_Tpot = Evaluation_Metrics.eval_metrics(clf, X, y, y_test, y_predict)
+		return eval_metrics_Tpot, clf
+
 
 def SVM(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=None):
 	logger.info("SVM >>>>>>>")
@@ -625,6 +680,25 @@ def classifiers(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=Non
 		rank_classifier(eval_metrics_per_classifier_dict, config["Classification"]["rank on metric"])
 
 def run_classifier(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model, eval_metrics_per_classifier_dict, summary):
+	if not os.path.exists("Data_Dump/Models"):
+		os.makedirs("Data_Dump/Models")
+
+	if config["Classifiers"]["Tpot"] == "True":
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/Models/model_tpot.pkl")
+		eval_Tpot, model = Tpot(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
+		eval_metrics_per_classifier_dict['Tpot'] = eval_Tpot
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model.fitted_pipeline_, "Data_Dump/Models/model_tpot.pkl")
+		summary.write("Tpot\n")
+	if config["Classifiers"]["AutoSklearn"] == "True":
+		if config["Classification"]["load model"] == "True":
+			trained_model = joblib.load("Data_Dump/Models/model_autosklearn.pkl")
+		eval_Autosklearn, model = Autosklearn(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trained_model)
+		eval_metrics_per_classifier_dict['Autosklearn'] = eval_Autosklearn
+		if config["Classification"]["save model"] == "True" and model is not None:
+			joblib.dump(model, "Data_Dump/Models/model_autosklearn.pkl")
+		summary.write("Autosklearn\n")
 	if config["Classifiers"]["SVM"] == "True":
 		if config["Classification"]["load model"] == "True":
 			trained_model = joblib.load("Data_Dump/Models/model_svm.pkl")
@@ -719,9 +793,3 @@ def run_classifier(X,y, X_test, y_test, X_train_balanced, y_train_balanced, trai
 		eval_dnn = DNN(X,y, X_test, y_test, X_train_balanced, y_train_balanced)
 		eval_metrics_per_classifier_dict['DNN'] = eval_dnn
 		summary.write("DNN \n")
-
-def fit_MNB(X,y):
-	mnb=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
-	mnb.fit(X,y)
-	logger.info("MNB >>>>>>>")
-	joblib.dump(mnb,"Data_Dump/Emails_Training/MNB_model.pkl")
