@@ -41,20 +41,23 @@ def Feature_Selection(X,y):
 
 def Feature_Ranking(X, y, k):
 	#RFE
-	if not os.path.exists("Data_Dump/Feature_Ranking"):
-		os.makedirs("Data_Dump/Feature_Ranking")
 	if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
 		emails=True
 		urls=False
+		if not os.path.exists("Data_Dump/Feature_Ranking_Emails"):
+			os.makedirs("Data_Dump/Feature_Ranking_Emails")
 		vectorizer=joblib.load("Data_Dump/Emails_Training/vectorizer.pkl")
 		if config["Feature Selection"]["with Tfidf"]=="True":
-		        vectorizer_tfidf=joblib.load("Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
+			vectorizer_tfidf=joblib.load("Data_Dump/Emails_Training/tfidf_vectorizer.pkl")
+
 	elif config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
 		urls=True
 		emails=False
+		if not os.path.exists("Data_Dump/Feature_Ranking_URLs"):
+			os.makedirs("Data_Dump/Feature_Ranking_URLs")
 		vectorizer=joblib.load("Data_Dump/URLs_Training/vectorizer.pkl")
 		if config["Feature Selection"]["with Tfidf"]=="True":
-		        vectorizer_tfidf=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
+			vectorizer_tfidf=joblib.load("Data_Dump/URLs_Training/tfidf_vectorizer.pkl")
 	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
 		model = LogisticRegression()
 		from sklearn.svm import LinearSVC
@@ -68,13 +71,26 @@ def Feature_Ranking(X, y, k):
 			features_list=(vectorizer.get_feature_names())
 		res= dict(zip(features_list,rfe.ranking_))
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_rfe.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
+		
 		if emails:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
+			with open("Data_Dump/Feature_Ranking_Emails/Feature_ranking_rfe.txt",'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
 		if urls:
-			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
+			with open("Data_Dump/Feature_Ranking_URLs/Feature_ranking_rfe.txt",'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+
+		if config["Feature Selection"]["with Tfidf"]=="True":
+			if emails:
+				joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
+			if urls:
+				joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_RFE_{}.pkl".format(k))
+		else:
+			if emails:
+				joblib.dump(X, "Data_Dump/Emails_Training/X_train_RFE_{}.pkl".format(k))
+			if urls:
+				joblib.dump(X, "Data_Dump/URLs_Training/X_train_RFE_{}.pkl".format(k))
 		return X, rfe
 
 	#Chi-2
@@ -90,14 +106,27 @@ def Feature_Ranking(X, y, k):
 			if math.isnan(res[key]):
 				res[key]=0
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_chi2.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
-		X=model.transform(X)
+
 		if emails:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
+			with open("Data_Dump/Feature_Ranking_Emails/Feature_ranking_chi2.txt",'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
 		if urls:
-			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
+			with open("Data_Dump/Feature_Ranking_URLs/Feature_ranking_chi2.txt",'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+
+		X=model.transform(X)
+		if config["Feature Selection"]["with Tfidf"]=="True":
+			if emails:
+				joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
+			if urls:
+				joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_Chi2_{}.pkl".format(k))
+		else:
+			if emails:
+				joblib.dump(X, "Data_Dump/Emails_Training/X_train_Chi2_{}.pkl".format(k))
+			if urls:
+				joblib.dump(X, "Data_Dump/URLs_Training/X_train_Chi2_{}.pkl".format(k))
 		return X, model
 
 	# Information Gain
@@ -114,16 +143,27 @@ def Feature_Ranking(X, y, k):
 			if math.isnan(res[key]):
 				res[key]=0
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_IG.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
+		if emails:
+			with open("Data_Dump/Feature_Ranking_Emails/Feature_ranking_IG.txt",'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+		if urls:
+			with open("Data_Dump/Feature_Ranking_URLs/Feature_ranking_IG.txt",'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
 		# create new model with the best k features
 		X=model.transform(X)
-		if emails:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
-		if urls:
-			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
-		return X, vectorizer
+		if config["Feature Selection"]["with Tfidf"]=="True":
+			if emails:
+				joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
+			if urls:
+				joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_IG_{}.pkl".format(k))
+		else:
+			if emails:
+				joblib.dump(X, "Data_Dump/Emails_Training/X_train_IG_{}.pkl".format(k))
+			if urls:
+				joblib.dump(X, "Data_Dump/URLs_Training/X_train_IG_{}.pkl".format(k))
+		return X, model
 
 	#Gini
 	elif config["Feature Selection"]["Gini"] == "True":
@@ -139,16 +179,27 @@ def Feature_Ranking(X, y, k):
 			if math.isnan(res[key]):
 				res[key]=0
 		sorted_d = sorted(res.items(), key=lambda x: x[1], reverse=True)
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_Gini.txt",'w') as f:
-			for (key, value) in sorted_d:
-				f.write("{}: {}\n".format(key,value))
+		if emails:	
+			with open("Data_Dump/Feature_Ranking_Emails/Feature_ranking_Gini.txt",'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
+		if urls:
+			with open("Data_Dump/Feature_Ranking_URLs/Feature_ranking_Gini.txt",'w') as f:
+				for (key, value) in sorted_d:
+					f.write("{}: {}\n".format(key,value))
 		# create new model with the best k features
 		X=model.transform(X)
-		if emails:
-			joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
-		if urls:
-			joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
-		return X, vectorizer
+		if config["Feature Selection"]["with Tfidf"]=="True":
+			if emails:
+				joblib.dump(X, "Data_Dump/Emails_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
+			if urls:
+				joblib.dump(X, "Data_Dump/URLs_Training/X_train_with_tfidf_Gini_{}.pkl".format(k))
+		else:
+			if emails:
+				joblib.dump(X, "Data_Dump/Emails_Training/X_train_Gini_{}.pkl".format(k))
+			if urls:
+				joblib.dump(X, "Data_Dump/URLs_Training/X_train_Gini_{}.pkl".format(k))
+		return X, model
 	
 
 def Select_Best_Features_Training(X, y, k):
@@ -158,10 +209,8 @@ def Select_Best_Features_Training(X, y, k):
 	# Print out the list of best features
 	return X, selection
 
-
-
 #<<<<<<< HEAD
-def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
+def Select_Best_Features_Testing(X, selection):
 	if config["Feature Selection"]["Recursive Feature Elimination"] == "True":
 		X = selection.transform(X)
 		logger.info("X_Shape: {}".format(X.shape))
@@ -171,45 +220,14 @@ def Select_Best_Features_Testing(X, selection, k, feature_list_dict_test ):
 		logger.info("X_Shape: {}".format(X.shape))
 		return X
 	elif config["Feature Selection"]["Information Gain"] == "True":
-		best_features=[]
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_IG.txt", 'r') as f:
-			for line in f.readlines():
-				best_features.append(line.split(':')[0])
-		new_list_dict_features=[]
-		for i in range(k):
-			key=best_features[i]
-			if "=" in key:
-				key=key.split("=")[0]
-			if i==0:
-				for j in range(len(feature_list_dict_test)):
-					new_list_dict_features.append({key: feature_list_dict_test[j][key]})
-			else:
-				for j in range(len(feature_list_dict_test)):
-					new_list_dict_features[j][key]=feature_list_dict_test[j][key]
-		X=selection.transform(new_list_dict_features)
+		X = selection.transform(X)
 		logger.info("X_Shape: {}".format(X.shape))
 		return X
 	elif config["Feature Selection"]["Gini"] == "True":
-		best_features=[]
-		with open("Data_Dump/Feature_Ranking/Feature_ranking_Gini.txt", 'r') as f:
-			for line in f.readlines():
-				best_features.append(line.split(':')[0])
-		new_list_dict_features=[]
-		for i in range(k):
-			key=best_features[i]
-			#logger.info("key: {}".format(key))
-			if "=" in key:
-				key=key.split("=")[0]
-			if i==0:
-				for j in range(len(feature_list_dict_test)):
-					new_list_dict_features.append({key: feature_list_dict_test[j][key]})
-			else:
-				for j in range(len(feature_list_dict_test)):
-					new_list_dict_features[j][key]=feature_list_dict_test[j][key]
-		logger.info(new_list_dict_features)
-		logger.info("new_list_dict_features shape: {}".format(len(new_list_dict_features[0])))
-		X=selection.transform(new_list_dict_features)
+		X = selection.transform(X)
+		logger.info("X_Shape: {}".format(X.shape))
 		return X
+
 
 	
 #=======
