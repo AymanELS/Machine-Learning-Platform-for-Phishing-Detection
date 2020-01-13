@@ -14,7 +14,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict, cross_validate
 from sklearn.cluster import KMeans
 from sklearn.metrics import confusion_matrix, accuracy_score, make_scorer
-from imblearn.datasets import make_imbalance
+#from imblearn.datasets import make_imbalance
 from imblearn.under_sampling import RandomUnderSampler,CondensedNearestNeighbour
 from imblearn.under_sampling import EditedNearestNeighbours
 from sklearn.datasets import load_svmlight_file

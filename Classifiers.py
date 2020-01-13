@@ -18,7 +18,7 @@ from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.cluster import KMeans
 from sklearn_extensions.extreme_learning_machines.elm import GenELMClassifier
 from sklearn_extensions.extreme_learning_machines.random_layer import RBFRandomLayer, MLPRandomLayer
-from imblearn.datasets import make_imbalance
+#from imblearn.datasets import make_imbalance
 from imblearn.under_sampling import RandomUnderSampler,CondensedNearestNeighbour
 from imblearn.under_sampling import EditedNearestNeighbours
 from sklearn.datasets import load_svmlight_file

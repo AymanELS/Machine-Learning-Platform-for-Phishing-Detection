@@ -13,7 +13,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 from sklearn.cluster import KMeans
-from imblearn.datasets import make_imbalance
+#from imblearn.datasets import make_imbalance
 from imblearn.under_sampling import RandomUnderSampler,CondensedNearestNeighbour
 from imblearn.under_sampling import EditedNearestNeighbours
 from imblearn.under_sampling import AllKNN
