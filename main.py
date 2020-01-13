@@ -331,7 +331,7 @@ def main():
                 joblib.dump(y_test, os.path.join(email_test_dir, "y_test.pkl"))
                 
                 if config["Extraction"]["Dump Features txt"] == "True":
-                    joblib.dump(feature_list_dict_test,os.path.join(url_test_dir, "Features_testing.txt"))
+                    joblib.dump(feature_list_dict_test,os.path.join(email_test_dir, "Features_testing.txt"))
                 logger.info("Feature Extraction for testing dataset: Done!")
             else:
                 X_test = None
