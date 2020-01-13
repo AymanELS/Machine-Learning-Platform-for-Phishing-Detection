@@ -1473,7 +1473,7 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
                 , x_originating_hostname, dkim_signature, received_spf, x_original_authentication_results, authentication_results
                 , received, Cc, Bcc, To, MIME_version, header, priority, list_features, list_time)
             email_url_features(url_All, sender_domain,body_html, list_features, list_time)
-            single_html_features(soup, body_html, url_All, list_features, list_time)
+            #single_html_features(soup, body_html, url_All, list_features, list_time)
             if config["Email_Features"]["extract external features"]=="True": 
                 Features.Email_External_Spamassassin_Feature(email, list_features, list_time)
                 logger.info("SpamAssassin feature extracted\n")
