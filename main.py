@@ -115,7 +115,7 @@ def load_dataset(load_train=True, load_test=False):
     X_train = None
     y_train = None
     vectorizer_train = None
-    vectorizer_test = None
+    #vectorizer_test = None
     if config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
         email_train_dir = os.path.join(args.output_input_dir, "Emails_Training")
         vectorizer_train=joblib.load(os.path.join(email_train_dir, "vectorizer.pkl"))
@@ -132,7 +132,7 @@ def load_dataset(load_train=True, load_test=False):
                     y_test=joblib.load(os.path.join(email_train_dir, "y_test.pkl"))
                 else:
                     email_test_dir = os.path.join(args.output_input_dir, "Emails_Testing")
-                    vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
+                    #vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
                     X_test=joblib.load(os.path.join(email_test_dir, "X_test.pkl"))
                     y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
         except FileNotFoundError as ex:
@@ -150,16 +150,16 @@ def load_dataset(load_train=True, load_test=False):
                 if config["Classification"]["Attack Features"] == "True":
                     with open(os.path.join(url_train_dir,"features.txt"),'r') as f:
                           dict_test=eval(f.read())
-                    X_test=vectorizer_test.fit_transform(dict_test)
+                    X_test=vectorizer_train.fit_transform(dict_test)
                     y_test=joblib.load(os.path.join(url_train_dir, "y_test.pkl"))
                 else:
                     X_test=joblib.load(os.path.join(url_test_dir, "X_test.pkl"))
                     y_test=joblib.load(os.path.join(url_test_dir, "y_test.pkl"))
-                    vectorizer_test= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
+                    #vectorizer_test= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
         except FileNotFoundError as ex:
             logger.warn("Test files not found {}".format(ex))
 
-    return X_train, y_train, X_test, y_test, vectorizer_train, vectorizer_test
+    return X_train, y_train, X_test, y_test, vectorizer_train#, vectorizer_test
 
 def main():
     Feature_extraction=False #flag for feature extraction
@@ -196,7 +196,7 @@ def main():
                 joblib.dump(vectorizer,os.path.join(url_train_dir, "vectorizer.pkl"))
         
         else: 
-            X, y, X_test, y_test, vectorizer_train, vectorizer_test = load_dataset()
+            X, y, X_test, y_test, vectorizer_train = load_dataset()
             #feature_list_dict_train=vectorizer_train.inverse_transform(X)
 
         logger.info("Select Best Features ######")
@@ -457,10 +457,10 @@ def main():
     if config["Classification"]["Running the classifiers"]=="True":
         if Feature_extraction==False:
             if config["Classification"]["load model"] == "True":
-                X_train, y_train, X_test, y_test, vectorizer_train, vectorizer_test = load_dataset(load_train=False, load_test=True)
+                X_train, y_train, X_test, y_test, vectorizer_train = load_dataset(load_train=False, load_test=True)
                 logger.info("loading test dataset only")
             else:
-                X_train, y_train, X_test, y_test, vectorizer_train, vectorizer_test = load_dataset(load_train=True, load_test=True)
+                X_train, y_train, X_test, y_test, vectorizer_train = load_dataset(load_train=True, load_test=True)
             if config["Email or URL feature Extraction"]["extract_features_urls"] == "True":
                 if config["Classification"]["load model"] == "False":
                     """
