@@ -231,7 +231,7 @@ def main():
                     X_train=hstack([X_train, Tfidf_train])
                     # Save tfidf model
                     joblib.dump(tfidf_vectorizer, os.path.join(email_train_dir, "tfidf_vectorizer.pkl"))
-                    joblib.dump(tfidf_train, os.path.join(email_train_dir, "tfidf_matrix.pkl"))
+                    joblib.dump(Tfidf_train, os.path.join(email_train_dir, "tfidf_matrix.pkl"))
                     joblib.dump(X_train, os.path.join(email_train_dir, "X_train_unprocessed_with_tfidf.pkl"))
                     X_train=Features_Support.Preprocessing(X_train)
                     joblib.dump(X_train, os.path.join(email_train_dir, "X_train_processed_with_tfidf.pkl"))
