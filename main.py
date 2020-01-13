@@ -221,8 +221,8 @@ def main():
                 X_train, vectorizer=Features_Support.Vectorization_Training(feature_list_dict_train)
                 # Save model for vectorization
                 joblib.dump(vectorizer, os.path.join(email_train_dir, "vectorizer.pkl"))
-				joblib.dump(X_train,os.path.join(email_train_dir,"X_train_unprocessed.pkl"))
-				#joblib.dump(y_train,os.path.join(email_train_dir,"y_train.pkl"))
+                joblib.dump(X_train,os.path.join(email_train_dir,"X_train_unprocessed.pkl"))
+                #joblib.dump(y_train,os.path.join(email_train_dir,"y_train.pkl"))
                 # Add tfidf if the user marked it as True
                 if config["Email_Features"]["tfidf_emails"] == "True":
                     logger.info("tfidf_emails_train ######")
@@ -236,7 +236,7 @@ def main():
                     joblib.dump(X_train, os.path.join(email_train_dir, "X_train_processed_with_tfidf.pkl"))
                 # Use Min_Max_scaling for prepocessing the feature matrix
                 
-                if config["Email_Features"]["tfidf_emails"] == "False"::
+                if config["Email_Features"]["tfidf_emails"] == "False":
                     X_train=Features_Support.Preprocessing(X_train)
                     joblib.dump(X_train, os.path.join(email_train_dir, "X_train_processed.pkl"))
 
@@ -314,7 +314,7 @@ def main():
                     selection=joblib.load(os.path.join(email_train_dir, "selection.pkl"))
                     X_test = Feature_Selection.Select_Best_Features_Testing(X_test, selection)
                     logger.info("### Feature Ranking and Selection for Training Done!")
-                	joblib.dump(X_test, os.path.join(email_test_dir, "X_test_processed_best_features.pkl"))
+                    joblib.dump(X_test, os.path.join(email_test_dir, "X_test_processed_best_features.pkl"))
 
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
@@ -381,7 +381,7 @@ def main():
                 # Train Classifiers on imbalanced dataset
                 if config["Imbalanced Datasets"]["Load_imbalanced_dataset"]=="True":
                     X_train, y_train=Imbalanced_Dataset.Make_Imbalanced_Dataset(X_train, y_train)
-                	joblib.dump(X_train, os.path.join(url_train_dir, "X_train_imbalanced.pkl"))
+                    joblib.dump(X_train, os.path.join(url_train_dir, "X_train_imbalanced.pkl"))
                     joblib.dump(y_train, os.path.join(url_train_dir, "y_train_imbalanced.pkl"))
 
                 # dump features and labels and vectorizers
@@ -509,10 +509,10 @@ def main():
                     #exit()
             elif config["Email or URL feature Extraction"]["extract_features_emails"] == "True":
                 if config["Classification"]["load model"] == "True":
-                	X_train=None
+                    X_train=None
                     y_train=None
                 if config["Classification"]["load model"] == "False":
-                	X_train = joblib.load(os.path.join(email_train_dir, "X_train_final.pkl"))
+                    X_train = joblib.load(os.path.join(email_train_dir, "X_train_final.pkl"))
                     y_train = joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
                 X_test = joblib.load(os.path.join(email_test_dir, "X_test_final.pkl"))
                 y_test = joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
