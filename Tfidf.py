@@ -36,7 +36,7 @@ def tfidf_training(corpus):
 	tfidf_matrix = tf.fit_transform(corpus)
 	return tfidf_matrix, tf
 
-def tfidf_testing(corpus):
+def tfidf_testing(corpus, tf):
 	tfidf_matrix = tf.transform(corpus)
 	return tfidf_matrix
 
