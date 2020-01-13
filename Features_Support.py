@@ -1454,7 +1454,7 @@ def email_features(filepath, list_features, features_output, list_dict, list_tim
     try:
         with open(filepath,'r', encoding = "ISO-8859-1") as f:
             email=f.read()
-            body_text, body_html, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes = extract_body(email)
+            body_text, body_html, soup, text_Html, test_text, num_attachment, content_disposition_list, content_type_list, Content_Transfer_Encoding_list, file_extension_list, charset_list, size_in_Bytes = extract_body(email)
             logger.debug("extract_body >>>> Done")
 
             url_All=get_url(body_html)
