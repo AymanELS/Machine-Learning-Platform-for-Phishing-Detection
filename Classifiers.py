@@ -113,7 +113,7 @@ def Autosklearn(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=Non
 		else:
 			clf = autosklearn.classification.AutoSklearnClassifier(ensemble_size=50,ml_memory_limit=16000)
 		logger.info("AutoSklearn >>>>>>>")
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -146,7 +146,7 @@ def Tpot(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=
 		else:
 			clf = TPOTClassifier(verbosity=2, max_time_mins=20, population_size=50, config_dict='TPOT sparse')
 		
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -179,7 +179,7 @@ def SVM(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=N
 			from sklearn.svm import LinearSVC
 			clf = LinearSVC()
 			#clf = LinearSVC(penalty="l1",loss="hinge", dual=True, C=100, multi_class="crammer_singer",class_weight=None)		
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -225,7 +225,7 @@ def RandomForest(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=No
 				min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features='auto', max_leaf_nodes=None,
 				min_impurity_decrease=0.0, min_impurity_split=None, bootstrap=False, oob_score=False, n_jobs=-1,
 				random_state=None, verbose=0, warm_start=False, class_weight=None)		
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -269,7 +269,7 @@ def DecisionTree(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=No
 			"""
 			clf = DecisionTreeClassifier(criterion='gini', splitter='best', max_depth=40, min_samples_split=2,
 				min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, min_impurity_decrease=0.0, min_impurity_split=None, class_weight=None, presort=False)		
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -308,7 +308,7 @@ def GaussianNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_balan
 			return
 		clf = GaussianNB(priors=None, var_smoothing=1e-06)
 		#clf = GaussianNB(priors=None)		
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -340,7 +340,7 @@ def MultinomialNaiveBayes(X,y, X_test, y_test, X_train_balanced=None, y_train_ba
 	                return
 		#clf=MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
 		clf=MultinomialNB(alpha=0.1, fit_prior=True, class_prior=None)		
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -372,7 +372,7 @@ def LogisticRegression(X,y, X_test, y_test, X_train_balanced=None, y_train_balan
 		else:
 			#clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=1.0, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='liblinear', max_iter=100, multi_class='ovr', verbose=0, warm_start=False, n_jobs=1)
 			clf=sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=4, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='sag', max_iter=100, multi_class='ovr', verbose=0, warm_start=False, n_jobs=1)		
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -418,7 +418,7 @@ def ELM(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, clf=N
 	
                 srhl_tanh = MLPRandomLayer(n_hidden=10, activation_func='tanh')
                 clf = GenELMClassifier(hidden_layer=srhl_tanh)                
-                if config["Evaluation Metrics"]["cross_val_score"]=="True":
+                if config["Evaluation Metrics"]["cross_validation"]=="True":
                         score=Evaluation_Metrics.Cross_validation(clf, X, y)
                         logger.info(score)
                         return score, None
@@ -442,7 +442,7 @@ def kNearestNeighbor(X,y, X_test, y_test, X_train_balanced=None, y_train_balance
 	
 		clf=KNeighborsClassifier(n_neighbors=5, weights='uniform', algorithm='auto', leaf_size=30, p=2,
 			metric='minkowski', metric_params=None, n_jobs=-1,)
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			clf.fit(X, y)
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
@@ -477,7 +477,7 @@ def KMeans(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, cl
 	
 		clf=sklearn.cluster.KMeans(n_clusters=2, init='k-means++', n_init=10, max_iter=300, tol=0.0001, precompute_distances='auto',
 			verbose=0, random_state=None, copy_x=True, n_jobs=1, algorithm='auto')		
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -519,7 +519,7 @@ def Bagging(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, c
 		clf=BaggingClassifier(base_estimator=base_classifier, n_estimators=90, max_samples=1.0, max_features=1.0,
 			bootstrap=False, bootstrap_features=True, oob_score=False, warm_start=False, n_jobs=2, random_state=None,
 			verbose=0)
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -555,7 +555,7 @@ def Boosting(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None, 
 		#clf = AdaBoostClassifier(base_estimator=base_classifier, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R',
 		clf = AdaBoostClassifier(base_estimator=base_classifier, n_estimators=100, learning_rate=1.5, algorithm='SAMME',
 			random_state=None)
-		if config["Evaluation Metrics"]["cross_val_score"]=="True":
+		if config["Evaluation Metrics"]["cross_validation"]=="True":
 			score=Evaluation_Metrics.Cross_validation(clf, X, y)
 			logger.info(score)
 			return score, None
@@ -597,7 +597,7 @@ def DNN(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=None):
 	dim=X.shape[1]	
 	# logger.info(X[0].transpose().shape)
 	model_dnn = model_build(dim)	
-	if config["Evaluation Metrics"]["cross_val_score"]=="True":		
+	if config["Evaluation Metrics"]["cross_validation"]=="True":		
 		#return -1
 		seed = 7
 		np.random.seed(seed)
@@ -653,9 +653,9 @@ def classifiers(X,y, X_test, y_test, X_train_balanced=None, y_train_balanced=Non
 	summary.write("\n##############\n\nClassifiers Used:\n")
 	eval_metrics_per_classifier_dict = {}
 	if config["Classification"]["load model"] != "True":
-		if X_test is None and config["Evaluation Metrics"]["cross_val_score"] != "True":
+		if X_test is None and config["Evaluation Metrics"]["cross_validation"] != "True":
 			X, X_test, y, y_test = train_test_split(X, y, train_size=0.9, test_size=0.1, random_state=1)
-		if config["Evaluation Metrics"]["cross_val_score"] != "True":
+		if config["Evaluation Metrics"]["cross_validation"] != "True":
 			if config["Imbalanced Datasets"]["make_imbalanced_dataset"] == "True":
 				X_train_balanced, y_train_balanced = Imbalanced_Dataset.Make_Imbalanced_Dataset(X, y)
 	trained_model = None
