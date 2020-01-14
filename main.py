@@ -120,7 +120,7 @@ def load_dataset(load_train=True, load_test=False):
         email_train_dir = os.path.join(args.output_input_dir, "Emails_Training")
         vectorizer_train=joblib.load(os.path.join(email_train_dir, "vectorizer.pkl"))
         if load_train:       
-            X_train=joblib.load(os.path.join(email_train_dir, "X_train.pkl"))
+            X_train=joblib.load(os.path.join(email_train_dir, "X_train_final.pkl"))
             y_train=joblib.load(os.path.join(email_train_dir, "y_train.pkl"))
             
         try:
@@ -133,7 +133,7 @@ def load_dataset(load_train=True, load_test=False):
                 else:
                     email_test_dir = os.path.join(args.output_input_dir, "Emails_Testing")
                     #vectorizer_test=joblib.load(os.path.join(email_test_dir, "vectorizer.pkl"))
-                    X_test=joblib.load(os.path.join(email_test_dir, "X_test.pkl"))
+                    X_test=joblib.load(os.path.join(email_test_dir, "X_test_final.pkl"))
                     y_test=joblib.load(os.path.join(email_test_dir, "y_test.pkl"))
         except FileNotFoundError as ex:
             logger.warn("Test files not found {}".format(ex))
@@ -143,7 +143,7 @@ def load_dataset(load_train=True, load_test=False):
         url_test_dir = os.path.join(args.output_input_dir, "URLs_Testing")
         vectorizer_train= joblib.load(os.path.join(url_train_dir, "vectorizer.pkl"))
         if load_train:
-            X_train=joblib.load(os.path.join(url_train_dir, "X_train.pkl"))
+            X_train=joblib.load(os.path.join(url_train_dir, "X_train_final.pkl"))
             y_train=joblib.load(os.path.join(url_train_dir, "y_train.pkl"))
         try:
             if load_test:
@@ -153,7 +153,7 @@ def load_dataset(load_train=True, load_test=False):
                     X_test=vectorizer_train.fit_transform(dict_test)
                     y_test=joblib.load(os.path.join(url_train_dir, "y_test.pkl"))
                 else:
-                    X_test=joblib.load(os.path.join(url_test_dir, "X_test.pkl"))
+                    X_test=joblib.load(os.path.join(url_test_dir, "X_test_final.pkl"))
                     y_test=joblib.load(os.path.join(url_test_dir, "y_test.pkl"))
                     #vectorizer_test= joblib.load(os.path.join(url_test_dir, "vectorizer.pkl"))
         except FileNotFoundError as ex:
@@ -266,7 +266,7 @@ def main():
 
                 #dump features in txt format
                 if config["Extraction"]["Dump Features txt"] == "True":
-                    joblib.dump(feature_list_dict_train,os.path.join(url_train_dir, "Features_training.txt"))
+                    joblib.dump(feature_list_dict_train,os.path.join(email_train_dir, "Features_training.txt"))
 
                 # flag to mark if training was done
                 flag_training=True
