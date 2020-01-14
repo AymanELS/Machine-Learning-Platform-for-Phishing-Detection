@@ -48,6 +48,10 @@ def Confusion_matrix2(y_test, y_predict):
 		tn, fp, fn, tp=confusion_matrix.ravel()
 		logger.info("Confusion Matrix (TN, FP, FN, TP):({}, {}, {}, {})".format(tn, fp, fn, tp))
 
+def Accuracy(y_test, y_predict):
+		acc=sklearn.metrics.accuracy_score(y_test, y_predict)
+		logger.info("Accuracy: {}".format(acc))
+		return (acc)
 
 def Matthews_corrcoef(y_test, y_predict):
 		Mcc=sklearn.metrics.matthews_corrcoef(y_test, y_predict)
@@ -118,6 +122,10 @@ def eval_metrics(clf, y_test, y_predict):
 	summary.write("\n\nEvaluation metrics used:\n")
 	summary.write("\n\n Supervised metrics:\n")
 	eval_metrics_dict = {}
+	if config["Evaluation Metrics"]["Accuracy"] == "True":
+		acc = Accuracy(y_test, y_predict)
+		eval_metrics_dict['Accuracy'] = acc
+		summary.write("Accuracy\n")
 	if config["Evaluation Metrics"]["Confusion_matrix"] == "True":
 		cm = Confusion_matrix(y_test, y_predict)
 		eval_metrics_dict['CM'] = cm
@@ -142,16 +150,16 @@ def eval_metrics(clf, y_test, y_predict):
 		f1_score = F1_score(y_test, y_predict)
 		eval_metrics_dict['F1_score'] = f1_score
 		summary.write("F1_score\n")
-	#if config["Evaluation Metrics"]["Cross_validation"] == "True":
-	#	Cross_validation(clf, X, y)
-	#	summary.write("Cross_validation\n")
+	if config["Evaluation Metrics"]["Cross_validation"] == "True":
+		Cross_validation(clf, X, y)
+		summary.write("Cross_validation\n")
 	if config["Evaluation Metrics"]["Geomteric_mean_score"] == "True":
 		gmean = Geomteric_mean_score(y_test,y_predict)
 		eval_metrics_dict['Gmean'] = gmean
 		summary.write("Geomteric_mean_score\n")
 	if config["Evaluation Metrics"]["Balanced_accuracy_score"] == "True":
 		accuracy = Balanced_accuracy_score(y_test,y_predict)
-		eval_metrics_dict['accuracy'] = accuracy
+		eval_metrics_dict['B_accuracy'] = accuracy
 		summary.write("Balanced_accuracy_score\n")
 	#	# write results to summary
 	if config["Classification"]["Attack Features"] == "True":
