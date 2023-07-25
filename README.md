@@ -1,7 +1,7 @@
 ############# README ##################
 
 The platform extract features from emails and URLs, run classifiers, and returns the results using different evaluation metrics.
-This platform was developped for the following research: [An in-depth benchmarking and evaluation of phishing detection research for security needs][https://ieeexplore.ieee.org/abstract/document/8970564]
+This platform was developped for the following research: [An in-depth benchmarking and evaluation of phishing detection research for security needs](https://ieeexplore.ieee.org/abstract/document/8970564)
 
 ##### INSTALL
 the platform is coded using Python 3.6.4
